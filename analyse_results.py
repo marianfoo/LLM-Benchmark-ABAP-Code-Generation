@@ -124,10 +124,11 @@ def categorize_errors():
 
 
 def analyse_syntax_error(results: Dict):
-    msgs = [eval(m[m.index("\n") + 1 :])[0] for m in results["The syntax check failed"]]
+    runs = [eval(m[m.index("\n") + 1 :]) for m in results["The syntax check failed"]]
 
-    errors = [e for e in msgs if e["type"] == "E"]
-    warnings = [w for w in msgs if w["type"] == "W"]
+    errors = [e for msgs in runs for e in msgs if e["type"] == "E"]
+    warnings = [w for msgs in runs for w in msgs if w["type"] == "W"]
+
 
     print(f"There are {len(errors)} errors")
     print(f"There are {len(warnings)} warnings")
@@ -145,7 +146,7 @@ def analyse_syntax_error(results: Dict):
     with open(SYNTAX_ERROR_FILE, "w") as file:
         file.write(json.dumps(syntax_errors, indent=4, ensure_ascii=False))
 
-    return msgs
+    return runs
 
 if __name__ == "__main__":
     results = categorize_errors()
