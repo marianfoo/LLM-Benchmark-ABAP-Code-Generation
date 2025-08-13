@@ -140,8 +140,14 @@ def generate_next_response(save_file_path: str, model_name: str):
         data.values(), desc="Processing prompts", leave=False
     ):
         for i, conversation in tqdm.tqdm(
-            enumerate(conversations), desc="Processing conversations", leave=False, total=len(conversations)
+            enumerate(conversations),
+            desc="Processing conversations",
+            leave=False,
+            total=len(conversations),
         ):
+            if conversation[-1]["content"] == "The unit tests were successful.":
+                continue
+
             response = ask_kiski(model_name, conversation)
             conversation.append({"role": "assistant", "content": response})
 

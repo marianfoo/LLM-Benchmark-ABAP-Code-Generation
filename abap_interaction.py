@@ -261,6 +261,10 @@ if __name__ == "__main__":
         ):
 
             for chat in tqdm.tqdm(chats, desc=f"Processing {prompt_file}", leave=False):
+
+                if chat[-1]["content"] == "The unit tests were successful.":
+                    continue
+
                 skip_remaining_steps = False
                 last_message = chat[-1]
                 src = last_message["content"]
@@ -319,5 +323,5 @@ if __name__ == "__main__":
                 except Exception as e:
                     pass
 
-                with open(filename, "w") as file:
-                    file.write(json.dumps(prompt_files, indent=4, ensure_ascii=False))
+            with open(filename, "w") as file:
+                file.write(json.dumps(prompt_files, indent=4, ensure_ascii=False))
