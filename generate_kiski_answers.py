@@ -12,7 +12,6 @@ import re
 load_dotenv()
 
 REPETITIONS = 10
-SAVE_EVERY_N_MESSAGES = 10
 TEMPERATURE = 0.2
 MODELS_TO_RUN = [
     "llama-3.3-70b-instruct",
@@ -126,14 +125,34 @@ def generate_first_response(save_file_path: str, model_name: str):
                 conversation.append({"role": "assistant", "content": response})
                 conversations[prompt_file].append(conversation)
 
-                if i % SAVE_EVERY_N_MESSAGES == 0:
-                    with open(save_file_path, "w", encoding="utf-8") as f:
-                        json.dump(conversations, f, ensure_ascii=False, indent=4)
+            with open(save_file_path, "w", encoding="utf-8") as f:
+                json.dump(conversations, f, ensure_ascii=False, indent=4)
 
     with open(save_file_path, "w", encoding="utf-8") as f:
         json.dump(conversations, f, ensure_ascii=False, indent=4)
 
 
+def generate_next_response(save_file_path: str, model_name: str):
+    with open(save_file_path, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    for conversations in tqdm.tqdm(
+        data.values(), desc="Processing prompts", leave=False
+    ):
+        for i, conversation in tqdm.tqdm(
+            enumerate(conversations), desc="Processing conversations", leave=False, total=len(conversations)
+        ):
+            response = ask_kiski(model_name, conversation)
+            conversation.append({"role": "assistant", "content": response})
+
+        with open(save_file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+    with open(save_file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
 if __name__ == "__main__":
     for model in tqdm.tqdm(MODELS_TO_RUN, desc="Models"):
-        generate_first_response(f"{model}.json", model)
+        # generate_first_response(f"{model}.json", model)
+        generate_next_response(f"{model}.json", model)
