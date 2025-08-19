@@ -75,7 +75,7 @@ def ask_kiski(model_name: str, chat_history: Iterable[ChatCompletionMessageParam
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
-                model=model_name, messages=chat_history, temperature=TEMPERATURE
+                model=model_name, messages=chat_history, temperature=TEMPERATURE, max_tokens=5000
             )
             text_response = response.choices[0].message.content
             text_response = remove_code_blocks(text_response)
