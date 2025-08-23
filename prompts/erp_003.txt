@@ -21,6 +21,6 @@ DATA(zorg_data) = VALUE STANDARD TABLE OF zorg_hierarchy WITH EMPTY KEY (
 ). 
 INSERT zorg_hierarchy FROM TABLE @zorg_data.
 Output: 
-find_management_chain( iv_employee_id = 'A' ) => ['B', 'C', 'D', 'CEO']
-find_management_chain( iv_employee_id = 'C' ) => ['D', 'CEO']
-find_management_chain( iv_employee_id = 'CEO' ) => []
+find_management_chain( employee_id = 'A' ) => ['B', 'C', 'D', 'CEO']
+find_management_chain( employee_id = 'C' ) => ['D', 'CEO']
+find_management_chain( employee_id = 'CEO' ) => []

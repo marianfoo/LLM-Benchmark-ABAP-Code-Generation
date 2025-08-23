@@ -6,7 +6,7 @@ CLASS z_humaneval_034 DEFINITION
   PUBLIC SECTION.
     CLASS-METHODS unique
       IMPORTING
-        VALUE(it_list)   TYPE int4_table
+        VALUE(l)   TYPE int4_table
       RETURNING
         VALUE(rt_unique) TYPE int4_table.
 
@@ -18,7 +18,7 @@ CLASS z_humaneval_034 IMPLEMENTATION.
     DATA: lt_unique TYPE int4_table.
 
     " Remove duplicates while preserving order
-    LOOP AT it_list INTO DATA(lv_value).
+    LOOP AT l INTO DATA(lv_value).
       READ TABLE lt_unique TRANSPORTING NO FIELDS WITH KEY table_line = lv_value.
       IF sy-subrc <> 0.
         APPEND lv_value TO lt_unique.

@@ -7,7 +7,7 @@ CLASS z_humaneval_erp_002 DEFINITION
 
     CLASS-METHODS: count_subordinates
       IMPORTING
-        iv_supervisor_id TYPE char20
+        supervisor_id TYPE char20
       RETURNING
         VALUE(rv_amount) TYPE i.
 
@@ -27,7 +27,7 @@ CLASS z_humaneval_erp_002 IMPLEMENTATION.
       INTO TABLE @lt_org_data.
 
     " Count direct subordinates
-    LOOP AT lt_org_data INTO DATA(ls_org_entry) WHERE supervisor_id = iv_supervisor_id.
+    LOOP AT lt_org_data INTO DATA(ls_org_entry) WHERE supervisor_id = supervisor_id.
       lv_count = lv_count + 1.
     ENDLOOP.
 

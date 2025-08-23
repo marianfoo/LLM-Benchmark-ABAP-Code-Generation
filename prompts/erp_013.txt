@@ -1,4 +1,7 @@
 Write an ABAP class with a static method that returns all scheduled flights for a given airline. The program should accept one airline ID as input (e.g., 'LH') and return all matching flight dates and connection numbers.
+Input Parameters:
+iv_carrid type abap.char(3)
+
 Relevant database table:
 define table sflight {
     key carrid   : abap.char(3) not null;

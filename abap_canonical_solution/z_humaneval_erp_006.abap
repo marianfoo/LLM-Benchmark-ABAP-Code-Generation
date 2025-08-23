@@ -6,7 +6,7 @@ CLASS z_humaneval_erp_006 DEFINITION
   PUBLIC SECTION.
     CLASS-METHODS: calculate_stock
       IMPORTING
-        iv_mat_id        TYPE char20
+        mat_id        TYPE char20
       RETURNING
         VALUE(rs_result) TYPE ztransaction.
 
@@ -28,7 +28,7 @@ CLASS z_humaneval_erp_006 IMPLEMENTATION.
     SELECT SINGLE stock
       FROM zstock
       INTO lv_current_stock
-      WHERE mat_id = iv_mat_id.
+      WHERE mat_id = mat_id.
 
     IF sy-subrc <> 0.
       " Material not found in stock table - assume 0 stock
@@ -39,7 +39,7 @@ CLASS z_humaneval_erp_006 IMPLEMENTATION.
     SELECT *
       FROM ztransaction
       INTO TABLE lt_transactions
-      WHERE mat_id = iv_mat_id
+      WHERE mat_id = mat_id
       ORDER BY transaction_date.
 
     " Process each transaction in chronological order
@@ -54,7 +54,7 @@ CLASS z_humaneval_erp_006 IMPLEMENTATION.
 
         " Create new planning order to cover the shortage
         rs_result-id = 999999.
-        rs_result-mat_id = iv_mat_id.
+        rs_result-mat_id = mat_id.
         rs_result-transaction_type = 'PLO'.
         rs_result-transaction_date = ls_transaction-transaction_date.
         rs_result-amount = lv_shortage.

@@ -53,7 +53,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
     ls_coord-row = 2. ls_coord-col = 0. APPEND ls_coord TO lt_expected.
 
     " Execute test
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 1 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 1 ).
 
     " Assert
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
@@ -80,7 +80,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
       ls_coord-row = lv_i. ls_coord-col = 1. APPEND ls_coord TO lt_expected.
     ENDDO.
 
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 2 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 2 ).
 
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
   ENDMETHOD.
@@ -135,7 +135,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
     ls_coord-row = 6. ls_coord-col = 5. APPEND ls_coord TO lt_expected.
     ls_coord-row = 6. ls_coord-col = 0. APPEND ls_coord TO lt_expected.
 
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 1 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 1 ).
 
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
   ENDMETHOD.
@@ -146,7 +146,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
           lt_result   TYPE tt_coordinates,
           lt_expected TYPE tt_coordinates.
 
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 1 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 1 ).
 
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
   ENDMETHOD.
@@ -162,7 +162,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
     APPEND 1 TO lt_row.
     APPEND lt_row TO lt_matrix.
 
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 2 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 2 ).
 
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
   ENDMETHOD.
@@ -188,7 +188,7 @@ CLASS ltcl_test_z_humaneval_087 IMPLEMENTATION.
 
     ls_coord-row = 2. ls_coord-col = 2. APPEND ls_coord TO lt_expected.
 
-    lt_result = z_humaneval_087=>check( iv_matrix = lt_matrix iv_search_value = 3 ).
+    lt_result = z_humaneval_087=>check( lst = lt_matrix x = 3 ).
 
     cl_abap_unit_assert=>assert_equals( act = lt_result exp = lt_expected ).
   ENDMETHOD.

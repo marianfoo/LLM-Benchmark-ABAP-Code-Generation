@@ -81,10 +81,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_success.
     " Test successful customer ID generation
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = 'Germany'
-      iv_region = 'North Rhine-Westphalia'
-      iv_ktyp = 'Private_Customer'
-      iv_idnr = 123
+      country   = 'Germany'
+      region = 'North Rhine-Westphalia'
+      customer_type   = 'Private_Customer'
+      digit_id   = 123
     ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -103,10 +103,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_empty.
     " Test with empty input values
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = ''
-      iv_region = ''
-      iv_ktyp = ''
-      iv_idnr = 456
+      country   = ''
+      region = ''
+      customer_type   = ''
+      digit_id   = 456
     ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -126,10 +126,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_unknown.
     " Test with unknown country, region, and customer type
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = 'Unknown Country'
-      iv_region = 'Unknown Region'
-      iv_ktyp = 'Unknown Type'
-      iv_idnr = 789
+      country   = 'Unknown Country'
+      region = 'Unknown Region'
+      customer_type   = 'Unknown Type'
+      digit_id   = 789
     ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -148,10 +148,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_spaces.
     " Test with input containing spaces and special characters
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = '  Germany  '
-      iv_region = '  North Rhine-Westphalia  '
-      iv_ktyp = '  Private_Customer  '
-      iv_idnr = 999
+      country   = '  Germany  '
+      region = '  North Rhine-Westphalia  '
+      customer_type   = '  Private_Customer  '
+      digit_id   = 999
     ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -164,10 +164,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_large_id.
     " Test with large ID number
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = 'Germany'
-      iv_region = 'Bavaria'
-      iv_ktyp = 'Business_Customer'
-      iv_idnr = 99999
+      country   = 'Germany'
+      region = 'Bavaria'
+      customer_type   = 'Business_Customer'
+      digit_id   = 99999
     ).
 
     cl_abap_unit_assert=>assert_char_cp(
@@ -180,10 +180,10 @@ CLASS ltcl_customer_id_generator IMPLEMENTATION.
   METHOD test_generate_zero_id.
     " Test with zero ID
     DATA(lv_result) = z_humaneval_erp_008=>generate_customer_id(
-      iv_land = 'Austria'
-      iv_region = 'Vienna'
-      iv_ktyp = 'Government_Customer'
-      iv_idnr = 0
+      country   = 'Austria'
+      region = 'Vienna'
+      customer_type   = 'Government_Customer'
+      digit_id   = 0
     ).
 
     cl_abap_unit_assert=>assert_char_cp(

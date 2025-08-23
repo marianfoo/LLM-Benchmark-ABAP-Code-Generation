@@ -1,4 +1,7 @@
 Implement a global ABAP class with a static method that runs a customer search. It should accept a partial customer_id or name and return matching full records from the database. The search should be case insensitive.
+Input Parameters:
+iv_pattern type abap.char(50)
+
 Use this database table:
 define table zcustomer {
     key customer_id : abap.numc(10);

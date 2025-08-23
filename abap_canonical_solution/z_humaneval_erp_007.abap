@@ -6,8 +6,8 @@ CLASS z_humaneval_erp_007 DEFINITION
 
     CLASS-METHODS: calculate_delivery_date
       IMPORTING
-        iv_order_date           TYPE string
-        iv_mat_id               TYPE string
+        order_date           TYPE string
+        mat_id               TYPE string
       RETURNING
         VALUE(rv_delivery_date) TYPE dats.
 
@@ -40,9 +40,9 @@ CLASS z_humaneval_erp_007 IMPLEMENTATION.
     DATA: lv_order_date TYPE dats,
           lv_lead_time  TYPE i.
     " Convert string date to DATS format
-    lv_order_date = iv_order_date.
+    lv_order_date = order_date.
     " Get lead time for material
-    lv_lead_time = get_lead_time( iv_mat_id ).
+    lv_lead_time = get_lead_time( mat_id ).
     " If no lead time, return order date
     IF lv_lead_time = 0.
       rv_delivery_date = lv_order_date.

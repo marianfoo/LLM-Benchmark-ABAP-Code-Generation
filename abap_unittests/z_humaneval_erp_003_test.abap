@@ -36,7 +36,7 @@ CLASS ltcl_z_humaneval_erp_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_single_supervisor.
-    DATA(result) = z_humaneval_erp_003=>find_management_chain( iv_employee_id = 'B' ).
+    DATA(result) = z_humaneval_erp_003=>find_management_chain( employee_id = 'B' ).
     cl_abap_unit_assert=>assert_equals(
       act = lines( result )
       exp = 1
@@ -50,7 +50,7 @@ CLASS ltcl_z_humaneval_erp_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_multiple_supervisors.
-    DATA(result) = z_humaneval_erp_003=>find_management_chain( iv_employee_id = 'A' ).
+    DATA(result) = z_humaneval_erp_003=>find_management_chain( employee_id = 'A' ).
     cl_abap_unit_assert=>assert_equals(
       act = lines( result )
       exp = 2
@@ -69,7 +69,7 @@ CLASS ltcl_z_humaneval_erp_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_no_supervisor.
-    DATA(result) = z_humaneval_erp_003=>find_management_chain( iv_employee_id = 'C' ).
+    DATA(result) = z_humaneval_erp_003=>find_management_chain( employee_id = 'C' ).
     cl_abap_unit_assert=>assert_equals(
       act = lines( result )
       exp = 0

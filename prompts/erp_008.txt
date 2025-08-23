@@ -42,10 +42,10 @@ Processing Rules
 5. ID number should be formatted as 5-digit string with leading zeros
 
 Example:
-DATA(lv_id) = generate_customer_id(
-  iv_land    = 'Germany'
-  iv_region  = 'North Rhine-Westphalia'
-  iv_ktyp    = 'Private_Customer'
-  iv_idnr    = 123
+DATA(lv_id)    = generate_customer_id(
+  country      = 'Germany'
+  region       = 'North Rhine-Westphalia'
+  customer_id  = 'Private_Customer'
+  digit_id     = 123
 ).
 " Result: '0049NWP00123'

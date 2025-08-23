@@ -33,7 +33,7 @@ CLASS ltcl_test_humaneval_erp_003 IMPLEMENTATION.
     ls_entry-supervisor_id = 'D'.
     INSERT zorg_structure FROM ls_entry.
 
-    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( iv_supervisor_id = 'X' ).
+    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( supervisor_id = 'X' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -62,7 +62,7 @@ CLASS ltcl_test_humaneval_erp_003 IMPLEMENTATION.
     ls_entry-supervisor_id = 'Y'.
     INSERT zorg_structure FROM ls_entry.
 
-    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( iv_supervisor_id = 'Z' ).
+    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( supervisor_id = 'Z' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -83,7 +83,7 @@ CLASS ltcl_test_humaneval_erp_003 IMPLEMENTATION.
     ls_entry-supervisor_id = 'N'.
     INSERT zorg_structure FROM ls_entry.
 
-    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( iv_supervisor_id = 'M' ).
+    DATA(lv_result) = z_humaneval_erp_002=>count_subordinates( supervisor_id = 'M' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result

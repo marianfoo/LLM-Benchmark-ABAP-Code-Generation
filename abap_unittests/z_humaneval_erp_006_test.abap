@@ -75,7 +75,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'MAT001' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'MAT001' ).
 
     " Assert: no PLO should be created (result should be initial)
     cl_abap_unit_assert=>assert_initial(
@@ -117,7 +117,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'X' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'X' ).
 
     " Assert: PLO should be created
     cl_abap_unit_assert=>assert_equals(
@@ -167,7 +167,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'NOTFOUND' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'NOTFOUND' ).
 
     " Assert: PLO should be created due to shortage (0 initial stock - 1 = -1)
     cl_abap_unit_assert=>assert_equals(
@@ -196,7 +196,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'MAT002' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'MAT002' ).
 
     " Assert: no PLO should be created
     cl_abap_unit_assert=>assert_initial(
@@ -241,7 +241,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'MAT003' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'MAT003' ).
 
     " Assert: PLO should be created for shortage on second transaction
     cl_abap_unit_assert=>assert_equals(
@@ -286,7 +286,7 @@ CLASS ltcl_stock_calculator_test IMPLEMENTATION.
     COMMIT WORK.
 
     " Execute method
-    ls_result = z_humaneval_erp_006=>calculate_stock( iv_mat_id = 'MAT004' ).
+    ls_result = z_humaneval_erp_006=>calculate_stock( mat_id = 'MAT004' ).
 
     " Assert: PLO should be created
     cl_abap_unit_assert=>assert_equals(

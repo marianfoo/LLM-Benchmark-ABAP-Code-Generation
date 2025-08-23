@@ -6,10 +6,10 @@ CLASS z_humaneval_erp_008 DEFINITION
   PUBLIC SECTION.
     CLASS-METHODS: generate_customer_id
       IMPORTING
-        iv_land               TYPE char50
-        iv_region             TYPE char100
-        iv_ktyp               TYPE char30
-        iv_idnr               TYPE i
+        country               TYPE char50
+        region                TYPE char100
+        customer_type         TYPE char30
+        digit_id              TYPE i
       RETURNING
         VALUE(rv_customer_id) TYPE string.
 
@@ -55,9 +55,9 @@ CLASS z_humaneval_erp_008 IMPLEMENTATION.
           lv_customer_type_trimmed TYPE char30.
 
     " Trim input parameters
-    lv_country_trimmed = iv_land.
-    lv_region_trimmed = iv_region.
-    lv_customer_type_trimmed = iv_ktyp.
+    lv_country_trimmed = country.
+    lv_region_trimmed = region.
+    lv_customer_type_trimmed = customer_type.
 
     CONDENSE: lv_country_trimmed,
               lv_region_trimmed,
@@ -75,7 +75,7 @@ CLASS z_humaneval_erp_008 IMPLEMENTATION.
     lv_type_code = get_customer_type_code( lv_customer_type_trimmed ).
 
     " Format ID with leading zeros (5 digits)
-    lv_id_formatted = |{ iv_idnr WIDTH = 5 PAD = '0' ALIGN = RIGHT }|.
+    lv_id_formatted = |{ digit_id WIDTH = 5 PAD = '0' ALIGN = RIGHT }|.
 
     " Combine all parts to create 12-character customer ID
     rv_customer_id = |{ lv_country_code }{ lv_region_code }{ lv_type_code }{ lv_id_formatted }|.

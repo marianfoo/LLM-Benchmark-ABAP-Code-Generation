@@ -62,8 +62,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Order on Monday 2024-12-16, 3 working days = Thursday 2024-12-19
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241216'
-      iv_mat_id = 'TEST001' ).
+      order_date = '20241216'
+      mat_id     = 'TEST001' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -78,8 +78,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Expected: Friday 2024-12-27 (skip 24th, 25th, 26th holidays + weekend)
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241223'
-      iv_mat_id = 'TEST001' ).
+      order_date = '20241223'
+      mat_id     = 'TEST001' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -92,8 +92,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Test case: Material not found, should return order date
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241216'
-      iv_mat_id = 'NONEXISTENT' ).
+      order_date = '20241216'
+      mat_id     = 'NONEXISTENT' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -107,8 +107,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Order on Friday 2024-12-13, 1 working day = Monday 2024-12-16
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241213'
-      iv_mat_id = 'TEST002' ).
+      order_date = '20241213'
+      mat_id     = 'TEST002' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -123,8 +123,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Expected: Skip weekend + New Year holidays
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241227'
-      iv_mat_id = 'TEST001' ).
+      order_date = '20241227'
+      mat_id     = 'TEST001' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -139,8 +139,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " 1 working day = Monday 2024-12-23
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241220'
-      iv_mat_id = 'TEST002' ).
+      order_date = '20241220'
+      mat_id     = 'TEST002' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -153,8 +153,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Test case: Material with zero lead time
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241216'
-      iv_mat_id = 'TEST004' ).
+      order_date = '20241216'
+      mat_id     = 'TEST004' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -168,8 +168,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Order on Friday 2024-12-13, 5 working days = Friday 2024-12-20
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241213'
-      iv_mat_id = 'TEST003' ).
+      order_date = '20241213'
+      mat_id     = 'TEST003' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result
@@ -184,8 +184,8 @@ CLASS ltcl_delivery_date_test IMPLEMENTATION.
     " Order on Monday 2024-12-16, 10 working days = Monday 2024-12-30
 
     DATA(lv_result) = z_humaneval_erp_007=>calculate_delivery_date(
-      iv_order_date = '20241216'
-      iv_mat_id = 'TEST005' ).
+      order_date = '20241216'
+      mat_id     = 'TEST005' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lv_result

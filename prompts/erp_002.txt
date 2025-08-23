@@ -19,4 +19,4 @@ DATA(lt_org_data) = VALUE zorg_hierarchy(
   ( employee_id = 'M1' supervisor_id = 'CEO' )
   ( employee_id = 'M2' supervisor_id = 'CEO' ) ).
 Output:
-DATA(lv_result) = zcl_example=>count_subordinates( iv_supervisor_id = 'M1' ). => 2
+DATA(lv_result) = zcl_example=>count_subordinates( supervisor_id = 'M1' ). => 2

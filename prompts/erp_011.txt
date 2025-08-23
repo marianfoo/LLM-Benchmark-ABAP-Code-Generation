@@ -3,6 +3,7 @@ Only flights that still have free seats should be returned.
 Input:
 origin_city type char(20)
 desination_city type char(20)
+flight_date type dats
 Return:
 airline name, departure city, destination, time, and available seats as a table
 Relevant Data Table

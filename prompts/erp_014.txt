@@ -1,4 +1,9 @@
 Write an ABAP class with a static method that counts the number of bookings for a specific flight. It should accept flight information (carrier, connection ID, date) and return the number of bookings for that flight.
+Input Parameters:
+iv_carrid type abap.char(3)
+iv_connid type abap.numc(4)
+iv_fldate type dats
+
 Relevant Data Table
 define table sbook {
     key carrid   : abap.char(3) not null;

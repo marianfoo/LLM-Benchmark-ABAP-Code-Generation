@@ -23,9 +23,9 @@ define table ztransaction {
   amount : abap.int4 not null;
 }
 Input: 
-mat_id : abap.char(20) 
+mat_id type abap.char(20) 
 Output:
-current_amount : abap.int4
+current_amount type abap.int4
 
 Example Input:
 zstock = [ ("X", 3) ]

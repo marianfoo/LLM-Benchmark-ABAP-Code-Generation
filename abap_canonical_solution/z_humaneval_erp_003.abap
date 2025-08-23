@@ -7,7 +7,7 @@ CLASS z_humaneval_erp_003 DEFINITION
 
     CLASS-METHODS:
       find_management_chain
-        IMPORTING iv_employee_id        TYPE char20
+        IMPORTING employee_id        TYPE char20
         RETURNING VALUE(rt_supervisors) TYPE ty_supervisor_ids.
 ENDCLASS.
 
@@ -18,7 +18,7 @@ CLASS z_humaneval_erp_003 IMPLEMENTATION.
           lt_chain       TYPE ty_supervisor_ids,
           lv_supervisor  TYPE char20.
 
-    lv_current_emp = iv_employee_id.
+    lv_current_emp = employee_id.
 
     WHILE lv_current_emp IS NOT INITIAL.
       SELECT SINGLE supervisor_id

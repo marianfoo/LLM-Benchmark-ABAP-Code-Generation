@@ -12,7 +12,7 @@ CLASS z_humaneval_111 DEFINITION
 
     CLASS-METHODS: histogram
       IMPORTING
-        iv_test          TYPE string
+        test          TYPE string
       RETURNING
         VALUE(et_result) TYPE tt_result.
 
@@ -31,11 +31,11 @@ CLASS z_humaneval_111 IMPLEMENTATION.
 
     CLEAR et_result.
 
-    IF iv_test IS INITIAL.
+    IF test IS INITIAL.
       RETURN.
     ENDIF.
 
-    SPLIT iv_test AT ' ' INTO TABLE lt_letters.
+    SPLIT test AT ' ' INTO TABLE lt_letters.
 
     LOOP AT lt_letters INTO lv_letter.
       IF lv_letter IS INITIAL.

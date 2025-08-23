@@ -26,7 +26,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_1.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'a b b a' ).
+    et_result = z_humaneval_111=>histogram( test = 'a b b a' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -49,7 +49,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_2.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'a b c a b' ).
+    et_result = z_humaneval_111=>histogram( test = 'a b c a b' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -72,7 +72,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_3.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'a b c d g' ).
+    et_result = z_humaneval_111=>histogram( test = 'a b c d g' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -113,7 +113,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_4.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'r t g' ).
+    et_result = z_humaneval_111=>histogram( test = 'r t g' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -142,7 +142,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_5.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'b b b b a' ).
+    et_result = z_humaneval_111=>histogram( test = 'b b b b a' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -159,7 +159,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_6.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'r t g' ).
+    et_result = z_humaneval_111=>histogram( test = 'r t g' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -188,7 +188,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_7.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = '' ).
+    et_result = z_humaneval_111=>histogram( test = '' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )
@@ -199,7 +199,7 @@ CLASS ltcl_test_histogram IMPLEMENTATION.
   METHOD test_case_8.
     DATA: et_result TYPE tt_result.
 
-    et_result = z_humaneval_111=>histogram( iv_test = 'a' ).
+    et_result = z_humaneval_111=>histogram( test = 'a' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lines( et_result )

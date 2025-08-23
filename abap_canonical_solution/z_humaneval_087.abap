@@ -14,8 +14,8 @@ CLASS z_humaneval_087 DEFINITION
 
     CLASS-METHODS: check
       IMPORTING
-        iv_matrix             TYPE tt_matrix
-        iv_search_value       TYPE i
+        lst                   TYPE tt_matrix
+        x                     TYPE i
       RETURNING
         VALUE(rt_coordinates) TYPE tt_coordinates.
 
@@ -33,14 +33,14 @@ CLASS z_humaneval_087 IMPLEMENTATION.
 
     CLEAR: rt_coordinates.
 
-    LOOP AT iv_matrix INTO DATA(lt_current_row).
+    LOOP AT lst INTO DATA(lt_current_row).
       lv_row_index = sy-tabix - 1.
       CLEAR: lt_row_coords.
 
       LOOP AT lt_current_row INTO DATA(lv_current_value).
         lv_col_index = sy-tabix - 1.
 
-        IF lv_current_value = iv_search_value.
+        IF lv_current_value = x.
           ls_coordinate-row = lv_row_index.
           ls_coordinate-col = lv_col_index.
           APPEND ls_coordinate TO lt_row_coords.
