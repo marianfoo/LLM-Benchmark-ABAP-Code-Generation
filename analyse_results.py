@@ -42,12 +42,9 @@ def categorize_errors() -> Dict[str, Dict[str, List[str]]]:
             prompt_files = json.load(file)
             for prompt_file, chats in prompt_files.items():
                 for chat in chats:
-                    # last_message = chat[-1]
                     for message in chat[2:]:
                         if message["role"] == "user":
                             message_text = message["content"]
-                            # if last_message["role"] == "user":
-                            #     last_message = last_message["content"]
                             added = False
                             for key in model_results:
                                 if message_text.startswith(key):
@@ -154,7 +151,6 @@ def analyse_success_by_round() -> Dict[str, List[int]]:
 
 
 def visualize_success_by_round(success_data: Dict[str, List[int]]):
-
     models = list(success_data.keys())
     num_models = len(models)
     rounds = list(range(6))
@@ -231,6 +227,63 @@ def visualize_success_by_llm(success_data: Dict[str, List[int]]):
     plt.show()
 
 
+def prompt_classification() -> Dict[str, Dict[str, float]]:
+    df = pd.read_csv("analyse_results/prompt_classification.csv", sep=";")
+    categories: Dict[str, List[int]] = {}
+    for classification in df.columns[3:]:
+        categories[classification] = list(df[df[classification] == "X"]["HumanEval/Nr"])
+
+    successes = {}
+    for model_name in MODELS_TO_RUN:
+        successes[model_name] = {}
+        for category, category_prompts in categories.items():
+            filename = f"{model_name}.json"
+            successes[model_name][category] = 0
+
+            with open(filename, "r", encoding="utf-8") as file:
+                prompt_files = json.load(file)
+                for prompt_file, chats in prompt_files.items():
+                    if prompt_file[:-4] in category_prompts:
+                        for chat in chats:
+                            user_responses = [
+                                msg for msg in chat if msg["role"] == "user"
+                            ][1:]
+                            for msg_num, msg in enumerate(user_responses):
+                                if msg["content"] == "The unit tests were successful.":
+                                    successes[model_name][category] += 1
+
+    relative_successrate = successes
+    for model_name in MODELS_TO_RUN:
+        for category, category_prompts in categories.items():
+            current_value = relative_successrate[model_name][category]
+            relative_successrate[model_name][category] = round(current_value / (
+                len(category_prompts) * REPETITIONS
+            ), 4)
+
+    return relative_successrate
+
+def visualize_prompt_classification_success(data: Dict[str, Dict[str, float]]):
+    models = list(data.keys())
+    categories = list(next(iter(data.values())).keys())
+    num_models = len(models)
+    num_categories = len(categories)
+
+    bar_width = 0.13
+    x = np.arange(num_models)
+    plt.figure(figsize=(15,6))
+    for i, category in enumerate(categories):
+        values = [data[model][category] for model in models]
+        plt.bar(x + i*bar_width, values, width=bar_width, label=category)
+    plt.xticks(x + bar_width*(num_categories-1)/2, models, rotation=45, ha='right')
+    plt.ylabel('Success Rate')
+    plt.title('Model Performance by Task Category')
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1)) 
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
+
 if __name__ == "__main__":
     error_categories = categorize_errors()
     syntax_errors = analyse_syntax_error(error_categories)
@@ -238,3 +291,5 @@ if __name__ == "__main__":
     successes = analyse_success_by_round()
     visualize_success_by_round(successes)
     visualize_success_by_llm(successes)
+    relative_prompt_success = prompt_classification()
+    visualize_prompt_classification_success(relative_prompt_success)
