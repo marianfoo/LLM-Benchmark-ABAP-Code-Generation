@@ -3,6 +3,7 @@ import os
 import re
 from typing import Dict, List
 from matplotlib import pyplot as plt
+import matplotlib
 from matplotlib.ticker import PercentFormatter
 import numpy as np
 import pandas as pd
@@ -23,6 +24,22 @@ SOURCE_CODE_ERROR_FILE = "analyse_results/source_code_errors.json"
 PUBLIC_METHOD_ERROR_FILE = "analyse_results/public_method_errors.json"
 CLASS_NAME_NOT_FOUND_FILE = "analyse_results/class_name_errors.json"
 UNIT_TEST_SUCCESS_FILE = "analyse_results/successful.json"
+
+
+COLORS = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+]
+
+matplotlib.use("Qt5Agg")
 
 
 def categorize_errors() -> Dict[str, Dict[str, List[str]]]:
@@ -303,7 +320,6 @@ def summarize_all_errors(
     source_code_errors: Dict[str, list],
     public_method_errors: Dict[str, list],
     class_name_errors: Dict[str, list],
-    unit_test_success: Dict[str, list],
 ) -> Dict[str, Dict[str, int]]:
     summary: Dict[str, Dict[str, int]] = {}
 
@@ -356,10 +372,6 @@ def visualize_success_by_round(success_data: Dict[str, List[int]]):
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    model_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"][
-        :num_models
-    ]
-
     for idx, model in enumerate(models):
         model_data = [m / NUM_PROMPTS * REPETITIONS for m in success_data[model]]
 
@@ -369,7 +381,7 @@ def visualize_success_by_round(success_data: Dict[str, List[int]]):
             model_data,
             width=bar_width,
             label=model,
-            color=model_colors[idx],
+            color=COLORS[idx],
         )
 
     ax.set_xticks(x)
@@ -400,7 +412,6 @@ def visualize_success_by_llm(success_data: Dict[str, List[int]]):
         "4 Feedbacks",
         "5 Feedbacks",
     ]
-    custom_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"]
 
     for i in rounds:
         round_values = [(success_data[model][i] / NUM_PROMPTS * REPETITIONS) for model in models]
@@ -410,7 +421,7 @@ def visualize_success_by_llm(success_data: Dict[str, List[int]]):
             round_values,
             width=bar_width,
             label=feedback_labels[i],
-            color=custom_colors[i],
+            color=COLORS[i],
         )
 
     ax.set_xticks(x)
@@ -476,6 +487,127 @@ def visualize_prompt_classification_success(data: Dict[str, Dict[str, float]]):
     plt.show()
 
 
+def filter_error_type(text: str) -> str:
+    text = text.strip().lower()
+    match = re.match(
+        r".*(syntax check failed|class could not be created|unit tests were successful|unit test failed|unittest syntax check failed|source code could not be set|there should only be the one public method|class name not found)(.*)",
+        text,
+        re.DOTALL,
+    )
+
+    if match and match.group(1) in [
+        "source code could not be set",
+        "unittest syntax check failed",
+        "there should only be the one public method",
+        "class name not found",
+    ]:
+        return "syntax check failed"
+
+    if match:
+        return match.group(1)
+
+    print(text)
+    return "other"
+
+
+def create_csv():
+    import csv
+
+    header = [
+        "Model",
+        "Prompt",
+        "Repetition",
+        "Feedback_Round_0",
+        "Feedback_Round_1",
+        "Feedback_Round_2",
+        "Feedback_Round_3",
+        "Feedback_Round_4",
+        "Feedback_Round_5",
+    ]
+    rows = []
+
+    for model_name in MODELS_TO_RUN:
+        filename = f"{model_name}.json"
+
+        with open(filename, "r", encoding="utf-8") as file:
+            prompt_files = json.load(file)
+            for prompt_file, chats in prompt_files.items():
+                for repetition, chat in enumerate(chats):
+                    user_responses = [msg for msg in chat if msg["role"] == "user"][1:]
+                    user_responses = [filter_error_type(m["content"]) for m in user_responses]
+
+                    rows.append([model_name, prompt_file[:-4], repetition, *user_responses])
+
+    with open("analyse_results/prompt_success_by_round.csv", "w", newline="", encoding="utf-8") as csvfile:
+        csvwriter = csv.writer(csvfile, delimiter=";")
+        csvwriter.writerow(header)
+        csvwriter.writerows(rows)
+
+    print("CSV file 'analyse_results/prompt_success_by_round.csv' created successfully.")
+
+
+def visualize_combined_summary_errors(summary: dict):
+    combined_summary = {}
+    for model, errors in summary.items():
+        combined = {
+            "class_creation": errors.get("class_creation_errors", 0) + errors.get("class_name_errors", 0),
+            "syntax_errors": errors.get("syntax_errors", 0) + errors.get("source_code_errors", 0) + errors.get("public_method_errors", 0),
+            "unit_test_errors": errors.get("unit_test_failures", 0) + errors.get("unittest_syntax_errors", 0),
+        }
+        total_errors = sum(combined.values())
+        if total_errors > 0:
+            combined_summary[model] = {k: v / total_errors for k, v in combined.items()}
+        else:
+            combined_summary[model] = {k: 0 for k in combined.keys()}
+
+    df = pd.DataFrame(combined_summary).T  # rows = models, columns = error types
+    df = df[["class_creation", "syntax_errors", "unit_test_errors"]]  # ensure column order
+
+    model_order = [
+        "llama-3.3-70b-instruct",
+        "qwen2.5-coder-32b-instruct",
+        "codestral-22b",
+        "gpt-oss_20b",
+        "gpt-oss_120b",
+        "qwen3-coder",
+        "gpt-5-2025-08-07",
+        "claude-sonnet-4-20250514"
+    ]
+    df = df.reindex(model_order)
+
+    error_types = df.columns.tolist()
+    models = df.index.tolist()
+    num_models = len(models)
+    num_error_types = len(error_types)
+    bar_width = 0.2
+    x = np.arange(num_models)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    for idx, etype in enumerate(error_types):
+        error_data = df[etype].values
+        bar_positions = x + (idx - (num_error_types - 1) / 2) * bar_width
+        ax.bar(
+            bar_positions,
+            error_data,
+            width=bar_width,
+            label=etype.replace("_", " ").title(),
+            color=COLORS[idx % len(COLORS)]
+        )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(models)
+    ax.set_xlabel("Models")
+    ax.set_ylabel("Percentage of Errors")
+    ax.yaxis.set_major_formatter(PercentFormatter(1))
+    ax.set_title("Relative Distribution of Errors by Model")
+    ax.legend(title="Error Type")
+
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+
 if __name__ == "__main__":
     error_categories = categorize_errors()
     syntax_errors = analyse_syntax_error(error_categories)
@@ -495,18 +627,22 @@ if __name__ == "__main__":
         source_code_errors,
         public_method_errors,
         class_name_errors,
-        unit_test_success,
     )
+
     print(summary)
+    visualize_combined_summary_errors(summary)
 
     total_counts = sum_summary(summary)
-    print("Total counts across all models:")
-    for key, value in total_counts.items():
-        print(f"{key}: {value}")
+    print("----")
+    visualize_syntax_errors(syntax_errors)
 
-    # visualize_syntax_errors(syntax_errors)
-    # successes = analyse_success_by_round()
-    # visualize_success_by_round(successes)
-    # visualize_success_by_llm(successes)
-    # relative_prompt_success = prompt_classification()
-    # visualize_prompt_classification_success(relative_prompt_success)
+    successes = analyse_success_by_round()
+    successes = {key: [f"{int(x)/1600*100}%" for x in value] for key, value in successes.items()}
+    print(successes)
+    visualize_success_by_round(successes)
+    visualize_success_by_llm(successes)
+    create_csv()
+
+    relative_prompt_success = prompt_classification()
+    print(relative_prompt_success)
+    visualize_prompt_classification_success(relative_prompt_success)
