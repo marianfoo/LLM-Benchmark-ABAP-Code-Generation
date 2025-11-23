@@ -1,0 +1,19 @@
+[project]
+name = "llm-benchmark-abap-code-generation"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "abap-adt-py>=0.1.4",
+    "anthropic>=0.72.0",
+    "matplotlib>=3.10.7",
+    "more-itertools>=10.8.0",
+    "numpy>=2.3.4",
+    "openai>=2.7.1",
+    "pandas>=2.3.3",
+    "pyqt5>=5.15.11",
+    "python-dotenv>=1.2.1",
+    "tiktoken>=0.12.0",
+    "tqdm>=4.67.1",
+]
