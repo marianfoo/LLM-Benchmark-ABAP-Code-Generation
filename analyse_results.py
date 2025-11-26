@@ -363,8 +363,8 @@ def sum_summary(summary: dict) -> dict:
     return total_per_model
 
 
-def visualize_success_by_round(success_data: Dict[str, List[int]]):
-    models = list(success_data.keys())
+def visualize_success_by_round(model_data: Dict[str, List[float]]):
+    models = list(model_data.keys())
     num_models = len(models)
     rounds = list(range(6))
     bar_width = 0.13
@@ -373,12 +373,11 @@ def visualize_success_by_round(success_data: Dict[str, List[int]]):
     fig, ax = plt.subplots(figsize=(10, 6))
 
     for idx, model in enumerate(models):
-        model_data = [m / NUM_PROMPTS * REPETITIONS for m in success_data[model]]
 
         bar_positions = x + (idx - (num_models - 1) / 2) * bar_width
         ax.bar(
             bar_positions,
-            model_data,
+            height=model_data[model],
             width=bar_width,
             label=model,
             color=COLORS[idx],
@@ -387,7 +386,7 @@ def visualize_success_by_round(success_data: Dict[str, List[int]]):
     ax.set_xticks(x)
     ax.set_xticklabels([str(r) for r in rounds])
     ax.set_xlabel("Rounds of Feedback")
-    ax.yaxis.set_major_formatter(PercentFormatter())
+    ax.yaxis.set_major_formatter(PercentFormatter(100))
     ax.set_ylabel("Cumulative Successful Prompts")
     ax.set_title("Cumulative Successful Code Generations by Feedback Round")
     ax.legend(title="Model")
@@ -396,8 +395,8 @@ def visualize_success_by_round(success_data: Dict[str, List[int]]):
     plt.show()
 
 
-def visualize_success_by_llm(success_data: Dict[str, List[int]]):
-    models = list(success_data.keys())
+def visualize_success_by_llm(model_data: Dict[str, List[float]]):
+    models = list(model_data.keys())
     rounds = list(range(6))
     bar_width = 0.13
     x = np.arange(len(models))
@@ -414,7 +413,7 @@ def visualize_success_by_llm(success_data: Dict[str, List[int]]):
     ]
 
     for i in rounds:
-        round_values = [(success_data[model][i] / NUM_PROMPTS * REPETITIONS) for model in models]
+        round_values = [(model_data[model][i]) for model in models]
         bar_positions = x + (i - 2.5) * bar_width
         ax.bar(
             bar_positions,
@@ -427,7 +426,7 @@ def visualize_success_by_llm(success_data: Dict[str, List[int]]):
     ax.set_xticks(x)
     ax.set_xticklabels(models, rotation=15, ha="right")
     ax.set_ylabel("Cumulative Successful Runs")
-    ax.yaxis.set_major_formatter(PercentFormatter())
+    ax.yaxis.set_major_formatter(PercentFormatter(100))
     ax.set_title("Cumulative Successful Code Generations by Feedback Round in Percent")
     ax.legend(title="Feedback Rounds")
     plt.tight_layout()
@@ -637,7 +636,7 @@ if __name__ == "__main__":
     visualize_syntax_errors(syntax_errors)
 
     successes = analyse_success_by_round()
-    successes = {key: [f"{int(x)/1600*100}%" for x in value] for key, value in successes.items()}
+    successes = {key: [int(x)/1600*100 for x in value] for key, value in successes.items()}
     print(successes)
     visualize_success_by_round(successes)
     visualize_success_by_llm(successes)
