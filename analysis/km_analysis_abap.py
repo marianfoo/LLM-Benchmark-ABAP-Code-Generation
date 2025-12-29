@@ -81,7 +81,10 @@ def run_analysis():
             if found_success_string:
                 success_event = True
                 
-            durations.append(duration_index)
+            final_duration = duration_index
+            if not success_event:
+                 final_duration = 5         
+            durations.append(final_duration)
             events.append(1 if success_event else 0)
 
         km_df = pd.DataFrame({

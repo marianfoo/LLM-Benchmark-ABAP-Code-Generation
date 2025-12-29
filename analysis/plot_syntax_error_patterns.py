@@ -99,4 +99,7 @@ def visualize_syntax_errors(json_path='../data/syntax_errors.json'):
     print("\nModel Order used:", model_order)
 
 if __name__ == "__main__":
-    visualize_syntax_errors()
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(current_dir, '../syntax_errors.json')
+    visualize_syntax_errors(json_path)
