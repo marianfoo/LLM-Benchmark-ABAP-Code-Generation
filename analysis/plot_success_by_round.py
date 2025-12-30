@@ -15,6 +15,7 @@ def get_model_data_from_csv(file_path):
         return None, None
 
     models = df['Model'].unique()
+    models = [m for m in models if 'codestral' not in m.lower()]
 
     
     model_data = {}

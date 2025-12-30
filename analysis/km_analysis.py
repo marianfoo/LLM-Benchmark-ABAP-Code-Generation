@@ -34,6 +34,7 @@ def run_analysis():
     plt.figure(figsize=(12, 8))
     
     models = df['Model'].unique()
+    models = [m for m in models if 'codestral' not in m.lower()]
 
     print(f"Found {len(models)} models: {models}\n")
 

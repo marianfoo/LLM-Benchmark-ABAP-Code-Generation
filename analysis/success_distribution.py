@@ -99,12 +99,12 @@ def plot_comparative_histogram(model_data):
     ax.legend()
     
     plt.tight_layout()
-    output_file = 'plots/success_distribution.png'
+    output_file = '../plots/success_distribution.png'
     plt.savefig(output_file)
     print(f"Saved plot to {output_file}")
 
 if __name__ == "__main__":
-    file_path = 'data/results.csv'
+    file_path = '../data/results.csv'
     data = get_success_rates_by_model(file_path)
     if data:
         plot_comparative_histogram(data)
