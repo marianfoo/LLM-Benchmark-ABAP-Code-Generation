@@ -49,34 +49,12 @@ function getActiveColumn(columns) {
   return columns.find((column) => column.key === state.sortKey) ?? columns[0];
 }
 
-function renderSummary(data) {
-  const summary = data.summary;
-  const container = document.getElementById("summaryCards");
-  container.innerHTML = "";
-
-  const generatedLocal = new Date(data.generated_at_utc).toLocaleString();
-  const totalModels = summary.total_models_count ?? summary.models_count;
-  const cards = [
-    { label: "Displayed Models", value: summary.models_count },
-    { label: "Total Models (Raw)", value: totalModels },
-    { label: "Fully Evaluated", value: summary.fully_evaluated_models_count },
-    { label: "Top Final Success", value: summary.top_by_final_success.join(", ") },
-    { label: "Top First-Try", value: summary.top_by_first_try_success.join(", ") },
-    { label: "Generated", value: generatedLocal },
-  ];
-
-  for (const card of cards) {
-    const element = document.createElement("div");
-    element.className = "summary-pill";
-    element.innerHTML = `<div class="label">${card.label}</div><div class="value">${card.value}</div>`;
-    container.appendChild(element);
-  }
-}
-
 function renderTable(tableId, columns, rows, sortable = false) {
   const table = document.getElementById(tableId);
+  if (!table) return;
   const thead = table.querySelector("thead");
   const tbody = table.querySelector("tbody");
+  if (!thead || !tbody) return;
 
   thead.innerHTML = "";
   tbody.innerHTML = "";
@@ -148,9 +126,11 @@ function renderSecondaryTables() {
 
 function renderPlots() {
   const grid = document.getElementById("plotsGrid");
+  if (!grid) return;
   grid.innerHTML = "";
 
   const template = document.getElementById("plotCardTemplate");
+  if (!template) return;
   for (const plot of state.raw.plots) {
     const clone = template.content.cloneNode(true);
     const link = clone.querySelector(".plot-image-link");
@@ -172,6 +152,7 @@ function renderPlots() {
 function bindControls() {
   const modelFilter = document.getElementById("modelFilter");
   const resetFilters = document.getElementById("resetFilters");
+  if (!modelFilter || !resetFilters) return;
 
   modelFilter.addEventListener("input", (event) => {
     state.filterText = event.target.value || "";
@@ -206,7 +187,6 @@ async function bootstrap() {
       throw new Error(`HTTP ${response.status}`);
     }
     state.raw = await response.json();
-    renderSummary(state.raw);
     renderMainTable();
     renderSecondaryTables();
     renderPlots();
