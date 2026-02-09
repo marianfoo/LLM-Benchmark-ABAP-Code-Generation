@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ABAP LLM Benchmark Leaderboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg"></div>
+    <main class="layout">
+      <header class="hero card">
+        <p class="eyebrow">ABAP Code Generation Benchmark</p>
+        <p class="abap-highlight">SAP ABAP LLM MODEL TESTING</p>
+        <h1>ABAP LLM Model Leaderboard</h1>
+        <p class="intro">
+          This dashboard benchmarks LLMs specifically on SAP ABAP code generation
+          across 180 tasks and 10 repetitions per task, with up to 5 feedback
+          iterations.
+          Baseline methodology comes from the original paper:
+          <a href="https://arxiv.org/abs/2601.15188" target="_blank" rel="noopener noreferrer">
+            Benchmarking Large Language Models for ABAP Code Generation (2601.15188)
+          </a>.
+        </p>
+        <div id="summaryCards" class="summary-grid" aria-live="polite"></div>
+      </header>
+
+      <section class="card">
+        <div class="section-title-row">
+          <h2>Main Comparison Table</h2>
+          <p class="section-subtitle">
+            Only fully evaluated models are shown (Max rounds tested = 6). Sort by any column and filter by model name.
+          </p>
+        </div>
+        <div class="controls">
+          <label class="control">
+            <span>Filter Model</span>
+            <input id="modelFilter" type="search" placeholder="e.g. gpt, claude, qwen" />
+          </label>
+          <button id="resetFilters" class="btn" type="button">Reset</button>
+        </div>
+        <div class="table-wrap">
+          <table id="mainTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Methodology Notes</h2>
+        <div class="notes-grid">
+          <article>
+            <h3>What Is Reused From The Paper</h3>
+            <ul>
+              <li>Success progression by feedback round (R0 to R5).</li>
+              <li>Success rates by benchmark task category.</li>
+              <li>Error-stage perspective based on SAP validation order.</li>
+            </ul>
+          </article>
+          <article>
+            <h3>What Is Extended Here</h3>
+            <ul>
+              <li>Sortable developer-facing leaderboard table.</li>
+              <li>pass@5, AUC over rounds, and prompt consistency metrics.</li>
+              <li>Completeness signal (`Max rounds tested`) for fair comparison.</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Generated Artifacts</h3>
+            <ul>
+              <li><a href="data/model_leaderboard.csv">`data/model_leaderboard.csv`</a></li>
+              <li><a href="data/results.csv">`data/results.csv`</a></li>
+              <li><a href="data/syntax_errors.json">`data/syntax_errors.json`</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Cumulative Success By Feedback Round</h2>
+        <div class="table-wrap">
+          <table id="roundTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Success By Task Category</h2>
+        <div class="table-wrap">
+          <table id="categoryTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Plots</h2>
+        <div id="plotsGrid" class="plots-grid"></div>
+      </section>
+    </main>
+
+    <template id="plotCardTemplate">
+      <article class="plot-card">
+        <a class="plot-image-link" target="_blank" rel="noopener noreferrer">
+          <img alt="" loading="lazy" />
+        </a>
+        <h3></h3>
+        <p></p>
+      </article>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

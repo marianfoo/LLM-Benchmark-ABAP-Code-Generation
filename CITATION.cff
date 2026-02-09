@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated to help users cite this repository.
+# See https://citation-file-format.github.io/ for the format specification.
+
+cff-version: 1.2.0
+title: "LLM Benchmark for ABAP Code Generation"
+message: >-
+  If you use this benchmark or dataset, please cite the accompanying paper
+  and this repository.
+type: software
+license: MIT
+repository-code: "https://github.com/marianfoo/LLM-Benchmark-ABAP-Code-Generation"
+url: "https://arxiv.org/abs/2601.15188"
+authors:
+  - family-names: Köhne
+    given-names: Tim
+  - family-names: Zeis
+    given-names: Marian
+preferred-citation:
+  type: article
+  title: "Benchmarking Large Language Models for ABAP Code Generation"
+  authors:
+    - family-names: Köhne
+      given-names: Tim
+    - family-names: Zeis
+      given-names: Marian
+  year: 2025
+  url: "https://arxiv.org/abs/2601.15188"
+  identifiers:
+    - type: other
+      value: "arXiv:2601.15188"
+      description: "arXiv preprint identifier"

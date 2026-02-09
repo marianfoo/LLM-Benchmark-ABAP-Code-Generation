@@ -1,7 +1,7 @@
 [project]
 name = "llm-benchmark-abap-code-generation"
 version = "0.1.0"
-description = "Add your description here"
+description = "Benchmark for evaluating LLM ABAP code generation with compiler/unit-test feedback loops"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -15,6 +15,7 @@ dependencies = [
     "pandas>=2.3.3",
     "pyqt5>=5.15.11",
     "python-dotenv>=1.2.1",
+    "sap-ai-sdk-gen[all]>=5.11.1",
     "scipy>=1.16.3",
     "statsmodels>=0.14.5",
     "tiktoken>=0.12.0",

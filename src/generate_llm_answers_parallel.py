@@ -1,42 +1,67 @@
 import asyncio
 import json
 import os
-from typing import Dict, Iterable, List
-from more_itertools import divide
+from typing import Any, Dict, Iterable, List
 from openai.types.chat import ChatCompletionMessageParam
-import openai
 import tqdm
 
 from llms import RunnableModel
 from generate_llm_answers import (
     remove_code_blocks,
-    amount_of_llm_responses,
     REPETITIONS,
     SYSTEM_PROMPT,
     PROMPT_FILES,
 )
+from chat_state import (
+    chat_is_success,
+    chat_needs_test,
+    chat_waiting_for_llm,
+    assistant_count as chat_assistant_count,
+    any_needs_test,
+    MAX_ASSISTANTS,
+)
 
-NUM_PARALLEL_LLM_REQUESTS = 3
+# Maximum number of concurrent API requests.  Requests are throttled via an
+# asyncio.Semaphore so that up to this many are in-flight at any time.
+# Increase to saturate the API; decrease if you hit rate-limit errors.
+MAX_CONCURRENT_REQUESTS = 9
+
+# Save progress every N completed API requests
+SAVE_INTERVAL = 20
 
 
 async def ask_provider(
-    client: openai.AsyncOpenAI,
+    client: Any,
     model_info: RunnableModel,
     chat_history: Iterable[ChatCompletionMessageParam],
 ):
 
     max_retries = 5
-    retry_delay = 60
+    messages = list(chat_history)
 
     for attempt in range(max_retries):
         try:
-            response = await client.chat.completions.create(
-                model=model_info["name"],
-                messages=chat_history,
-                temperature=model_info["temperature"],
-                max_tokens=model_info["max_tokens"],
-            )
-            text_response = response.choices[0].message.content
+            if model_info["provider"] == "SAP_AICORE":
+                text_response = await client.complete(messages)
+                text_response = remove_code_blocks(text_response)
+                return text_response
+
+            # GPT-5 family requires max_completion_tokens and does not accept
+            # a custom temperature (always 1).
+            if "gpt-5" in model_info["name"]:
+                response = await client.chat.completions.create(
+                    model=model_info["name"],
+                    messages=messages,
+                    max_completion_tokens=model_info["max_tokens"],
+                )
+            else:
+                response = await client.chat.completions.create(
+                    model=model_info["name"],
+                    messages=messages,
+                    temperature=model_info["temperature"],
+                    max_tokens=model_info["max_tokens"],
+                )
+            text_response = response.choices[0].message.content or ""
             text_response = remove_code_blocks(text_response)
             return text_response
 
@@ -44,12 +69,10 @@ async def ask_provider(
             if attempt == max_retries - 1:
                 raise e
             else:
-                tqdm.tqdm.write("retrying...")
+                # Exponential backoff: 5s, 10s, 20s, 40s, 80s (capped at 120s)
+                retry_delay = min(5 * (2 ** attempt), 120)
+                tqdm.tqdm.write(f"retrying in {retry_delay}s... ({e!r})")
                 await asyncio.sleep(retry_delay)
-
-
-def amount_of_llm_responses(conversation: dict):
-    return sum(1 for message in conversation if message["role"] == "assistant")
 
 
 def read_file_or_create(save_file_path: str):
@@ -61,236 +84,227 @@ def read_file_or_create(save_file_path: str):
     return conversations
 
 
-async def _first_response_requests(
-    llm_client: openai.AsyncOpenAI,
+# =============================================================================
+# First-response generation (semaphore-based concurrency)
+# =============================================================================
+
+async def _first_response_single(
+    llm_client: Any,
     model_info: RunnableModel,
-    prompt_list: list[str],
+    prompt_file: str,
+    rep_index: int,
     conversations: Dict[str, List],
-    main_pbar: tqdm.tqdm,
-    thread_id: int,
+    sem: asyncio.Semaphore,
+    pbar: tqdm.tqdm,
+    counter: dict,
     save_file_path: str,
     save_lock: asyncio.Lock,
 ):
-    total_requests = len(prompt_list) * REPETITIONS
+    """Process a single (prompt_file, repetition) pair, throttled by *sem*."""
+    async with sem:
+        if prompt_file not in conversations:
+            conversations[prompt_file] = []
 
-    with tqdm.tqdm(
-        total=total_requests,
-        desc=f"Thread {thread_id}",
-        position=thread_id,
-        leave=False,
-    ) as thread_pbar:
-        processed_count = 0
-        for prompt_file in prompt_list:
-            with open(f"dataset/prompts/{prompt_file}", "r", encoding="utf-8") as file:
-                prompt_content = file.read()
-            for i in range(REPETITIONS):
-                if prompt_file not in conversations:
-                    conversations[prompt_file] = []
-                if len(conversations[prompt_file]) > i:
-                    # print(f"skipping {prompt_file} repetiontion {i} because it was already done")
-                    main_pbar.update(1)
-                    thread_pbar.update(1)
-                    main_pbar.refresh()
-                    thread_pbar.refresh()
-                elif len(conversations[prompt_file]) <= i:
-                    conversation: List[ChatCompletionMessageParam] = [
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": prompt_content},
-                    ]
-                    response = await ask_provider(llm_client, model_info, conversation)
-                    conversation.append({"role": "assistant", "content": response})
-                    conversations[prompt_file].append(conversation)
-                    main_pbar.update(1)
-                    thread_pbar.update(1)
-                    main_pbar.refresh()
-                    thread_pbar.refresh()
-                    processed_count += 1
+        # Skip if already done
+        if len(conversations[prompt_file]) > rep_index:
+            pbar.update(1)
+            pbar.refresh()
+            return
 
-                    # Save progress
-                    if processed_count % 10 == 0:
-                        await save_progress_first(
-                            conversations, save_file_path, save_lock, thread_id
-                        )
+        with open(f"dataset/prompts/{prompt_file}", "r", encoding="utf-8") as file:
+            prompt_content = file.read()
 
-    # Final save for this thread
-    await save_progress_first(conversations, save_file_path, save_lock, thread_id)
-    return conversations
+        conversation: List[ChatCompletionMessageParam] = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt_content},
+        ]
+        response = await ask_provider(llm_client, model_info, conversation)
+        conversation.append({"role": "assistant", "content": response})
+
+        # Append in order – we hold the event loop so this is safe for
+        # the same prompt_file as long as we don't yield between check & append.
+        while len(conversations[prompt_file]) < rep_index:
+            # Another task for an earlier rep hasn't finished yet; yield briefly.
+            await asyncio.sleep(0.05)
+        conversations[prompt_file].append(conversation)
+
+        pbar.update(1)
+        pbar.refresh()
+
+        counter["done"] += 1
+        if counter["done"] % SAVE_INTERVAL == 0:
+            await _save_conversations(conversations, save_file_path, save_lock)
 
 
 async def generate_first_response(
-    llm_client: openai.AsyncOpenAI, model_info: RunnableModel
+    llm_client: Any, model_info: RunnableModel
 ):
-    save_file_path = f"data/{model_info["name"].replace(':', '_')}.json"
+    save_file_path = f"data/{model_info['name'].replace(':', '_')}.json"
     conversations: Dict[str, List] = read_file_or_create(save_file_path)
 
     total_requests = len(PROMPT_FILES) * REPETITIONS
 
-    split_prompts = [
-        list(part) for part in divide(NUM_PARALLEL_LLM_REQUESTS, PROMPT_FILES)
-    ]
-
+    sem = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     save_lock = asyncio.Lock()
-    with tqdm.tqdm(
-        total=total_requests, desc="Total Progress", position=0
-    ) as main_pbar:
-        tasks = [
-            asyncio.create_task(
-                _first_response_requests(
-                    llm_client,
-                    model_info,
-                    sublist,
-                    conversations,
-                    main_pbar,
-                    i + 1,
-                    save_file_path,
-                    save_lock,
-                )
-            )
-            for i, sublist in enumerate(split_prompts)
-        ]
-        results: List[Dict[str, List]] = await asyncio.gather(*tasks)
+    counter: dict = {"done": 0}
 
-    merged = {}
-    for res in results:
-        merged.update(res)
-    with open(save_file_path, "w", encoding="utf-8") as f:
-        json.dump(merged, f, ensure_ascii=False, indent=4)
-
-
-async def save_progress_first(
-    conversations: Dict[str, List],
-    save_file_path: str,
-    save_lock: asyncio.Lock,
-    thread_id: int,
-):
-    async with save_lock:
-        try:
-            current_data = read_file_or_create(save_file_path)
-            current_data.update(conversations)
-
-            with open(save_file_path, "w", encoding="utf-8") as f:
-                json.dump(current_data, f, ensure_ascii=False, indent=4)
-
-            tqdm.tqdm.write(f"Thread {thread_id}: Progress saved")
-        except Exception as e:
-            tqdm.tqdm.write(f"Thread {thread_id}: Error saving progress: {e}")
-
-
-async def next_response_request(
-    llm_client: openai.AsyncOpenAI,
-    model_info: RunnableModel,
-    conversations: Dict[str, List],
-    response_number: int,
-    main_pbar: tqdm.tqdm,
-    thread_id: int,
-    save_file_path: str,
-    save_lock: asyncio.Lock,
-):
-    total_in_subset = 0
-    for prompt_file in conversations:
-        repetitions = conversations[prompt_file]
-        for conversation in repetitions:
-            total_in_subset += 1
-
-    with tqdm.tqdm(
-        total=total_in_subset,
-        desc=f"Thread {thread_id}",
-        position=thread_id,
-        leave=False,
-    ) as thread_pbar:
-        processed_count = 0
-        for prompt_file in conversations:
-            repetitions = conversations[prompt_file]
-            for conversation in repetitions:
-                if (
-                    amount_of_llm_responses(conversation) >= response_number
-                    or conversation[-1]["content"] == "The unit tests were successful."
-                ):
-                    main_pbar.update(1)
-                    thread_pbar.update(1)
-                    main_pbar.refresh()
-                    thread_pbar.refresh()
-                    continue
-                response = await ask_provider(llm_client, model_info, conversation)
-                conversation.append({"role": "assistant", "content": response})
-                main_pbar.update(1)
-                thread_pbar.update(1)
-                main_pbar.refresh()
-                thread_pbar.refresh()
-                processed_count += 1
-
-                # Save progress every 10 processed conversations
-                if processed_count % 10 == 0:
-                    await save_progress(
-                        conversations, save_file_path, save_lock, thread_id
+    with tqdm.tqdm(total=total_requests, desc="Total Progress") as pbar:
+        tasks = []
+        for prompt_file in PROMPT_FILES:
+            for i in range(REPETITIONS):
+                tasks.append(
+                    asyncio.create_task(
+                        _first_response_single(
+                            llm_client,
+                            model_info,
+                            prompt_file,
+                            i,
+                            conversations,
+                            sem,
+                            pbar,
+                            counter,
+                            save_file_path,
+                            save_lock,
+                        )
                     )
+                )
+        await asyncio.gather(*tasks)
 
-    # Final save for this thread
-    await save_progress(conversations, save_file_path, save_lock, thread_id)
-    return conversations
+    # Final save
+    await _save_conversations(conversations, save_file_path, save_lock)
+
+    with open(save_file_path, "w", encoding="utf-8") as f:
+        json.dump(conversations, f, ensure_ascii=False, indent=4)
 
 
-async def save_progress(
+# =============================================================================
+# Next-round generation (semaphore-based concurrency)
+# =============================================================================
+
+async def _next_response_single(
+    llm_client: Any,
+    model_info: RunnableModel,
+    prompt_file: str,
+    rep_index: int,
+    conversation: List,
+    response_number: int,
+    sem: asyncio.Semaphore,
+    pbar: tqdm.tqdm,
+    counter: dict,
     conversations: Dict[str, List],
     save_file_path: str,
     save_lock: asyncio.Lock,
-    thread_id: int,
 ):
-    async with save_lock:
-        try:
-            with open(save_file_path, "r", encoding="utf-8") as file:
-                current_data = json.load(file)
-            current_data.update(conversations)
-            with open(save_file_path, "w", encoding="utf-8") as f:
-                json.dump(current_data, f, ensure_ascii=False, indent=4)
+    """Process a single conversation for the next correction round."""
+    async with sem:
+        # Skip if already has enough responses, is successful,
+        # or is not in WaitingForLLM state (e.g. NeedsSAPTest, InfraRetriable).
+        # Note: response_number is the round being generated (1-indexed from
+        # llm_generate.py), which equals the current assistant_count for chats
+        # that are waiting.  Use `>` so we don't skip conversations that are
+        # exactly at that count and need the next response.
+        skip = False
+        if chat_assistant_count(conversation) > response_number:
+            skip = True
+        elif chat_is_success(conversation):
+            skip = True
+        elif not chat_waiting_for_llm(conversation):
+            # Not waiting for LLM – e.g. NeedsSAPTest or InfraRetriable
+            skip = True
+        elif chat_assistant_count(conversation) >= MAX_ASSISTANTS:
+            # Already at Round 5 (6 assistant messages) – no more rounds
+            skip = True
 
-            tqdm.tqdm.write(f"Thread {thread_id}: Progress saved")
-        except Exception as e:
-            tqdm.tqdm.write(f"Thread {thread_id}: Error saving progress: {e}")
+        if skip:
+            pbar.update(1)
+            pbar.refresh()
+            return
+
+        response = await ask_provider(llm_client, model_info, conversation)
+        conversation.append({"role": "assistant", "content": response})
+
+        pbar.update(1)
+        pbar.refresh()
+
+        counter["done"] += 1
+        if counter["done"] % SAVE_INTERVAL == 0:
+            await _save_conversations(conversations, save_file_path, save_lock)
 
 
 async def generate_next_response(
-    llm_client: openai.AsyncOpenAI,
+    llm_client: Any,
     model_info: RunnableModel,
     response_number: int,
 ):
-    save_file_path = f"data/{model_info["name"].replace(':', '_')}.json"
+    save_file_path = f"data/{model_info['name'].replace(':', '_')}.json"
     with open(save_file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
 
-    total_conversations = 0
-    for prompt_file in data:
-        repetitions = data[prompt_file]
-        for conversation in repetitions:
-            total_conversations += 1
+    # ── GUARD: refuse to generate next round if any chats still need SAP testing ──
+    if any_needs_test(data):
+        needs = sum(
+            1 for chats in data.values()
+            for c in chats if chat_needs_test(c)
+        )
+        print(
+            f"[BLOCKED] {needs} conversation(s) still need SAP testing "
+            f"(last message is assistant without feedback).\n"
+            f"  Run SAP tests first:  python src/abap_test.py --model {model_info['name']} --mode resume\n"
+            f"  Then retry:           python src/abap_test.py --model {model_info['name']} --mode retry --max-attempts 3"
+        )
+        return
 
-    prompt_files = list(data.keys())
-    split_prompts = [
-        list(part) for part in divide(NUM_PARALLEL_LLM_REQUESTS, prompt_files)
-    ]
-    subsets = [{key: data[key] for key in sublist} for sublist in split_prompts]
+    total_conversations = sum(
+        len(reps) for reps in data.values()
+    )
 
+    sem = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     save_lock = asyncio.Lock()
-    with tqdm.tqdm(
-        total=total_conversations, desc="Total Progress", position=0
-    ) as main_pbar:
-        tasks = [
-            next_response_request(
-                llm_client,
-                model_info,
-                subset,
-                response_number,
-                main_pbar,
-                i + 1,
-                save_file_path,
-                save_lock,
-            )
-            for i, subset in enumerate(subsets)
-        ]
-        results: List[Dict[str, List]] = await asyncio.gather(*tasks)
+    counter: dict = {"done": 0}
 
-    merged = {}
-    for res in results:
-        merged.update(res)
+    with tqdm.tqdm(total=total_conversations, desc="Total Progress") as pbar:
+        tasks = []
+        for prompt_file, repetitions in data.items():
+            for rep_idx, conversation in enumerate(repetitions):
+                tasks.append(
+                    asyncio.create_task(
+                        _next_response_single(
+                            llm_client,
+                            model_info,
+                            prompt_file,
+                            rep_idx,
+                            conversation,
+                            response_number,
+                            sem,
+                            pbar,
+                            counter,
+                            data,
+                            save_file_path,
+                            save_lock,
+                        )
+                    )
+                )
+        await asyncio.gather(*tasks)
+
+    # Final save
     with open(save_file_path, "w", encoding="utf-8") as f:
-        json.dump(merged, f, ensure_ascii=False, indent=4)
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+# =============================================================================
+# Shared helpers
+# =============================================================================
+
+async def _save_conversations(
+    conversations: Dict[str, List],
+    save_file_path: str,
+    save_lock: asyncio.Lock,
+):
+    """Atomically save all conversations to disk."""
+    async with save_lock:
+        try:
+            with open(save_file_path, "w", encoding="utf-8") as f:
+                json.dump(conversations, f, ensure_ascii=False, indent=4)
+            tqdm.tqdm.write("Progress saved")
+        except Exception as e:
+            tqdm.tqdm.write(f"Error saving progress: {e}")

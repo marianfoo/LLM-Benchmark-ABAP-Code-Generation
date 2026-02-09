@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "batch_6973e0807e0081908f07412d25832815",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-01-23T21:56:32.613170",
+      "completed_at": "2026-01-23T22:06:42.776152"
+    },
+    {
+      "batch_id": "batch_6989821ca97c8190827871730b89364e",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-02-09T07:43:40.870524",
+      "completed_at": "2026-02-09T09:56:07.097971"
+    },
+    {
+      "batch_id": "batch_6989a65ef6f88190bbdfcb5c4bd1739d",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 2,
+      "status": "completed",
+      "created_at": "2026-02-09T10:18:23.329229",
+      "completed_at": "2026-02-09T10:23:58.726963"
+    },
+    {
+      "batch_id": "batch_6989ad3463f0819083727a9d667f17cc",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 3,
+      "status": "completed",
+      "created_at": "2026-02-09T10:47:32.582034",
+      "completed_at": "2026-02-09T10:54:39.774629"
+    },
+    {
+      "batch_id": "batch_6989b5fe9a388190aa190335341db5fa",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 4,
+      "status": "completed",
+      "created_at": "2026-02-09T11:25:02.727248",
+      "completed_at": "2026-02-09T11:30:07.481600"
+    },
+    {
+      "batch_id": "batch_6989ba66e51081909bb3587971ed72f4",
+      "model_name": "gpt-5.2",
+      "save_file": "data/gpt-5.2.json",
+      "save_file_batch": "data/gpt-5.2_batch.jsonl",
+      "save_file_batch_response": "data/gpt-5.2_batch_response.jsonl",
+      "round_num": 5,
+      "status": "completed",
+      "created_at": "2026-02-09T11:43:50.999242",
+      "completed_at": "2026-02-09T12:02:34.695695"
+    }
+  ]
+}

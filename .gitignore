@@ -207,3 +207,14 @@ marimo/_lsp/
 __marimo__/
 
 *_copy.json
+
+local_test/
+tools/node_modules/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Large binary artifacts (link to arXiv instead)
+*.pdf

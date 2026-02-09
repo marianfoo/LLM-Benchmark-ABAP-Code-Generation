@@ -5,7 +5,12 @@ import sys
 import re
 import ast
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(REPO_ROOT, "src")
+
+if SRC_DIR not in sys.path:
+    sys.path.append(SRC_DIR)
+
 from abap_errors import ERRORS_BY_CATEGORY
 
 def generate_syntax_errors():
@@ -28,16 +33,22 @@ def generate_syntax_errors():
     for file_path in json_files:
         filename = os.path.basename(file_path)
         
-        if filename in ["package.json", "tsconfig.json", "results.json", "syntax_errors.json"]: 
+        if filename in [
+            "package.json",
+            "tsconfig.json",
+            "results.json",
+            "syntax_errors.json",
+            "openai_batch_tracking.json",
+            "anthropic_batch_tracking.json",
+        ]:
+            continue
+        if filename.endswith("_tiers.json"):
+            continue
+        if filename.endswith("_retry_state.json"):
+            continue
+        if filename.endswith("_queue.json"):
             continue
             
-        model_name = filename.replace(".json", "")
-        print(f"Processing {model_name}...")
-        
-        results[model_name] = {category: {error.regex: [] for error in errors} 
-                               for category, errors in ERRORS_BY_CATEGORY.items()}
-        results[model_name]["Uncategorized"] = {"Other": []}
-
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = json.load(f)
@@ -48,11 +59,28 @@ def generate_syntax_errors():
         if not content or not isinstance(content, dict):
             continue
 
+        first_key = next(iter(content))
+        if not str(first_key).endswith(".txt"):
+            continue
+        
+        model_name = filename.replace(".json", "")
+        print(f"Processing {model_name}...")
+        
+        results[model_name] = {category: {error.regex: [] for error in errors} 
+                               for category, errors in ERRORS_BY_CATEGORY.items()}
+        results[model_name]["Uncategorized"] = {"Other": []}
+
         for prompt_file, repetitions in content.items():
+            if not isinstance(repetitions, list):
+                continue
             for conversation in repetitions:
+                if not isinstance(conversation, list):
+                    continue
                 for message in conversation:
-                    if message["role"] == "user":
-                        content_txt = message["content"]
+                    if not isinstance(message, dict):
+                        continue
+                    if message.get("role") == "user":
+                        content_txt = message.get("content", "")
                         if "The syntax check failed with the following errors:" in content_txt:
                             try:
                                 error_list_str = content_txt.split("The syntax check failed with the following errors:\n")[-1]

@@ -14,7 +14,20 @@ def consolidate_results():
     for file_path in json_files:
         filename = os.path.basename(file_path)
         
-        if filename in ["package.json", "tsconfig.json", "results.json"]: 
+        if filename in [
+            "package.json",
+            "tsconfig.json",
+            "results.json",
+            "openai_batch_tracking.json",
+            "anthropic_batch_tracking.json",
+            "syntax_errors.json",
+        ]:
+            continue
+        if filename.endswith("_tiers.json"):
+            continue
+        if filename.endswith("_retry_state.json"):
+            continue
+        if filename.endswith("_queue.json"):
             continue
             
         model_name = filename.replace(".json", "")
@@ -30,15 +43,21 @@ def consolidate_results():
             continue
         
         first_key = next(iter(content))
-        if not first_key.endswith(".txt"):
+        if not str(first_key).endswith(".txt"):
             continue
 
         print(f"Processing {model_name}...")
 
         for prompt_file, repetitions in content.items():
+            if not str(prompt_file).endswith(".txt"):
+                continue
+            if not isinstance(repetitions, list):
+                continue
             prompt_id = prompt_file.replace(".txt", "")
             
             for rep_idx, conversation in enumerate(repetitions):
+                if not isinstance(conversation, list):
+                    continue
                 row = {
                     "Model": model_name,
                     "Prompt": prompt_id,
@@ -55,8 +74,10 @@ def consolidate_results():
                 feedback_round = 0
                 
                 for message in conversation:
-                    if message["role"] == "user":
-                        content_txt = message["content"]
+                    if not isinstance(message, dict):
+                        continue
+                    if message.get("role") == "user":
+                        content_txt = str(message.get("content", ""))
                         
                         is_feedback = False
                         feedback_status = None
@@ -74,6 +95,10 @@ def consolidate_results():
                         elif "The class could not be created" in content_txt:
                              feedback_status = "class could not be created"
                              is_feedback = True
+                        elif content_txt.startswith("[INFRA]"):
+                            # Transient/infrastructure ADT error (retriable)
+                            feedback_status = "infra error"
+                            is_feedback = True
                     
                         if is_feedback:
                             if feedback_round <= 5:

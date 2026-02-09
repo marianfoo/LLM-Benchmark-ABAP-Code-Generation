@@ -1,0 +1,12 @@
+{
+  "name": "abap-benchmark-tools",
+  "version": "1.0.0",
+  "description": "Local tools for ABAP LLM benchmark (abaplint)",
+  "private": true,
+  "dependencies": {
+    "@abaplint/cli": "^2.111.0"
+  },
+  "scripts": {
+    "lint": "abaplint"
+  }
+}

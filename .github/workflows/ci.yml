@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Compile check (src + analysis)
+        run: |
+          python -m compileall -q src/
+          python -m compileall -q analysis/
+
+      - name: Verify CLI entry points
+        run: |
+          python src/llm_generate.py --help
+          python src/abap_test.py --help
+          python src/parallel_runner.py --help
+          python src/main.py --help
+
+      - name: Import smoke test
+        run: |
+          python -c "
+          import llms
+          import chat_state
+          import abap_errors
+          print('Core module imports OK')
+          "
+        env:
+          PYTHONPATH: src

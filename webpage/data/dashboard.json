@@ -1,0 +1,524 @@
+{
+  "generated_at_utc": "2026-02-09T21:49:31Z",
+  "paper_url": "https://arxiv.org/abs/2601.15188",
+  "main_table": {
+    "columns": [
+      {
+        "key": "Model_Display",
+        "label": "Model",
+        "type": "text",
+        "default_sort": "none"
+      },
+      {
+        "key": "Success_R5_pct",
+        "label": "Success R5",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "Success_R0_pct",
+        "label": "Success R0",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "AUC_Success_pct",
+        "label": "AUC (R0-R5)",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "Median_Success_Round",
+        "label": "Median Feedbacks To Success",
+        "type": "number",
+        "decimals": 1,
+        "default_sort": "asc"
+      },
+      {
+        "key": "R0_Reaches_UnitTests_pct",
+        "label": "R0 Reaches Unit Tests",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "PassAt5_Final_pct",
+        "label": "pass@5 (Final)",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "Prompts_Solved_Any_pct",
+        "label": "Prompts Solved >=1/10",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "Prompts_Solved_All_pct",
+        "label": "Prompts Solved 10/10",
+        "type": "percent",
+        "default_sort": "desc"
+      },
+      {
+        "key": "Max_LLM_Calls_Per_Run",
+        "label": "Max Rounds Tested",
+        "type": "number",
+        "default_sort": "desc"
+      }
+    ],
+    "rows": [
+      {
+        "Model_Display": "Claude Opus 4.5 (2025-11-01)",
+        "Success_R5_pct": 78.72222222222223,
+        "Success_R0_pct": 31.61111111111111,
+        "AUC_Success_pct": 65.02777777777779,
+        "Median_Success_Round": 1.0,
+        "R0_Reaches_UnitTests_pct": 37.77777777777778,
+        "PassAt5_Final_pct": 80.90167548500881,
+        "Prompts_Solved_Any_pct": 81.11111111111111,
+        "Prompts_Solved_All_pct": 76.11111111111111,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "GPT-5 (2025-08-07)",
+        "Success_R5_pct": 77.11111111111111,
+        "Success_R0_pct": 19.27777777777778,
+        "AUC_Success_pct": 56.601851851851855,
+        "Median_Success_Round": 1.0,
+        "R0_Reaches_UnitTests_pct": 22.38888888888889,
+        "PassAt5_Final_pct": 84.70017636684304,
+        "Prompts_Solved_Any_pct": 86.11111111111111,
+        "Prompts_Solved_All_pct": 59.44444444444444,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Claude Sonnet 4 (2025-05-14)",
+        "Success_R5_pct": 74.66666666666667,
+        "Success_R0_pct": 24.11111111111111,
+        "AUC_Success_pct": 54.3425925925926,
+        "Median_Success_Round": 1.0,
+        "R0_Reaches_UnitTests_pct": 29.055555555555557,
+        "PassAt5_Final_pct": 82.83289241622576,
+        "Prompts_Solved_Any_pct": 84.44444444444444,
+        "Prompts_Solved_All_pct": 63.888888888888886,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "GPT-5.2",
+        "Success_R5_pct": 64.0,
+        "Success_R0_pct": 16.333333333333332,
+        "AUC_Success_pct": 44.74074074074074,
+        "Median_Success_Round": 1.0,
+        "R0_Reaches_UnitTests_pct": 20.0,
+        "PassAt5_Final_pct": 76.7989417989418,
+        "Prompts_Solved_Any_pct": 78.88888888888889,
+        "Prompts_Solved_All_pct": 41.11111111111111,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "GPT-OSS 120B",
+        "Success_R5_pct": 46.166666666666664,
+        "Success_R0_pct": 1.4444444444444444,
+        "AUC_Success_pct": 27.435185185185187,
+        "Median_Success_Round": 2.0,
+        "R0_Reaches_UnitTests_pct": 2.2777777777777777,
+        "PassAt5_Final_pct": 67.05026455026454,
+        "Prompts_Solved_Any_pct": 74.44444444444444,
+        "Prompts_Solved_All_pct": 20.555555555555554,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "GPT-OSS 20B",
+        "Success_R5_pct": 29.333333333333332,
+        "Success_R0_pct": 3.111111111111111,
+        "AUC_Success_pct": 19.435185185185187,
+        "Median_Success_Round": 2.0,
+        "R0_Reaches_UnitTests_pct": 4.222222222222222,
+        "PassAt5_Final_pct": 48.35537918871252,
+        "Prompts_Solved_Any_pct": 56.111111111111114,
+        "Prompts_Solved_All_pct": 8.88888888888889,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Qwen3 Coder",
+        "Success_R5_pct": 20.944444444444443,
+        "Success_R0_pct": 11.722222222222223,
+        "AUC_Success_pct": 17.703703703703702,
+        "Median_Success_Round": 0.0,
+        "R0_Reaches_UnitTests_pct": 21.666666666666668,
+        "PassAt5_Final_pct": 30.610670194003525,
+        "Prompts_Solved_Any_pct": 33.88888888888889,
+        "Prompts_Solved_All_pct": 10.0,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Llama 3.3 70B Instruct",
+        "Success_R5_pct": 20.833333333333336,
+        "Success_R0_pct": 0.0,
+        "AUC_Success_pct": 8.925925925925926,
+        "Median_Success_Round": 3.0,
+        "R0_Reaches_UnitTests_pct": 0.0,
+        "PassAt5_Final_pct": 29.51058201058201,
+        "Prompts_Solved_Any_pct": 32.77777777777778,
+        "Prompts_Solved_All_pct": 10.0,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "sap-abap-1",
+        "Success_R5_pct": 19.88888888888889,
+        "Success_R0_pct": 10.666666666666668,
+        "AUC_Success_pct": 16.555555555555557,
+        "Median_Success_Round": 0.0,
+        "R0_Reaches_UnitTests_pct": 22.666666666666668,
+        "PassAt5_Final_pct": 35.22927689594356,
+        "Prompts_Solved_Any_pct": 41.66666666666667,
+        "Prompts_Solved_All_pct": 5.0,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Qwen2.5 Coder 32B Instruct",
+        "Success_R5_pct": 13.0,
+        "Success_R0_pct": 6.0,
+        "AUC_Success_pct": 10.287037037037036,
+        "Median_Success_Round": 1.0,
+        "R0_Reaches_UnitTests_pct": 9.166666666666668,
+        "PassAt5_Final_pct": 17.652116402116402,
+        "Prompts_Solved_Any_pct": 19.444444444444446,
+        "Prompts_Solved_All_pct": 6.666666666666667,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R5_pct": 0.0,
+        "Success_R0_pct": 0.0,
+        "AUC_Success_pct": 0.0,
+        "Median_Success_Round": null,
+        "R0_Reaches_UnitTests_pct": 0.0,
+        "PassAt5_Final_pct": 0.0,
+        "Prompts_Solved_Any_pct": 0.0,
+        "Prompts_Solved_All_pct": 0.0,
+        "Max_LLM_Calls_Per_Run": 6
+      }
+    ]
+  },
+  "round_table": {
+    "columns": [
+      {
+        "key": "Model_Display",
+        "label": "Model",
+        "type": "text"
+      },
+      {
+        "key": "Success_R0_pct",
+        "label": "R0",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R1_pct",
+        "label": "R1",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R2_pct",
+        "label": "R2",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R3_pct",
+        "label": "R3",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R4_pct",
+        "label": "R4",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R5_pct",
+        "label": "R5",
+        "type": "percent"
+      }
+    ],
+    "rows": [
+      {
+        "Model_Display": "Claude Opus 4.5 (2025-11-01)",
+        "Success_R0_pct": 31.61111111111111,
+        "Success_R1_pct": 56.666666666666664,
+        "Success_R2_pct": 70.16666666666667,
+        "Success_R3_pct": 75.66666666666667,
+        "Success_R4_pct": 77.33333333333333,
+        "Success_R5_pct": 78.72222222222223
+      },
+      {
+        "Model_Display": "GPT-5 (2025-08-07)",
+        "Success_R0_pct": 19.27777777777778,
+        "Success_R1_pct": 41.833333333333336,
+        "Success_R2_pct": 58.666666666666664,
+        "Success_R3_pct": 68.55555555555556,
+        "Success_R4_pct": 74.16666666666667,
+        "Success_R5_pct": 77.11111111111111
+      },
+      {
+        "Model_Display": "Claude Sonnet 4 (2025-05-14)",
+        "Success_R0_pct": 24.11111111111111,
+        "Success_R1_pct": 41.5,
+        "Success_R2_pct": 52.77777777777778,
+        "Success_R3_pct": 63.16666666666667,
+        "Success_R4_pct": 69.83333333333334,
+        "Success_R5_pct": 74.66666666666667
+      },
+      {
+        "Model_Display": "GPT-5.2",
+        "Success_R0_pct": 16.333333333333332,
+        "Success_R1_pct": 33.0,
+        "Success_R2_pct": 44.55555555555556,
+        "Success_R3_pct": 52.05555555555556,
+        "Success_R4_pct": 58.5,
+        "Success_R5_pct": 64.0
+      },
+      {
+        "Model_Display": "GPT-OSS 120B",
+        "Success_R0_pct": 1.4444444444444444,
+        "Success_R1_pct": 13.61111111111111,
+        "Success_R2_pct": 26.333333333333332,
+        "Success_R3_pct": 35.27777777777778,
+        "Success_R4_pct": 41.77777777777778,
+        "Success_R5_pct": 46.166666666666664
+      },
+      {
+        "Model_Display": "GPT-OSS 20B",
+        "Success_R0_pct": 3.111111111111111,
+        "Success_R1_pct": 12.944444444444445,
+        "Success_R2_pct": 20.055555555555554,
+        "Success_R3_pct": 24.38888888888889,
+        "Success_R4_pct": 26.77777777777778,
+        "Success_R5_pct": 29.333333333333332
+      },
+      {
+        "Model_Display": "Qwen3 Coder",
+        "Success_R0_pct": 11.722222222222223,
+        "Success_R1_pct": 16.22222222222222,
+        "Success_R2_pct": 17.888888888888886,
+        "Success_R3_pct": 19.27777777777778,
+        "Success_R4_pct": 20.166666666666664,
+        "Success_R5_pct": 20.944444444444443
+      },
+      {
+        "Model_Display": "Llama 3.3 70B Instruct",
+        "Success_R0_pct": 0.0,
+        "Success_R1_pct": 0.0,
+        "Success_R2_pct": 3.6666666666666665,
+        "Success_R3_pct": 12.166666666666668,
+        "Success_R4_pct": 16.88888888888889,
+        "Success_R5_pct": 20.833333333333336
+      },
+      {
+        "Model_Display": "sap-abap-1",
+        "Success_R0_pct": 10.666666666666668,
+        "Success_R1_pct": 14.833333333333334,
+        "Success_R2_pct": 16.77777777777778,
+        "Success_R3_pct": 18.166666666666668,
+        "Success_R4_pct": 19.0,
+        "Success_R5_pct": 19.88888888888889
+      },
+      {
+        "Model_Display": "Qwen2.5 Coder 32B Instruct",
+        "Success_R0_pct": 6.0,
+        "Success_R1_pct": 8.5,
+        "Success_R2_pct": 10.055555555555555,
+        "Success_R3_pct": 11.722222222222223,
+        "Success_R4_pct": 12.444444444444445,
+        "Success_R5_pct": 13.0
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R0_pct": 0.0,
+        "Success_R1_pct": 0.0,
+        "Success_R2_pct": 0.0,
+        "Success_R3_pct": 0.0,
+        "Success_R4_pct": 0.0,
+        "Success_R5_pct": 0.0
+      }
+    ]
+  },
+  "category_table": {
+    "columns": [
+      {
+        "key": "Model_Display",
+        "label": "Model",
+        "type": "text"
+      },
+      {
+        "key": "Success_R5_StringHandling_pct",
+        "label": "String Handling",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R5_ListOrArrayOperation_pct",
+        "label": "List Or Array Operation",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R5_MathematicalCalculation_pct",
+        "label": "Mathematical Calculation",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R5_LogicalCondition_pct",
+        "label": "Logical Condition",
+        "type": "percent"
+      },
+      {
+        "key": "Success_R5_ABAPDatabaseOperation_pct",
+        "label": "ABAP Database Operation",
+        "type": "percent"
+      }
+    ],
+    "rows": [
+      {
+        "Model_Display": "Claude Opus 4.5 (2025-11-01)",
+        "Success_R5_StringHandling_pct": 88.94736842105263,
+        "Success_R5_ListOrArrayOperation_pct": 68.7037037037037,
+        "Success_R5_MathematicalCalculation_pct": 78.92473118279571,
+        "Success_R5_LogicalCondition_pct": 80.4,
+        "Success_R5_ABAPDatabaseOperation_pct": 25.0
+      },
+      {
+        "Model_Display": "GPT-5 (2025-08-07)",
+        "Success_R5_StringHandling_pct": 81.84210526315789,
+        "Success_R5_ListOrArrayOperation_pct": 68.61111111111111,
+        "Success_R5_MathematicalCalculation_pct": 76.88172043010752,
+        "Success_R5_LogicalCondition_pct": 77.52,
+        "Success_R5_ABAPDatabaseOperation_pct": 68.125
+      },
+      {
+        "Model_Display": "Claude Sonnet 4 (2025-05-14)",
+        "Success_R5_StringHandling_pct": 81.57894736842105,
+        "Success_R5_ListOrArrayOperation_pct": 63.98148148148148,
+        "Success_R5_MathematicalCalculation_pct": 71.93548387096774,
+        "Success_R5_LogicalCondition_pct": 76.8,
+        "Success_R5_ABAPDatabaseOperation_pct": 66.25
+      },
+      {
+        "Model_Display": "GPT-5.2",
+        "Success_R5_StringHandling_pct": 75.26315789473685,
+        "Success_R5_ListOrArrayOperation_pct": 51.01851851851852,
+        "Success_R5_MathematicalCalculation_pct": 63.11827956989248,
+        "Success_R5_LogicalCondition_pct": 65.92,
+        "Success_R5_ABAPDatabaseOperation_pct": 16.25
+      },
+      {
+        "Model_Display": "GPT-OSS 120B",
+        "Success_R5_StringHandling_pct": 45.6578947368421,
+        "Success_R5_ListOrArrayOperation_pct": 32.5,
+        "Success_R5_MathematicalCalculation_pct": 53.65591397849462,
+        "Success_R5_LogicalCondition_pct": 45.2,
+        "Success_R5_ABAPDatabaseOperation_pct": 58.12500000000001
+      },
+      {
+        "Model_Display": "GPT-OSS 20B",
+        "Success_R5_StringHandling_pct": 26.184210526315788,
+        "Success_R5_ListOrArrayOperation_pct": 18.425925925925927,
+        "Success_R5_MathematicalCalculation_pct": 39.462365591397855,
+        "Success_R5_LogicalCondition_pct": 26.8,
+        "Success_R5_ABAPDatabaseOperation_pct": 24.375
+      },
+      {
+        "Model_Display": "Qwen3 Coder",
+        "Success_R5_StringHandling_pct": 19.078947368421055,
+        "Success_R5_ListOrArrayOperation_pct": 10.462962962962962,
+        "Success_R5_MathematicalCalculation_pct": 24.408602150537632,
+        "Success_R5_LogicalCondition_pct": 18.8,
+        "Success_R5_ABAPDatabaseOperation_pct": 21.875
+      },
+      {
+        "Model_Display": "Llama 3.3 70B Instruct",
+        "Success_R5_StringHandling_pct": 18.815789473684212,
+        "Success_R5_ListOrArrayOperation_pct": 8.518518518518519,
+        "Success_R5_MathematicalCalculation_pct": 26.989247311827956,
+        "Success_R5_LogicalCondition_pct": 18.24,
+        "Success_R5_ABAPDatabaseOperation_pct": 26.25
+      },
+      {
+        "Model_Display": "sap-abap-1",
+        "Success_R5_StringHandling_pct": 15.13157894736842,
+        "Success_R5_ListOrArrayOperation_pct": 11.944444444444445,
+        "Success_R5_MathematicalCalculation_pct": 27.204301075268816,
+        "Success_R5_LogicalCondition_pct": 17.919999999999998,
+        "Success_R5_ABAPDatabaseOperation_pct": 13.125
+      },
+      {
+        "Model_Display": "Qwen2.5 Coder 32B Instruct",
+        "Success_R5_StringHandling_pct": 11.447368421052632,
+        "Success_R5_ListOrArrayOperation_pct": 6.481481481481481,
+        "Success_R5_MathematicalCalculation_pct": 17.956989247311828,
+        "Success_R5_LogicalCondition_pct": 11.44,
+        "Success_R5_ABAPDatabaseOperation_pct": 14.374999999999998
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R5_StringHandling_pct": 0.0,
+        "Success_R5_ListOrArrayOperation_pct": 0.0,
+        "Success_R5_MathematicalCalculation_pct": 0.0,
+        "Success_R5_LogicalCondition_pct": 0.0,
+        "Success_R5_ABAPDatabaseOperation_pct": 0.0
+      }
+    ]
+  },
+  "plots": [
+    {
+      "file": "success_by_model_by_feedbackround_in_percent.png",
+      "title": "Cumulative Success By Feedback Round",
+      "description": "Shows cumulative success at each feedback round (R0 to R5). A steep early increase means the model can quickly turn SAP compiler and unit-test feedback into fixes. Higher values at R5 indicate stronger final reliability."
+    },
+    {
+      "file": "success_by_model_by_task_category_in_percent.png",
+      "title": "Success By Task Category",
+      "description": "Compares final success by benchmark task type, including ABAP Database Operations. Use this to see whether a model is consistently strong across categories or only performs well on general-purpose tasks. This helps identify models with better ABAP-specific robustness."
+    },
+    {
+      "file": "km_survival_curve_all_models.png",
+      "title": "Kaplan-Meier Survival Curves (All Tasks)",
+      "description": "Survival here means the share of runs that are still unsolved after each round. A faster downward curve indicates faster convergence to passing solutions. Lower survival at the same round is better."
+    },
+    {
+      "file": "km_survival_curve_abap.png",
+      "title": "Kaplan-Meier Survival Curves (ABAP DB Tasks)",
+      "description": "The same survival analysis, restricted to ABAP Database Operation tasks only. This isolates performance on SAP/ABAP-specific problems and highlights which models stay reliable in this harder subset."
+    },
+    {
+      "file": "error_categories_by_model.png",
+      "title": "Response Error Stage Distribution",
+      "description": "Breaks down where failures occur in the SAP validation pipeline: class creation, syntax checks, or unit tests. Interpret this in order: a low unit-test failure rate is only meaningful if the model reliably passes creation and syntax stages first."
+    },
+    {
+      "file": "syntax_error_types_by_model.png",
+      "title": "Syntax Error Category Distribution",
+      "description": "Splits syntax failures into lexical/token, structural, type/conversion, OOP, and declaration errors. This shows whether a model mostly fails on basic ABAP syntax mechanics or on deeper typing and object-oriented constraints."
+    },
+    {
+      "file": "failed_tasks_by_category.png",
+      "title": "Tasks Failed By All Models",
+      "description": "Shows the percentage of tasks in each category that no evaluated model could solve. Higher values indicate benchmark blind spots and hard task regions where model capabilities are still weak."
+    },
+    {
+      "file": "success_distribution.png",
+      "title": "Task-Level Success Distribution",
+      "description": "Displays the distribution of per-task success rates, not just a single average score. Use it to distinguish stable models from polarized ones that solve some tasks almost always and others almost never."
+    }
+  ],
+  "summary": {
+    "models_count": 11,
+    "total_models_count": 11,
+    "fully_evaluated_models_count": 11,
+    "top_by_final_success": [
+      "Claude Opus 4.5 (2025-11-01)",
+      "GPT-5 (2025-08-07)",
+      "Claude Sonnet 4 (2025-05-14)"
+    ],
+    "top_by_first_try_success": [
+      "Claude Opus 4.5 (2025-11-01)",
+      "Claude Sonnet 4 (2025-05-14)",
+      "GPT-5 (2025-08-07)"
+    ]
+  }
+}

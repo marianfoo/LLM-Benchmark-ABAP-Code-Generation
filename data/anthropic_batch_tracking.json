@@ -1,0 +1,81 @@
+{
+  "batches": [
+    {
+      "batch_id": "msgbatch_01M31eyL6REFewJuL54F9psB",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-01-23T22:12:21.125854",
+      "completed_at": "2026-01-24T10:37:43.795587"
+    },
+    {
+      "batch_id": "msgbatch_0134gDmvgDHzm5CD5FDc18e1",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-02-09T07:48:50.762917",
+      "completed_at": "2026-02-09T07:50:53.169399"
+    },
+    {
+      "batch_id": "msgbatch_01Kagvw1VWoYzJj6kdzq1EmK",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 2,
+      "status": "completed",
+      "created_at": "2026-02-09T08:21:55.050271",
+      "completed_at": "2026-02-09T08:25:58.805218"
+    },
+    {
+      "batch_id": "msgbatch_019PB5QJxfxj25FC7NgRvbQX",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 2,
+      "status": "pending",
+      "created_at": "2026-02-09T08:22:56.219006",
+      "completed_at": null
+    },
+    {
+      "batch_id": "msgbatch_01TPLCMj5K7wT9KCzv1Gr3iU",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 3,
+      "status": "completed",
+      "created_at": "2026-02-09T08:59:45.552691",
+      "completed_at": "2026-02-09T09:02:19.406371"
+    },
+    {
+      "batch_id": "msgbatch_01EkFFDALox9PhtTyFs37saK",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 4,
+      "status": "completed",
+      "created_at": "2026-02-09T09:16:53.251277",
+      "completed_at": "2026-02-09T09:20:27.021332"
+    },
+    {
+      "batch_id": "msgbatch_012e2ckKBB7EnASqPnGfnzdV",
+      "model_name": "claude-opus-4-5-20251101",
+      "save_file": "data/claude-opus-4-5-20251101.json",
+      "save_file_batch": "data/claude-opus-4-5-20251101_batch.jsonl",
+      "save_file_batch_response": "data/claude-opus-4-5-20251101_batch_response.jsonl",
+      "round_num": 5,
+      "status": "completed",
+      "created_at": "2026-02-09T09:34:49.019879",
+      "completed_at": "2026-02-09T09:37:22.728335"
+    }
+  ]
+}
