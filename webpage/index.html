@@ -4,7 +4,117 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ABAP LLM Benchmark Leaderboard</title>
+    <meta
+      name="description"
+      content="ABAP LLM Benchmark Leaderboard for SAP ABAP code generation. Compare models across 180 tasks x 10 repetitions with up to 5 feedback rounds (R0-R5) and pass@5."
+    />
+    <link rel="canonical" href="https://abap-llm-benchmark.marianzeis.de/" />
+    <meta
+      name="robots"
+      content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+    />
+    <meta
+      name="googlebot"
+      content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#060912" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:site_name" content="ABAP LLM Benchmark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ABAP LLM Benchmark Leaderboard" />
+    <meta
+      property="og:description"
+      content="ABAP LLM Benchmark Leaderboard for SAP ABAP code generation. Compare models across 180 tasks x 10 repetitions with up to 5 feedback rounds (R0-R5) and pass@5."
+    />
+    <meta property="og:url" content="https://abap-llm-benchmark.marianzeis.de/" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ABAP LLM Benchmark Leaderboard" />
+    <meta
+      name="twitter:description"
+      content="ABAP LLM Benchmark Leaderboard for SAP ABAP code generation. Compare models across 180 tasks x 10 repetitions with up to 5 feedback rounds (R0-R5) and pass@5."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+    />
     <link rel="stylesheet" href="styles.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "ABAP LLM Benchmark Leaderboard",
+        "url": "https://abap-llm-benchmark.marianzeis.de/",
+        "description": "ABAP LLM Benchmark Leaderboard for SAP ABAP code generation. Compare models across 180 tasks x 10 repetitions with up to 5 feedback rounds (R0-R5) and pass@5.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "ABAP LLM Benchmark",
+          "url": "https://abap-llm-benchmark.marianzeis.de/"
+        },
+        "about": [
+          {
+            "@type": "Thing",
+            "name": "SAP ABAP"
+          },
+          {
+            "@type": "Thing",
+            "name": "Large Language Models"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "ABAP LLM Benchmark — Results and Leaderboard",
+        "description": "Benchmark dataset for LLM-generated SAP ABAP code across 180 tasks x 10 repetitions with feedback rounds (R0-R5).",
+        "url": "https://abap-llm-benchmark.marianzeis.de/",
+        "license": "https://opensource.org/licenses/MIT",
+        "creator": [
+          {
+            "@type": "Person",
+            "name": "Tim Köhne"
+          },
+          {
+            "@type": "Person",
+            "name": "Marian Zeis"
+          }
+        ],
+        "keywords": ["ABAP", "SAP", "LLM", "benchmark", "code generation"],
+        "isBasedOn": "https://arxiv.org/abs/2601.15188",
+        "sameAs": "https://github.com/marianfoo/LLM-Benchmark-ABAP-Code-Generation",
+        "distribution": [
+          {
+            "@type": "DataDownload",
+            "encodingFormat": "text/csv",
+            "contentUrl": "https://abap-llm-benchmark.marianzeis.de/data/model_leaderboard.csv"
+          },
+          {
+            "@type": "DataDownload",
+            "encodingFormat": "text/csv",
+            "contentUrl": "https://abap-llm-benchmark.marianzeis.de/data/results.csv"
+          },
+          {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "https://abap-llm-benchmark.marianzeis.de/data/dashboard.json"
+          },
+          {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "https://abap-llm-benchmark.marianzeis.de/data/syntax_errors.json"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div class="page-bg"></div>
@@ -24,6 +134,18 @@
         </p>
       </header>
 
+      <noscript>
+        <section class="card">
+          <h2>JavaScript is required to render the tables</h2>
+          <p class="intro">
+            If you cannot enable JavaScript, you can still download the raw benchmark artifacts:
+            <a href="data/model_leaderboard.csv">model leaderboard (CSV)</a>,
+            <a href="data/results.csv">results (CSV)</a>, and
+            <a href="data/syntax_errors.json">syntax errors (JSON)</a>.
+          </p>
+        </section>
+      </noscript>
+
       <section class="card">
         <div class="section-title-row">
           <h2>Main Comparison Table</h2>
@@ -40,6 +162,7 @@
         </div>
         <div class="table-wrap">
           <table id="mainTable">
+            <caption class="sr-only">Sortable main comparison table of evaluated ABAP LLM models.</caption>
             <thead></thead>
             <tbody></tbody>
           </table>
@@ -80,6 +203,7 @@
         <h2>Cumulative Success By Feedback Round</h2>
         <div class="table-wrap">
           <table id="roundTable">
+            <caption class="sr-only">Cumulative success rates by feedback round (R0 to R5).</caption>
             <thead></thead>
             <tbody></tbody>
           </table>
@@ -90,6 +214,7 @@
         <h2>Success By Task Category</h2>
         <div class="table-wrap">
           <table id="categoryTable">
+            <caption class="sr-only">Final success rates by benchmark task category.</caption>
             <thead></thead>
             <tbody></tbody>
           </table>

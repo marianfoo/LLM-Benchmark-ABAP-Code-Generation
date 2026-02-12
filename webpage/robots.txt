@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abap-llm-benchmark.marianzeis.de/sitemap.xml
