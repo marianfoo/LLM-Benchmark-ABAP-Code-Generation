@@ -120,6 +120,17 @@ def mode_complete_pending(model_name: str, model_info: RunnableModel):
         else:
             print(f"[OK] No pending OpenAI batches for {model_name}")
 
+    elif provider == "MISTRAL":
+        import generate_llm_answers_batch_mistral as gen
+        from mistralai import Mistral as MistralClient
+
+        client = MistralClient(api_key=get_provider_api_key(provider))
+        completed = gen.check_and_complete_pending_batches(client, model_info["name"])
+        if completed:
+            print(f"[DONE] Completed {len(completed)} pending Mistral batch(es)")
+        else:
+            print(f"[OK] No pending Mistral batches for {model_name}")
+
     else:
         print(f"[SKIP] Provider '{provider}' does not use batch processing.")
 
@@ -177,6 +188,20 @@ def mode_first(model_name: str, model_info: RunnableModel):
         llm_client = openai.AsyncOpenAI(api_key=api_key)
         asyncio.run(gen.generate_first_response(llm_client, model_info))
 
+    elif provider == "MISTRAL":
+        import generate_llm_answers_batch_mistral as gen
+        from mistralai import Mistral as MistralClient
+
+        client = MistralClient(api_key=get_provider_api_key(provider))
+        batch_id = gen.generate_first_response_batch(
+            client, model_info, save_file_batch, save_file
+        )
+        if batch_id is None:
+            return
+        gen.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+
     elif provider == "SAP_AICORE":
         # SAP ABAP-1 is available through SAP AI Core orchestration, not batch APIs.
         import generate_llm_answers_parallel as gen
@@ -190,7 +215,7 @@ def mode_first(model_name: str, model_info: RunnableModel):
         asyncio.run(gen.generate_first_response(llm_client, model_info))
 
     else:
-        # OpenAI-compatible provider (Groq, Mistral, etc.) – uses async parallel
+        # OpenAI-compatible provider (Groq, etc.) – uses async parallel
         import generate_llm_answers_parallel as gen
 
         base_url = API_PROVIDERS[provider].get("base_url")
@@ -293,6 +318,20 @@ def mode_next(model_name: str, model_info: RunnableModel):
             client, batch_id, save_file, save_file_batch, save_file_batch_response
         )
 
+    elif provider == "MISTRAL":
+        import generate_llm_answers_batch_mistral as gen
+        from mistralai import Mistral as MistralClient
+
+        client = MistralClient(api_key=get_provider_api_key(provider))
+        batch_id = gen.generate_next_response_batch(
+            client, model_info, save_file, save_file_batch, round_num=round_num
+        )
+        if batch_id is None:
+            return
+        gen.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+
     elif provider == "OPENAI_DIRECT":
         # Non-batch OpenAI (e.g. gpt-5.2-codex) – direct async API calls
         import openai
@@ -318,7 +357,7 @@ def mode_next(model_name: str, model_info: RunnableModel):
         )
 
     else:
-        # OpenAI-compatible provider – uses async parallel
+        # OpenAI-compatible provider (Groq, etc.) – uses async parallel
         import generate_llm_answers_parallel as gen
 
         base_url = API_PROVIDERS[provider].get("base_url")

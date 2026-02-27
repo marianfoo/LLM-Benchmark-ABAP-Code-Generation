@@ -106,6 +106,12 @@ MODELS_TO_RUN: List[RunnableModel] = [
         "temperature": 0.2,
         "max_tokens": 5000,
     },
+    {
+        "name": "mistral-large-2512",  # Mistral: Large 3 (675B MoE, 41B active) - $0.50/$1.50 per 1M tokens
+        "provider": "MISTRAL",
+        "temperature": 0.2,
+        "max_tokens": 5000,
+    },
     # --- Closed-Source Models ---
     {
         "name": "gpt-5.2",  # OpenAI: GPT-5.1 - $1.25/$10.00 per 1M tokens (Standard)

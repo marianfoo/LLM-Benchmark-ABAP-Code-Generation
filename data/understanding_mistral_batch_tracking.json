@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "63e4b8f0-4def-487d-9831-05994585bc8e",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 0,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r0.jsonl",
+      "item_count": 521,
+      "status": "completed",
+      "created_at": "2026-02-26T22:12:02.130883+00:00",
+      "completed_at": "2026-02-26T22:13:33.042118+00:00"
+    },
+    {
+      "batch_id": "eabb0b12-b5cd-449d-92c9-8630774f1d0c",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 1,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r1.jsonl",
+      "item_count": 327,
+      "status": "completed",
+      "created_at": "2026-02-26T22:13:47.153113+00:00",
+      "completed_at": "2026-02-26T22:14:17.511051+00:00"
+    },
+    {
+      "batch_id": "1652d575-bbc9-4d16-8d97-016b9078fc34",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 2,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r2.jsonl",
+      "item_count": 286,
+      "status": "completed",
+      "created_at": "2026-02-26T22:14:30.810822+00:00",
+      "completed_at": "2026-02-26T22:15:31.418419+00:00"
+    },
+    {
+      "batch_id": "f80451af-61ab-4004-9b24-8907399a97a1",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 3,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r3.jsonl",
+      "item_count": 270,
+      "status": "completed",
+      "created_at": "2026-02-26T22:15:42.441868+00:00",
+      "completed_at": "2026-02-26T22:16:12.811198+00:00"
+    },
+    {
+      "batch_id": "9bbb5acf-249c-4254-999f-a02ae18bafab",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 4,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r4.jsonl",
+      "item_count": 261,
+      "status": "completed",
+      "created_at": "2026-02-26T22:16:21.784124+00:00",
+      "completed_at": "2026-02-26T22:17:22.356588+00:00"
+    },
+    {
+      "batch_id": "d38d60d7-5a41-4cc6-b204-cfecd5d5192e",
+      "model_name": "mistral-large-2512",
+      "provider": "MISTRAL",
+      "round_num": 5,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/mistral-large-2512_understanding_batch_r5.jsonl",
+      "item_count": 249,
+      "status": "completed",
+      "created_at": "2026-02-26T22:17:35.324306+00:00",
+      "completed_at": "2026-02-26T22:18:05.684980+00:00"
+    }
+  ]
+}

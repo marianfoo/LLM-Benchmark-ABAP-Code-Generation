@@ -64,6 +64,8 @@ function renderTable(tableId, columns, rows, sortable = false) {
 
   for (const column of columns) {
     const th = document.createElement("th");
+    // Ensure headers are never narrower than their label – prevents character stacking on mobile
+    th.style.minWidth = column.type === "text" ? "120px" : "80px";
     if (sortable) {
       th.classList.add("sortable");
       th.addEventListener("click", () => {
@@ -168,6 +170,12 @@ function bindControls() {
   });
 }
 
+function renderUnderstandingSection() {
+  const u = state.raw.understanding;
+  if (!u) return;
+  renderTable("understandingTable", u.table.columns, u.table.rows);
+}
+
 function renderLoadError(message) {
   const root = document.querySelector(".layout");
   const errorBox = document.createElement("section");
@@ -190,6 +198,7 @@ async function bootstrap() {
     renderMainTable();
     renderSecondaryTables();
     renderPlots();
+    renderUnderstandingSection();
   } catch (error) {
     renderLoadError(String(error));
   }

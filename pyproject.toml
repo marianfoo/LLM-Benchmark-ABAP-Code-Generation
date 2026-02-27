@@ -9,6 +9,7 @@ dependencies = [
     "anthropic>=0.72.0",
     "lifelines>=0.30.0",
     "matplotlib>=3.10.7",
+    "mistralai>=1.6.0",
     "more-itertools>=10.8.0",
     "numpy>=2.3.4",
     "openai>=2.7.1",

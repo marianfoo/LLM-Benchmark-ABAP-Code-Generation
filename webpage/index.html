@@ -42,7 +42,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260227-3" />
 
     <script type="application/ld+json">
       {
@@ -132,6 +132,12 @@
             Benchmarking Large Language Models for ABAP Code Generation (2601.15188)
           </a>.
         </p>
+        <p class="intro">
+          Read the blog post for background, cost analysis, and practical recommendations:
+          <a href="https://blog.zeis.de/posts/2026-02-09-abap-llm-benchmark/" target="_blank" rel="noopener noreferrer">
+            Benchmarking LLMs for ABAP: Why ABAP-1 Isn't a Code Generator (Yet)
+          </a>.
+        </p>
       </header>
 
       <noscript>
@@ -163,6 +169,24 @@
         <div class="table-wrap">
           <table id="mainTable">
             <caption class="sr-only">Sortable main comparison table of evaluated ABAP LLM models.</caption>
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-title-row">
+          <h2>ABAP Code Understanding Benchmark</h2>
+          <p class="section-subtitle">
+            A separate track testing how well models <em>understand</em> existing ABAP code and unit tests — not generation.
+            Each model answered 180 structured questions (3 repetitions, up to 6 feedback rounds).
+            Scored on 6 objective fields extracted from canonical code and unit tests.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table id="understandingTable">
+            <caption class="sr-only">Understanding benchmark cumulative success rates by feedback round (R0 to R5).</caption>
             <thead></thead>
             <tbody></tbody>
           </table>
@@ -225,6 +249,7 @@
         <h2>Plots</h2>
         <div id="plotsGrid" class="plots-grid"></div>
       </section>
+
     </main>
 
     <template id="plotCardTemplate">
@@ -237,6 +262,6 @@
       </article>
     </template>
 
-    <script src="app.js?v=20260209-1" defer></script>
+    <script src="app.js?v=20260227-1" defer></script>
   </body>
 </html>

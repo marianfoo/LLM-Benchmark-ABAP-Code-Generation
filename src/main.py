@@ -22,6 +22,7 @@ from abap_interaction import run_abap_interaction
 
 import generate_llm_answers_batch_openai
 import generate_llm_answers_batch_anthropic
+import generate_llm_answers_batch_mistral
 import generate_llm_answers_parallel
 import generate_llm_answers_openai_direct
 from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
@@ -112,6 +113,46 @@ def batch_anthropic(model_info: RunnableModel):
             print(f"[Anthropic] No more conversations to process at round {i + 2}")
             break
         generate_llm_answers_batch_anthropic.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+        run_abap_interaction(model_info["name"])
+
+
+def batch_mistral(model_info: RunnableModel):
+    from mistralai import Mistral as MistralClient
+
+    client = MistralClient(api_key=get_provider_api_key(model_info["provider"]))
+    save_file = f"data/{model_info['name']}.json"
+    save_file_batch = f"{save_file[:-5]}_batch.jsonl"
+    save_file_batch_response = save_file_batch[:-6] + "_response.jsonl"
+
+    # Check for any pending batches first
+    print(f"\n[Mistral] Checking for pending batches for {model_info['name']}...")
+    completed = generate_llm_answers_batch_mistral.check_and_complete_pending_batches(
+        client, model_info["name"]
+    )
+    if completed:
+        print(f"[Mistral] Completed {len(completed)} pending batch(es)")
+        for batch in completed:
+            run_abap_interaction(model_info["name"])
+
+    batch_id = generate_llm_answers_batch_mistral.generate_first_response_batch(
+        client, model_info, save_file_batch, save_file
+    )
+    if batch_id is not None:
+        generate_llm_answers_batch_mistral.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+    run_abap_interaction(model_info["name"])
+
+    for i in range(5):
+        batch_id = generate_llm_answers_batch_mistral.generate_next_response_batch(
+            client, model_info, save_file, save_file_batch, round_num=i + 2
+        )
+        if batch_id is None:
+            print(f"[Mistral] No more conversations to process at round {i + 2}")
+            break
+        generate_llm_answers_batch_mistral.wait_for_batch_and_save(
             client, batch_id, save_file, save_file_batch, save_file_batch_response
         )
         run_abap_interaction(model_info["name"])
@@ -227,5 +268,7 @@ if __name__ == "__main__":
             batch_openai(model_info)
         elif model_info["provider"] == "OPENAI_DIRECT":
             run_openai_direct_model(model_info)
+        elif model_info["provider"] == "MISTRAL":
+            batch_mistral(model_info)
         else:
             run_parrallel_model(model_info)

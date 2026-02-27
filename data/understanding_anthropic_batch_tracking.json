@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "msgbatch_012DSxcG3RJTmXF2r8aBDuYP",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 0,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r0.jsonl",
+      "item_count": 537,
+      "status": "completed",
+      "created_at": "2026-02-26T20:56:52.746659+00:00",
+      "completed_at": "2026-02-26T20:59:01.818036+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01BoKagq4mycPvfextuD5m3d",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 1,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r1.jsonl",
+      "item_count": 299,
+      "status": "completed",
+      "created_at": "2026-02-26T20:59:10.834503+00:00",
+      "completed_at": "2026-02-26T21:00:42.417444+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01AUZZJKLUxUf63es5qs2FBg",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 2,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r2.jsonl",
+      "item_count": 296,
+      "status": "completed",
+      "created_at": "2026-02-26T21:00:53.223910+00:00",
+      "completed_at": "2026-02-26T21:02:24.528584+00:00"
+    },
+    {
+      "batch_id": "msgbatch_019eVcpHAXrpJ6KgJbtNjMuP",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 3,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r3.jsonl",
+      "item_count": 275,
+      "status": "completed",
+      "created_at": "2026-02-26T21:02:33.518273+00:00",
+      "completed_at": "2026-02-26T21:04:35.220125+00:00"
+    },
+    {
+      "batch_id": "msgbatch_013RSFArBGWdLBmzr9e3MXWJ",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 4,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r4.jsonl",
+      "item_count": 250,
+      "status": "completed",
+      "created_at": "2026-02-26T21:04:44.959047+00:00",
+      "completed_at": "2026-02-26T21:06:46.954806+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01VxD1Bm8uCAq4KnYG3fKPo8",
+      "model_name": "claude-opus-4-5-20251101",
+      "provider": "ANTHROPIC",
+      "round_num": 5,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-opus-4-5-20251101_understanding_batch_r5.jsonl",
+      "item_count": 231,
+      "status": "completed",
+      "created_at": "2026-02-26T21:06:58.160288+00:00",
+      "completed_at": "2026-02-26T21:09:00.271581+00:00"
+    }
+  ]
+}

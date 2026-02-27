@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "batch_69a0b0cc841081909ebffffffa718456",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 0,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r0.jsonl",
+      "item_count": 480,
+      "status": "completed",
+      "created_at": "2026-02-26T20:45:01.022189+00:00",
+      "completed_at": "2026-02-26T20:56:11.927458+00:00"
+    },
+    {
+      "batch_id": "batch_69a0b3706a6881909aafe09d57987f53",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 1,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r1.jsonl",
+      "item_count": 307,
+      "status": "completed",
+      "created_at": "2026-02-26T20:56:16.838888+00:00",
+      "completed_at": "2026-02-26T21:08:28.191476+00:00"
+    },
+    {
+      "batch_id": "batch_69a0b650c3188190be660f4910a66f00",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 2,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r2.jsonl",
+      "item_count": 295,
+      "status": "completed",
+      "created_at": "2026-02-26T21:08:33.031920+00:00",
+      "completed_at": "2026-02-26T21:12:06.497941+00:00"
+    },
+    {
+      "batch_id": "batch_69a0b73a9d788190b73294a15838518c",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 3,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r3.jsonl",
+      "item_count": 283,
+      "status": "completed",
+      "created_at": "2026-02-26T21:12:27.008060+00:00",
+      "completed_at": "2026-02-26T21:19:33.710712+00:00"
+    },
+    {
+      "batch_id": "batch_69a0b8e99a74819091e1258acb84e407",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 4,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r4.jsonl",
+      "item_count": 266,
+      "status": "completed",
+      "created_at": "2026-02-26T21:19:37.821321+00:00",
+      "completed_at": "2026-02-26T21:25:12.726280+00:00"
+    },
+    {
+      "batch_id": "batch_69a0ba3cae10819081e10dcf0711c9d0",
+      "model_name": "gpt-5.2",
+      "provider": "OPENAI",
+      "round_num": 5,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gpt-5.2_understanding_batch_r5.jsonl",
+      "item_count": 262,
+      "status": "completed",
+      "created_at": "2026-02-26T21:25:16.830200+00:00",
+      "completed_at": "2026-02-26T21:40:29.204292+00:00"
+    }
+  ]
+}

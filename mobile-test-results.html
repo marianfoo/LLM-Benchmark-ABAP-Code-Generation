@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Test Results</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #0f0;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        h1 { color: #0ff; margin-bottom: 20px; }
+        .result { margin: 8px 0; }
+        .label { color: #ff0; }
+        .value { color: #0f0; font-weight: bold; }
+        button {
+            background: #0a0;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        button:hover { background: #0f0; }
+    </style>
+</head>
+<body>
+    <h1>iPhone 14 Mobile Test Results</h1>
+    <button onclick="runTest()">RUN TEST</button>
+    <div id="output"></div>
+    
+    <script>
+        function runTest() {
+            // Open the target page in a hidden iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'http://localhost:8000/';
+            document.body.appendChild(iframe);
+            
+            iframe.onload = function() {
+                setTimeout(() => {
+                    try {
+                        const doc = iframe.contentDocument || iframe.contentWindow.document;
+                        const wrap = doc.querySelector('.table-wrap');
+                        const table = doc.querySelector('#mainTable');
+                        
+                        const results = [];
+                        
+                        results.push(`<div class="result"><span class="label">viewport width:</span> <span class="value">${iframe.contentWindow.innerWidth}</span></div>`);
+                        results.push(`<div class="result"><span class="label">wrap clientWidth:</span> <span class="value">${wrap ? wrap.clientWidth : 'NOT FOUND'}</span></div>`);
+                        results.push(`<div class="result"><span class="label">table offsetWidth:</span> <span class="value">${table ? table.offsetWidth : 'NOT FOUND'}</span></div>`);
+                        results.push(`<div class="result"><span class="label">scrollable?</span> <span class="value">${wrap ? (wrap.scrollWidth > wrap.clientWidth) : 'N/A'}</span></div>`);
+                        results.push(`<div class="result"><span class="label">wrap overflow-x:</span> <span class="value">${wrap ? iframe.contentWindow.getComputedStyle(wrap).overflowX : 'N/A'}</span></div>`);
+                        results.push(`<div class="result"><span class="label">wrap scrollWidth:</span> <span class="value">${wrap ? wrap.scrollWidth : 'N/A'}</span></div>`);
+                        results.push('<br>');
+                        
+                        if (table) {
+                            const ths = table.querySelectorAll('thead th');
+                            results.push('<div class="result"><span class="label">Table headers (th elements):</span></div>');
+                            ths.forEach((th, i) => {
+                                const minW = th.style.minWidth || '(empty)';
+                                const text = th.textContent.trim().substring(0, 15);
+                                results.push(`<div class="result">th[${i}] minWidth: "${minW}" text: "${text}"</div>`);
+                            });
+                        } else {
+                            results.push('<div class="result"><span class="value">Table not found!</span></div>');
+                        }
+                        
+                        document.getElementById('output').innerHTML = results.join('');
+                    } catch (e) {
+                        document.getElementById('output').innerHTML = `<div class="result" style="color: #f00;">Error: ${e.message}</div>`;
+                    }
+                }, 1000);
+            };
+            
+            iframe.onerror = function(e) {
+                document.getElementById('output').innerHTML = '<div class="result" style="color: #f00;">Failed to load iframe</div>';
+            };
+        }
+        
+        // Auto-run on load
+        window.onload = () => {
+            runTest();
+        };
+    </script>
+</body>
+</html>
