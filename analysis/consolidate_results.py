@@ -20,6 +20,7 @@ def consolidate_results():
             "results.json",
             "openai_batch_tracking.json",
             "anthropic_batch_tracking.json",
+            "mistral_batch_tracking.json",
             "syntax_errors.json",
         ]:
             continue

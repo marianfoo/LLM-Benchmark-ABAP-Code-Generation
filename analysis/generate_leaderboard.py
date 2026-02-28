@@ -24,6 +24,7 @@ DISPLAY_NAME_BY_MODEL: dict[str, str] = {
     "gpt-oss_120b": "GPT-OSS 120B",
     "gpt-oss_20b": "GPT-OSS 20B",
     "llama-3.3-70b-instruct": "Llama 3.3 70B Instruct",
+    "mistral-large-2512": "Mistral Large 3",
     "qwen2.5-coder-32b-instruct": "Qwen2.5 Coder 32B Instruct",
     "qwen3-coder": "Qwen3 Coder",
     "codestral-22b": "Codestral 22B",
@@ -61,6 +62,7 @@ def _iter_model_json_files(data_dir: Path) -> Iterable[Path]:
             "results.json",
             "anthropic_batch_tracking.json",
             "openai_batch_tracking.json",
+            "mistral_batch_tracking.json",
             "syntax_errors.json",
         }:
             continue

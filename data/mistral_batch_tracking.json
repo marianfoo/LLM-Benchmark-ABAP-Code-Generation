@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "b502a62d-9da2-4d21-bbef-1b51daff9f86",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-02-27T19:28:45.908614",
+      "completed_at": "2026-02-28T00:57:05.086169"
+    },
+    {
+      "batch_id": "7949936c-1b64-453a-bc55-16ad70245dc4",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 2,
+      "status": "completed",
+      "created_at": "2026-02-28T02:59:19.853976",
+      "completed_at": "2026-02-28T03:04:23.915989"
+    },
+    {
+      "batch_id": "e70dc513-5c88-48dc-8749-c1d5e94c78a4",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 3,
+      "status": "completed",
+      "created_at": "2026-02-28T04:46:05.472466",
+      "completed_at": "2026-02-28T04:53:10.112153"
+    },
+    {
+      "batch_id": "200ac2a1-26b1-425f-9410-87fa13b31412",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 4,
+      "status": "completed",
+      "created_at": "2026-02-28T06:17:43.968539",
+      "completed_at": "2026-02-28T06:24:18.299783"
+    },
+    {
+      "batch_id": "f543339a-d778-4b35-97ec-46b15faca4e6",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 5,
+      "status": "completed",
+      "created_at": "2026-02-28T07:31:44.159371",
+      "completed_at": "2026-02-28T07:35:17.577048"
+    },
+    {
+      "batch_id": "e440e47f-b0f7-4e21-8736-fbae4af2a4a0",
+      "model_name": "mistral-large-2512",
+      "save_file": "data/mistral-large-2512.json",
+      "save_file_batch": "data/mistral-large-2512_batch.jsonl",
+      "save_file_batch_response": "data/mistral-large-2512_batch_response.jsonl",
+      "round_num": 6,
+      "status": "completed",
+      "created_at": "2026-02-28T08:36:45.616506",
+      "completed_at": "2026-02-28T08:41:49.292482"
+    }
+  ]
+}

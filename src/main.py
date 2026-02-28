@@ -136,9 +136,21 @@ def batch_mistral(model_info: RunnableModel):
         for batch in completed:
             run_abap_interaction(model_info["name"])
 
-    batch_id = generate_llm_answers_batch_mistral.generate_first_response_batch(
-        client, model_info, save_file_batch, save_file
-    )
+    try:
+        batch_id = generate_llm_answers_batch_mistral.generate_first_response_batch(
+            client, model_info, save_file_batch, save_file
+        )
+    except Exception as exc:
+        msg = str(exc)
+        if "Status 402" in msg or "free trial" in msg.lower():
+            print(
+                f"[WARN] Mistral batch mode rejected by provider quota "
+                f"({msg}). Falling back to parallel run mode."
+            )
+            run_parrallel_model(model_info)
+            return
+        raise
+
     if batch_id is not None:
         generate_llm_answers_batch_mistral.wait_for_batch_and_save(
             client, batch_id, save_file, save_file_batch, save_file_batch_response

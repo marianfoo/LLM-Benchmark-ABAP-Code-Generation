@@ -24,6 +24,8 @@ WEB_PLOTS_DIR = WEB_DIR / "assets" / "plots"
 CORE_SCRIPTS = [
     "consolidate_results.py",
     "generate_syntax_errors.py",
+    # Understanding benchmark scoring (produces understanding_model_leaderboard.csv)
+    "score_understanding.py",
 ]
 
 PLOT_SCRIPTS = [
@@ -35,6 +37,9 @@ PLOT_SCRIPTS = [
     "plot_failed_tasks_intersection.py",
     "km_analysis.py",
     "km_analysis_abap.py",
+    # Understanding benchmark plots
+    "plot_understanding_success_by_round.py",
+    "plot_understanding_field_accuracy.py",
 ]
 
 POST_SCRIPTS = [
@@ -115,6 +120,7 @@ PLOT_METADATA = [
 MAIN_COLUMNS = [
     {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
     {"key": "Success_R5_pct", "label": "Success R5", "type": "percent", "default_sort": "desc"},
+    {"key": "Understanding_R5_pct", "label": "Understanding R5", "type": "percent", "default_sort": "desc"},
     {"key": "Success_R0_pct", "label": "Success R0", "type": "percent", "default_sort": "desc"},
     {"key": "AUC_Success_pct", "label": "AUC (R0-R5)", "type": "percent", "default_sort": "desc"},
     {
@@ -223,6 +229,28 @@ def _copy_data_files() -> list[str]:
     return missing
 
 
+def _merge_understanding_scores(df: pd.DataFrame) -> pd.DataFrame:
+    """Merge Understanding_R5_pct from understanding_model_leaderboard.csv if available."""
+    understanding_path = DATA_DIR / "understanding_model_leaderboard.csv"
+    if not understanding_path.exists():
+        print(f"[INFO] No understanding leaderboard found at {understanding_path}, skipping merge.")
+        return df
+
+    try:
+        udf = pd.read_csv(understanding_path)
+        # Rename Success_R5_pct to Understanding_R5_pct and keep only what we need
+        udf = udf[["Model", "Success_R5_pct"]].rename(columns={"Success_R5_pct": "Understanding_R5_pct"})
+        df = df.merge(udf, on="Model", how="left")
+        # Round to 2 decimal places to match existing dashboard format
+        df["Understanding_R5_pct"] = df["Understanding_R5_pct"].round(2)
+        merged = int(df["Understanding_R5_pct"].notna().sum())
+        print(f"[OK] Merged understanding scores for {merged} model(s).")
+    except Exception as exc:
+        print(f"[WARN] Could not merge understanding scores: {exc}")
+
+    return df
+
+
 def _build_dashboard_json() -> Path:
     leaderboard_path = DATA_DIR / "model_leaderboard.csv"
     if not leaderboard_path.exists():
@@ -231,6 +259,7 @@ def _build_dashboard_json() -> Path:
         )
 
     df = pd.read_csv(leaderboard_path)
+    df = _merge_understanding_scores(df)
     df = df.sort_values(
         ["Success_R5_pct", "AUC_Success_pct", "Success_R0_pct"],
         ascending=[False, False, False],

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-09T21:49:31Z",
+  "generated_at_utc": "2026-02-28T11:31:05Z",
   "paper_url": "https://arxiv.org/abs/2601.15188",
   "main_table": {
     "columns": [
@@ -74,8 +74,8 @@
     "rows": [
       {
         "Model_Display": "Claude Opus 4.5 (2025-11-01)",
-        "Understanding_R5_pct": 61.11,
         "Success_R5_pct": 78.72222222222223,
+        "Understanding_R5_pct": 61.11,
         "Success_R0_pct": 31.61111111111111,
         "AUC_Success_pct": 65.02777777777779,
         "Median_Success_Round": 1.0,
@@ -88,6 +88,7 @@
       {
         "Model_Display": "GPT-5 (2025-08-07)",
         "Success_R5_pct": 77.11111111111111,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 19.27777777777778,
         "AUC_Success_pct": 56.601851851851855,
         "Median_Success_Round": 1.0,
@@ -100,6 +101,7 @@
       {
         "Model_Display": "Claude Sonnet 4 (2025-05-14)",
         "Success_R5_pct": 74.66666666666667,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 24.11111111111111,
         "AUC_Success_pct": 54.3425925925926,
         "Median_Success_Round": 1.0,
@@ -111,8 +113,8 @@
       },
       {
         "Model_Display": "GPT-5.2",
-        "Understanding_R5_pct": 45.19,
         "Success_R5_pct": 64.0,
+        "Understanding_R5_pct": 45.19,
         "Success_R0_pct": 16.333333333333332,
         "AUC_Success_pct": 44.74074074074074,
         "Median_Success_Round": 1.0,
@@ -123,8 +125,22 @@
         "Max_LLM_Calls_Per_Run": 6
       },
       {
+        "Model_Display": "Mistral Large 3",
+        "Success_R5_pct": 51.33333333333333,
+        "Understanding_R5_pct": 54.26,
+        "Success_R0_pct": 9.22222222222222,
+        "AUC_Success_pct": 33.2037037037037,
+        "Median_Success_Round": 2.0,
+        "R0_Reaches_UnitTests_pct": 20.0,
+        "PassAt5_Final_pct": 67.40520282186948,
+        "Prompts_Solved_Any_pct": 71.11111111111111,
+        "Prompts_Solved_All_pct": 27.22222222222222,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
         "Model_Display": "GPT-OSS 120B",
         "Success_R5_pct": 46.166666666666664,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 1.4444444444444444,
         "AUC_Success_pct": 27.435185185185187,
         "Median_Success_Round": 2.0,
@@ -137,6 +153,7 @@
       {
         "Model_Display": "GPT-OSS 20B",
         "Success_R5_pct": 29.333333333333332,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 3.111111111111111,
         "AUC_Success_pct": 19.435185185185187,
         "Median_Success_Round": 2.0,
@@ -149,6 +166,7 @@
       {
         "Model_Display": "Qwen3 Coder",
         "Success_R5_pct": 20.944444444444443,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 11.722222222222223,
         "AUC_Success_pct": 17.703703703703702,
         "Median_Success_Round": 0.0,
@@ -161,6 +179,7 @@
       {
         "Model_Display": "Llama 3.3 70B Instruct",
         "Success_R5_pct": 20.833333333333336,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 0.0,
         "AUC_Success_pct": 8.925925925925926,
         "Median_Success_Round": 3.0,
@@ -172,8 +191,8 @@
       },
       {
         "Model_Display": "sap-abap-1",
-        "Understanding_R5_pct": 47.63,
         "Success_R5_pct": 19.88888888888889,
+        "Understanding_R5_pct": 47.63,
         "Success_R0_pct": 10.666666666666668,
         "AUC_Success_pct": 16.555555555555557,
         "Median_Success_Round": 0.0,
@@ -186,6 +205,7 @@
       {
         "Model_Display": "Qwen2.5 Coder 32B Instruct",
         "Success_R5_pct": 13.0,
+        "Understanding_R5_pct": null,
         "Success_R0_pct": 6.0,
         "AUC_Success_pct": 10.287037037037036,
         "Median_Success_Round": 1.0,
@@ -193,6 +213,19 @@
         "PassAt5_Final_pct": 17.652116402116402,
         "Prompts_Solved_Any_pct": 19.444444444444446,
         "Prompts_Solved_All_pct": 6.666666666666667,
+        "Max_LLM_Calls_Per_Run": 6
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R5_pct": 0.0,
+        "Understanding_R5_pct": null,
+        "Success_R0_pct": 0.0,
+        "AUC_Success_pct": 0.0,
+        "Median_Success_Round": null,
+        "R0_Reaches_UnitTests_pct": 0.0,
+        "PassAt5_Final_pct": 0.0,
+        "Prompts_Solved_Any_pct": 0.0,
+        "Prompts_Solved_All_pct": 0.0,
         "Max_LLM_Calls_Per_Run": 6
       }
     ]
@@ -273,6 +306,15 @@
         "Success_R5_pct": 64.0
       },
       {
+        "Model_Display": "Mistral Large 3",
+        "Success_R0_pct": 9.22222222222222,
+        "Success_R1_pct": 20.88888888888889,
+        "Success_R2_pct": 31.722222222222225,
+        "Success_R3_pct": 40.166666666666664,
+        "Success_R4_pct": 45.88888888888889,
+        "Success_R5_pct": 51.33333333333333
+      },
+      {
         "Model_Display": "GPT-OSS 120B",
         "Success_R0_pct": 1.4444444444444444,
         "Success_R1_pct": 13.61111111111111,
@@ -325,6 +367,15 @@
         "Success_R3_pct": 11.722222222222223,
         "Success_R4_pct": 12.444444444444445,
         "Success_R5_pct": 13.0
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R0_pct": 0.0,
+        "Success_R1_pct": 0.0,
+        "Success_R2_pct": 0.0,
+        "Success_R3_pct": 0.0,
+        "Success_R4_pct": 0.0,
+        "Success_R5_pct": 0.0
       }
     ]
   },
@@ -395,6 +446,14 @@
         "Success_R5_ABAPDatabaseOperation_pct": 16.25
       },
       {
+        "Model_Display": "Mistral Large 3",
+        "Success_R5_StringHandling_pct": 49.73684210526316,
+        "Success_R5_ListOrArrayOperation_pct": 47.129629629629626,
+        "Success_R5_MathematicalCalculation_pct": 55.053763440860216,
+        "Success_R5_LogicalCondition_pct": 52.48,
+        "Success_R5_ABAPDatabaseOperation_pct": 13.750000000000002
+      },
+      {
         "Model_Display": "GPT-OSS 120B",
         "Success_R5_StringHandling_pct": 45.6578947368421,
         "Success_R5_ListOrArrayOperation_pct": 32.5,
@@ -441,6 +500,14 @@
         "Success_R5_MathematicalCalculation_pct": 17.956989247311828,
         "Success_R5_LogicalCondition_pct": 11.44,
         "Success_R5_ABAPDatabaseOperation_pct": 14.374999999999998
+      },
+      {
+        "Model_Display": "Codestral 22B",
+        "Success_R5_StringHandling_pct": 0.0,
+        "Success_R5_ListOrArrayOperation_pct": 0.0,
+        "Success_R5_MathematicalCalculation_pct": 0.0,
+        "Success_R5_LogicalCondition_pct": 0.0,
+        "Success_R5_ABAPDatabaseOperation_pct": 0.0
       }
     ]
   },
@@ -456,81 +523,40 @@
       "description": "Compares final success by benchmark task type, including ABAP Database Operations. Use this to see whether a model is consistently strong across categories or only performs well on general-purpose tasks. This helps identify models with better ABAP-specific robustness."
     },
     {
-      "file": "understanding_success_by_model_by_feedbackround_in_percent.png",
-      "title": "Understanding Benchmark: Cumulative Success By Feedback Round",
-      "description": "Cumulative share of (item, repetition) pairs answered correctly across feedback rounds R0–R5. Each model answered 180 structured questions about ABAP code and unit tests. Claude Opus 4.5 leads, GPT-5.2 trails — the reverse of the code generation benchmark."
+      "file": "km_survival_curve_all_models.png",
+      "title": "Kaplan-Meier Survival Curves (All Tasks)",
+      "description": "Survival here means the share of runs that are still unsolved after each round. A faster downward curve indicates faster convergence to passing solutions. Lower survival at the same round is better."
+    },
+    {
+      "file": "km_survival_curve_abap.png",
+      "title": "Kaplan-Meier Survival Curves (ABAP DB Tasks)",
+      "description": "The same survival analysis, restricted to ABAP Database Operation tasks only. This isolates performance on SAP/ABAP-specific problems and highlights which models stay reliable in this harder subset."
+    },
+    {
+      "file": "error_categories_by_model.png",
+      "title": "Response Error Stage Distribution",
+      "description": "Breaks down where failures occur in the SAP validation pipeline: class creation, syntax checks, or unit tests. Interpret this in order: a low unit-test failure rate is only meaningful if the model reliably passes creation and syntax stages first."
+    },
+    {
+      "file": "syntax_error_types_by_model.png",
+      "title": "Syntax Error Category Distribution",
+      "description": "Splits syntax failures into lexical/token, structural, type/conversion, OOP, and declaration errors. This shows whether a model mostly fails on basic ABAP syntax mechanics or on deeper typing and object-oriented constraints."
+    },
+    {
+      "file": "failed_tasks_by_category.png",
+      "title": "Tasks Failed By All Models",
+      "description": "Shows the percentage of tasks in each category that no evaluated model could solve. Higher values indicate benchmark blind spots and hard task regions where model capabilities are still weak."
+    },
+    {
+      "file": "success_distribution.png",
+      "title": "Task-Level Success Distribution",
+      "description": "Displays the distribution of per-task success rates, not just a single average score. Use it to distinguish stable models from polarized ones that solve some tasks almost always and others almost never."
     }
   ],
-  "understanding": {
-    "table": {
-      "columns": [
-        { "key": "Model_Display", "label": "Model", "type": "text" },
-        { "key": "Runs", "label": "Runs", "type": "number" },
-        { "key": "Success_R0_pct", "label": "R0", "type": "percent" },
-        { "key": "Success_R1_pct", "label": "R1", "type": "percent" },
-        { "key": "Success_R2_pct", "label": "R2", "type": "percent" },
-        { "key": "Success_R3_pct", "label": "R3", "type": "percent" },
-        { "key": "Success_R4_pct", "label": "R4", "type": "percent" },
-        { "key": "Success_R5_pct", "label": "R5", "type": "percent" },
-        { "key": "AUC_Success_pct", "label": "AUC (R0–R5)", "type": "percent" }
-      ],
-      "rows": [
-        {
-          "Model_Display": "Claude Opus 4.5",
-          "Runs": 540,
-          "Success_R0_pct": 44.26,
-          "Success_R1_pct": 45.19,
-          "Success_R2_pct": 49.07,
-          "Success_R3_pct": 53.70,
-          "Success_R4_pct": 57.22,
-          "Success_R5_pct": 61.11,
-          "AUC_Success_pct": 51.76
-        },
-        {
-          "Model_Display": "Mistral Large 2512",
-          "Runs": 540,
-          "Success_R0_pct": 38.70,
-          "Success_R1_pct": 46.30,
-          "Success_R2_pct": 49.26,
-          "Success_R3_pct": 50.93,
-          "Success_R4_pct": 53.15,
-          "Success_R5_pct": 54.26,
-          "AUC_Success_pct": 48.77
-        },
-        {
-          "Model_Display": "SAP ABAP-1",
-          "Runs": 548,
-          "Success_R0_pct": 37.23,
-          "Success_R1_pct": 40.0,
-          "Success_R2_pct": 42.15,
-          "Success_R3_pct": 45.99,
-          "Success_R4_pct": 47.26,
-          "Success_R5_pct": 47.63,
-          "AUC_Success_pct": 43.37
-        },
-        {
-          "Model_Display": "GPT-5.2",
-          "Runs": 540,
-          "Success_R0_pct": 36.11,
-          "Success_R1_pct": 38.89,
-          "Success_R2_pct": 41.11,
-          "Success_R3_pct": 44.26,
-          "Success_R4_pct": 45.0,
-          "Success_R5_pct": 45.19,
-          "AUC_Success_pct": 41.76
-        }
-      ]
-    },
-    "plot": {
-      "file": "understanding_success_by_model_by_feedbackround_in_percent.png",
-      "title": "Understanding Benchmark: Cumulative Success By Feedback Round",
-      "description": "Cumulative share of (item, repetition) pairs answered correctly across feedback rounds R0–R5. Each model answered 180 structured questions about ABAP code and unit tests. A higher bar means the model better understands ABAP code structure and test behaviour. Claude Opus 4.5 leads, GPT-5.2 trails — the reverse of the code generation benchmark."
-    }
-  },
   "summary": {
-    "models_count": 11,
-    "total_models_count": 11,
-    "fully_evaluated_models_count": 11,
+    "models_count": 12,
+    "total_models_count": 12,
+    "fully_evaluated_models_count": 12,
     "top_by_final_success": [
       "Claude Opus 4.5 (2025-11-01)",
       "GPT-5 (2025-08-07)",
