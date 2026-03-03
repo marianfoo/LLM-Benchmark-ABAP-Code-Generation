@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-03-03T21:20:05Z",
+  "generated_at_utc": "2026-03-03T21:33:52Z",
   "paper_url": "https://arxiv.org/abs/2601.15188",
   "main_table": {
     "columns": [
@@ -11,49 +11,49 @@
       },
       {
         "key": "Success_R5_pct",
-        "label": "Success R5",
+        "label": "Code Gen (after R5)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Understanding_R5_pct",
-        "label": "Understanding R5",
+        "label": "Understanding (after R5)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R0_pct",
-        "label": "Success R0",
+        "label": "Code Gen (1st attempt)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "AUC_Success_pct",
-        "label": "AUC (R0-R5)",
+        "label": "AUC R0\u2013R5 (improves fast?)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "R0_Reaches_UnitTests_pct",
-        "label": "R0 Reaches Unit Tests",
+        "label": "R0 Code Compiles (%)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "PassAt5_Final_pct",
-        "label": "pass@5 (Final)",
+        "label": "pass@5",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Prompts_Solved_Any_pct",
-        "label": "Prompts Solved >=1/10",
+        "label": "Tasks Solved (\u22651/10 runs)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Prompts_Solved_All_pct",
-        "label": "Prompts Solved 10/10",
+        "label": "Tasks Solved (10/10 runs)",
         "type": "percent",
         "default_sort": "desc"
       }
@@ -236,37 +236,37 @@
       },
       {
         "key": "Success_R0_pct",
-        "label": "R0",
+        "label": "R0 (1st attempt)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R1_pct",
-        "label": "R1",
+        "label": "R1 (+1 feedback)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R2_pct",
-        "label": "R2",
+        "label": "R2 (+2 feedback)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R3_pct",
-        "label": "R3",
+        "label": "R3 (+3 feedback)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R4_pct",
-        "label": "R4",
+        "label": "R4 (+4 feedback)",
         "type": "percent",
         "default_sort": "desc"
       },
       {
         "key": "Success_R5_pct",
-        "label": "R5",
+        "label": "R5 (+5 feedback)",
         "type": "percent",
         "default_sort": "desc"
       }
@@ -425,7 +425,7 @@
       },
       {
         "key": "Success_R5_ListOrArrayOperation_pct",
-        "label": "List Or Array Operation",
+        "label": "List / Array Operation",
         "type": "percent",
         "default_sort": "desc"
       },
@@ -599,43 +599,43 @@
         },
         {
           "key": "AUC_Success_pct",
-          "label": "AUC (R0\u2013R5)",
+          "label": "AUC R0\u2013R5 (improves fast?)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R0_pct",
-          "label": "R0",
+          "label": "R0 (1st attempt)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R1_pct",
-          "label": "R1",
+          "label": "R1 (+1 feedback)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R2_pct",
-          "label": "R2",
+          "label": "R2 (+2 feedback)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R3_pct",
-          "label": "R3",
+          "label": "R3 (+3 feedback)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R4_pct",
-          "label": "R4",
+          "label": "R4 (+4 feedback)",
           "type": "percent",
           "default_sort": "desc"
         },
         {
           "key": "Success_R5_pct",
-          "label": "R5",
+          "label": "R5 (+5 feedback)",
           "type": "percent",
           "default_sort": "desc"
         }

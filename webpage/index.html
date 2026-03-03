@@ -42,7 +42,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
     />
-    <link rel="stylesheet" href="styles.css?v=20260303-1" />
+    <link rel="stylesheet" href="styles.css?v=20260303-3" />
 
     <script type="application/ld+json">
       {
@@ -133,9 +133,13 @@
           </a>.
         </p>
         <p class="intro">
-          Read the blog post for background, cost analysis, and practical recommendations:
+          Read the blog posts for background, cost analysis, and practical recommendations:
           <a href="https://blog.zeis.de/posts/2026-02-09-abap-llm-benchmark/" target="_blank" rel="noopener noreferrer">
             Benchmarking LLMs for ABAP: Why ABAP-1 Isn't a Code Generator (Yet)
+          </a>
+          and
+          <a href="https://blog.zeis.de/posts/2026-03-05-abap-llm-benchmark-understanding/" target="_blank" rel="noopener noreferrer">
+            SAP's ABAP-1 Loses Every ABAP Benchmark, Even "Explaining"
           </a>.
         </p>
       </header>
@@ -156,8 +160,18 @@
         <div class="section-title-row">
           <h2>ABAP Code Generation — Main Comparison Table</h2>
           <p class="section-subtitle">
-            Only fully evaluated models are shown (Max rounds tested = 6). Sort by any column and filter by model name.
+            Only fully evaluated models are shown (all 6 rounds tested). Sort by any column and filter by model name.
           </p>
+          <dl class="col-guide">
+            <dt>Code Gen (after R5)</dt><dd>% of 1,800 runs passing after up to 5 feedback rounds — headline metric</dd>
+            <dt>Code Gen (1st attempt)</dt><dd>Same, but on the very first try with no feedback</dd>
+            <dt>Understanding (after R5)</dt><dd>Score on the separate ABAP understanding benchmark (180 tasks × 3 reps)</dd>
+            <dt>AUC R0–R5</dt><dd>Area under the cumulative-success curve; higher = improves faster with feedback</dd>
+            <dt>R0 Code Compiles (%)</dt><dd>% of first attempts where the code compiled &amp; activated in SAP (regardless of test outcome)</dd>
+            <dt>pass@5</dt><dd>Probability that ≥1 of 5 randomly drawn runs passes (standard HumanEval metric)</dd>
+            <dt>Tasks Solved (≥1/10)</dt><dd>% of the 180 tasks where at least one run eventually succeeded</dd>
+            <dt>Tasks Solved (10/10)</dt><dd>% of the 180 tasks where every run succeeded (maximum consistency)</dd>
+          </dl>
         </div>
         <div class="controls">
           <label class="control">
@@ -183,6 +197,11 @@
             Each model answered 180 structured questions (3 repetitions, up to 6 feedback rounds).
             Scored on 6 objective fields extracted from canonical code and unit tests.
           </p>
+          <dl class="col-guide">
+            <dt>R0 (1st attempt)</dt><dd>% of runs scored correctly on the first try, no feedback given</dd>
+            <dt>R1–R5 (+N feedback)</dt><dd>Cumulative % correct after N rounds of automated correction feedback</dd>
+            <dt>AUC R0–R5</dt><dd>Area under the cumulative-success curve; higher = improves faster with feedback</dd>
+          </dl>
         </div>
         <div class="table-wrap">
           <table id="understandingTable">
@@ -225,6 +244,10 @@
 
       <section class="card">
         <h2>Cumulative Success By Feedback Round</h2>
+        <p class="section-subtitle">
+          Cumulative % of 1,800 runs passing up to and including each round.
+          R0 = first attempt with no feedback · R1–R5 = after receiving SAP compiler &amp; unit test errors.
+        </p>
         <div class="table-wrap">
           <table id="roundTable">
             <caption class="sr-only">Cumulative success rates by feedback round (R0 to R5).</caption>
@@ -236,6 +259,9 @@
 
       <section class="card">
         <h2>Success By Task Category</h2>
+        <p class="section-subtitle">
+          Final success rate after R5, broken down by the five benchmark task categories.
+        </p>
         <div class="table-wrap">
           <table id="categoryTable">
             <caption class="sr-only">Final success rates by benchmark task category.</caption>
@@ -262,6 +288,6 @@
       </article>
     </template>
 
-    <script src="app.js?v=20260303-2" defer></script>
+    <script src="app.js?v=20260303-3" defer></script>
   </body>
 </html>

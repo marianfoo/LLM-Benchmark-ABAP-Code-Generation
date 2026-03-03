@@ -86,37 +86,47 @@ UNDERSTANDING_EXCLUDED_MODELS = {"gemini-3.1-pro-preview"}
 
 MAIN_COLUMNS = [
     {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
-    {"key": "Success_R5_pct", "label": "Success R5", "type": "percent", "default_sort": "desc"},
-    {"key": "Understanding_R5_pct", "label": "Understanding R5", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R0_pct", "label": "Success R0", "type": "percent", "default_sort": "desc"},
-    {"key": "AUC_Success_pct", "label": "AUC (R0-R5)", "type": "percent", "default_sort": "desc"},
+    # % of all 1800 runs (180 tasks × 10 reps) that passed after up to 5 feedback rounds
+    {"key": "Success_R5_pct", "label": "Code Gen (after R5)", "type": "percent", "default_sort": "desc"},
+    # % of all 540 understanding runs (180 tasks × 3 reps) that passed after up to 5 feedback rounds
+    {"key": "Understanding_R5_pct", "label": "Understanding (after R5)", "type": "percent", "default_sort": "desc"},
+    # % of runs that passed on the very first attempt (no feedback given)
+    {"key": "Success_R0_pct", "label": "Code Gen (1st attempt)", "type": "percent", "default_sort": "desc"},
+    # Area under the cumulative-success curve across rounds R0–R5; higher = improves faster
+    {"key": "AUC_Success_pct", "label": "AUC R0–R5 (improves fast?)", "type": "percent", "default_sort": "desc"},
     {
         "key": "R0_Reaches_UnitTests_pct",
-        "label": "R0 Reaches Unit Tests",
+        # % of R0 runs where code compiled & activated (reached the unit-test stage), regardless of test outcome
+        "label": "R0 Code Compiles (%)",
         "type": "percent",
         "default_sort": "desc",
     },
-    {"key": "PassAt5_Final_pct", "label": "pass@5 (Final)", "type": "percent", "default_sort": "desc"},
-    {"key": "Prompts_Solved_Any_pct", "label": "Prompts Solved >=1/10", "type": "percent", "default_sort": "desc"},
-    {"key": "Prompts_Solved_All_pct", "label": "Prompts Solved 10/10", "type": "percent", "default_sort": "desc"},
+    # pass@5: given 10 independent runs, probability at least 1 of any 5 drawn passes (standard HumanEval metric)
+    {"key": "PassAt5_Final_pct", "label": "pass@5", "type": "percent", "default_sort": "desc"},
+    # % of the 180 prompts where at least 1 of the 10 runs eventually succeeded
+    {"key": "Prompts_Solved_Any_pct", "label": "Tasks Solved (≥1/10 runs)", "type": "percent", "default_sort": "desc"},
+    # % of the 180 prompts where all 10 runs succeeded (maximum consistency)
+    {"key": "Prompts_Solved_All_pct", "label": "Tasks Solved (10/10 runs)", "type": "percent", "default_sort": "desc"},
 ]
 
 ROUND_COLUMNS = [
     {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
-    {"key": "Success_R0_pct", "label": "R0", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R1_pct", "label": "R1", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R2_pct", "label": "R2", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R3_pct", "label": "R3", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R4_pct", "label": "R4", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R5_pct", "label": "R5", "type": "percent", "default_sort": "desc"},
+    # Cumulative % of runs passing after each feedback round (R0 = first attempt, R5 = after 5 corrections)
+    {"key": "Success_R0_pct", "label": "R0 (1st attempt)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R1_pct", "label": "R1 (+1 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R2_pct", "label": "R2 (+2 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R3_pct", "label": "R3 (+3 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R4_pct", "label": "R4 (+4 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R5_pct", "label": "R5 (+5 feedback)", "type": "percent", "default_sort": "desc"},
 ]
 
 CATEGORY_COLUMNS = [
     {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
+    # Final success rate (after R5) per task category
     {"key": "Success_R5_StringHandling_pct", "label": "String Handling", "type": "percent", "default_sort": "desc"},
     {
         "key": "Success_R5_ListOrArrayOperation_pct",
-        "label": "List Or Array Operation",
+        "label": "List / Array Operation",
         "type": "percent",
         "default_sort": "desc",
     },
@@ -217,13 +227,15 @@ def _merge_understanding_scores(df: pd.DataFrame) -> pd.DataFrame:
 
 UNDERSTANDING_TABLE_COLUMNS = [
     {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
-    {"key": "AUC_Success_pct", "label": "AUC (R0\u2013R5)", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R0_pct", "label": "R0", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R1_pct", "label": "R1", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R2_pct", "label": "R2", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R3_pct", "label": "R3", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R4_pct", "label": "R4", "type": "percent", "default_sort": "desc"},
-    {"key": "Success_R5_pct", "label": "R5", "type": "percent", "default_sort": "desc"},
+    # Area under the cumulative-success curve across rounds R0–R5; higher = improves faster with feedback
+    {"key": "AUC_Success_pct", "label": "AUC R0\u2013R5 (improves fast?)", "type": "percent", "default_sort": "desc"},
+    # Cumulative % of understanding runs passing after each feedback round (R0 = first attempt, R5 = after 5 corrections)
+    {"key": "Success_R0_pct", "label": "R0 (1st attempt)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R1_pct", "label": "R1 (+1 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R2_pct", "label": "R2 (+2 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R3_pct", "label": "R3 (+3 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R4_pct", "label": "R4 (+4 feedback)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R5_pct", "label": "R5 (+5 feedback)", "type": "percent", "default_sort": "desc"},
 ]
 
 # Human-readable display names for understanding benchmark models

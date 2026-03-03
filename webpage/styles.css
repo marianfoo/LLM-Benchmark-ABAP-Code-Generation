@@ -171,6 +171,25 @@ h3 {
   font-size: 0.93rem;
 }
 
+.col-guide {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.col-guide dt {
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.col-guide dd {
+  margin: 0;
+}
+
 .controls {
   display: grid;
   grid-template-columns: minmax(220px, 1fr) auto;
