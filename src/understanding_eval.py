@@ -285,53 +285,114 @@ def _mock_response(expected: dict[str, Any], round_idx: int, model_name: str, it
     return json.dumps(payload, ensure_ascii=False)
 
 
+def _parse_retry_delay(exc: Exception) -> float | None:
+    """Extract the suggested retry delay (seconds) from a 429 response, if present."""
+    try:
+        body = getattr(exc, "body", None) or {}
+        # OpenAI SDK: body is a dict with 'error' → 'details' list
+        for detail in (body.get("error") or {}).get("details", []):
+            delay_str = detail.get("retryDelay", "")
+            if delay_str:
+                # Format is e.g. "6s" or "6.642320681s"
+                return float(delay_str.rstrip("s"))
+    except Exception:
+        pass
+    return None
+
+
 async def _ask_provider(client: Any, model_info: RunnableModel, chat_history: list[dict[str, str]]) -> str:
+    """Call the provider API with automatic 429 retry/backoff.
+
+    On RateLimitError the function respects the API's suggested retryDelay
+    (parsed from the response body) and falls back to exponential backoff
+    (5 s → 10 s → 20 s → 40 s → 80 s, capped at 120 s) for up to 8 attempts.
+    """
     provider = model_info["provider"]
+    max_attempts = 8
 
-    if provider == "SAP_AICORE":
-        return await client.complete(chat_history)
+    for attempt in range(max_attempts):
+        try:
+            if provider == "SAP_AICORE":
+                return await client.complete(chat_history)
 
-    if provider == "ANTHROPIC":
-        system_prompt = ""
-        messages: list[dict[str, str]] = []
-        for msg in chat_history:
-            role = msg["role"]
-            if role == "system":
-                system_prompt = msg["content"]
-            elif role in {"user", "assistant"}:
-                messages.append({"role": role, "content": msg["content"]})
+            if provider == "ANTHROPIC":
+                system_prompt = ""
+                messages: list[dict[str, str]] = []
+                for msg in chat_history:
+                    role = msg["role"]
+                    if role == "system":
+                        system_prompt = msg["content"]
+                    elif role in {"user", "assistant"}:
+                        messages.append({"role": role, "content": msg["content"]})
 
-        response = await client.messages.create(
-            model=model_info["name"],
-            system=system_prompt,
-            messages=messages,
-            temperature=model_info["temperature"],
-            max_tokens=model_info["max_tokens"],
-        )
+                response = await client.messages.create(
+                    model=model_info["name"],
+                    system=system_prompt,
+                    messages=messages,
+                    temperature=model_info["temperature"],
+                    max_tokens=model_info["max_tokens"],
+                )
 
-        parts: list[str] = []
-        for block in response.content:
-            txt = getattr(block, "text", None)
-            if isinstance(txt, str):
-                parts.append(txt)
-        return "\n".join(parts).strip()
+                parts: list[str] = []
+                for block in response.content:
+                    txt = getattr(block, "text", None)
+                    if isinstance(txt, str):
+                        parts.append(txt)
+                return "\n".join(parts).strip()
 
-    # OpenAI and OpenAI-compatible providers
-    if "gpt-5" in model_info["name"]:
-        response = await client.chat.completions.create(
-            model=model_info["name"],
-            messages=chat_history,
-            max_completion_tokens=model_info["max_tokens"],
-        )
-    else:
-        response = await client.chat.completions.create(
-            model=model_info["name"],
-            messages=chat_history,
-            temperature=model_info["temperature"],
-            max_tokens=model_info["max_tokens"],
-        )
+            # OpenAI Responses API (/v1/responses) — for codex/reasoning models
+            if provider == "OPENAI_RESPONSES":
+                kwargs: dict = {
+                    "model": model_info["name"],
+                    "input": list(chat_history),
+                    "max_output_tokens": model_info["max_tokens"],
+                    "store": False,
+                }
+                effort = model_info.get("reasoning_effort")
+                if effort:
+                    kwargs["reasoning"] = {"effort": effort}
+                response = await client.responses.create(**kwargs)
+                return (response.output_text or "").strip()
 
-    return (response.choices[0].message.content or "").strip()
+            # OpenAI and OpenAI-compatible providers (chat completions)
+            if "gpt-5" in model_info["name"]:
+                response = await client.chat.completions.create(
+                    model=model_info["name"],
+                    messages=chat_history,
+                    max_completion_tokens=model_info["max_tokens"],
+                )
+            else:
+                response = await client.chat.completions.create(
+                    model=model_info["name"],
+                    messages=chat_history,
+                    temperature=model_info["temperature"],
+                    max_tokens=model_info["max_tokens"],
+                )
+
+            return (response.choices[0].message.content or "").strip()
+
+        except Exception as exc:
+            is_last = attempt == max_attempts - 1
+            status = getattr(exc, "status_code", None)
+            exc_type = type(exc).__name__
+            is_rate_limit = status == 429 or "RateLimitError" in exc_type
+            # 503 = server overloaded (high demand) — also retriable
+            is_server_overload = status == 503 or "InternalServerError" in exc_type
+
+            if is_last or not (is_rate_limit or is_server_overload):
+                raise
+
+            # Honour the API's suggested retry delay; fall back to exponential backoff
+            suggested = _parse_retry_delay(exc) if is_rate_limit else None
+            delay = suggested if suggested is not None else min(5 * (2 ** attempt), 120)
+            # Add a small buffer on top of the suggested delay to avoid immediately re-hitting the limit
+            delay = delay + 2
+            label = "RATE LIMIT" if is_rate_limit else "SERVER OVERLOAD"
+            print(
+                f"[{label}] {model_info['name']} — attempt {attempt + 1}/{max_attempts}, "
+                f"retrying in {delay:.1f}s"
+            )
+            await asyncio.sleep(delay)
 
 
 async def _build_client(model_info: RunnableModel) -> Any:
@@ -353,6 +414,7 @@ async def _build_client(model_info: RunnableModel) -> Any:
     import openai
 
     api_key = get_provider_api_key(provider)
+    # OPENAI_RESPONSES uses the same AsyncOpenAI client; the difference is in _ask_provider
     base_url = API_PROVIDERS[provider].get("base_url")
     if base_url:
         return openai.AsyncOpenAI(api_key=api_key, base_url=base_url)
@@ -559,11 +621,16 @@ async def _run(args: argparse.Namespace) -> int:
     expected_total = len(items) * repetitions
     todo = expected_total - len(existing_keys)
 
+    concurrency = args.concurrency
+    # Gemini 3.1 Pro Preview has only 25 RPM — cap concurrency automatically
+    # unless the user explicitly raised it above the default.
+    if model_info["provider"] == "GOOGLE" and concurrency == 10:
+        concurrency = 3
     print(f"Model: {model_info['name']} ({model_info['provider']})")
     print(f"Items: {len(items)}, repetitions: {repetitions}, max_rounds: {max_rounds}")
     print(f"Output: {output_path}")
     print(f"Resume: {args.resume}, already completed keys: {len(existing_keys)}, todo: {todo}")
-    print(f"Mock mode: {args.mock}")
+    print(f"Mock mode: {args.mock}, concurrency: {concurrency}")
 
     if todo <= 0:
         print("No pending runs.")
@@ -573,16 +640,19 @@ async def _run(args: argparse.Namespace) -> int:
     if not args.mock:
         client = await _build_client(model_info)
 
+    # Shared mutable state — safe because asyncio is single-threaded cooperative.
     file_cache: dict[str, str] = {}
+    done_count = 0
+    errors = 0
+    semaphore = asyncio.Semaphore(concurrency)
 
-    done = 0
-    for item in items:
+    async def _run_one(item: dict, repetition: int) -> None:
+        nonlocal done_count, errors
         item_id = str(item["item_id"])
-        for repetition in range(repetitions):
-            key = f"{item_id}|{repetition}"
-            if key in existing_keys:
-                continue
-
+        key = f"{item_id}|{repetition}"
+        if key in existing_keys:
+            return
+        async with semaphore:
             try:
                 record = await _run_single_item(
                     client=client,
@@ -595,17 +665,31 @@ async def _run(args: argparse.Namespace) -> int:
                     cache=file_cache,
                 )
                 _append_record(output_path, record)
-                done += 1
-
-                if done % 10 == 0 or done == todo:
-                    print(f"Progress: {done}/{todo} new runs")
-
+                done_count += 1
+                if done_count % 10 == 0 or done_count == todo:
+                    print(f"Progress: {done_count}/{todo} new runs")
             except Exception as exc:
+                errors += 1
                 print(f"[ERROR] item={item_id} rep={repetition}: {exc!r}")
                 if not args.continue_on_error:
-                    return 1
+                    raise
 
-    print(f"Completed new runs: {done}")
+    tasks = [
+        _run_one(item, repetition)
+        for item in items
+        for repetition in range(repetitions)
+    ]
+    try:
+        await asyncio.gather(*tasks)
+    except Exception:
+        # continue_on_error=False: first error already printed; stop here
+        print(f"Stopped after error. Completed: {done_count}/{todo}")
+        return 1
+
+    if errors:
+        print(f"Completed new runs: {done_count}/{todo} ({errors} errors)")
+    else:
+        print(f"Completed new runs: {done_count}")
     return 0
 
 
@@ -636,6 +720,11 @@ def main() -> int:
     parser.add_argument("--smoke", action="store_true", help="Shortcut: very small run (<=3 items, 1 repetition, <=2 rounds)")
     parser.add_argument("--include-conversation", action="store_true", help="Store full chat history per run (larger output)")
     parser.add_argument("--continue-on-error", action="store_true", help="Continue on per-item errors")
+    parser.add_argument(
+        "--concurrency", type=int, default=10,
+        help="Max concurrent API requests in sequential run mode (default: 10). "
+             "Increase for faster providers; decrease if you hit rate-limit errors.",
+    )
 
     args = parser.parse_args()
     return asyncio.run(_run(args))

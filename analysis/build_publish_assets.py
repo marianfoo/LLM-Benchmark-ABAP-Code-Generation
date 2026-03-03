@@ -66,55 +66,22 @@ PLOT_METADATA = [
         ),
     },
     {
-        "file": "km_survival_curve_all_models.png",
-        "title": "Kaplan-Meier Survival Curves (All Tasks)",
+        "file": "understanding_success_by_model_by_feedbackround_in_percent.png",
+        "title": "Understanding Benchmark: Cumulative Success By Feedback Round",
         "description": (
-            "Survival here means the share of runs that are still unsolved after each round. "
-            "A faster downward curve indicates faster convergence to passing solutions. "
-            "Lower survival at the same round is better."
-        ),
-    },
-    {
-        "file": "km_survival_curve_abap.png",
-        "title": "Kaplan-Meier Survival Curves (ABAP DB Tasks)",
-        "description": (
-            "The same survival analysis, restricted to ABAP Database Operation tasks only. "
-            "This isolates performance on SAP/ABAP-specific problems and highlights which models stay reliable in this harder subset."
-        ),
-    },
-    {
-        "file": "error_categories_by_model.png",
-        "title": "Response Error Stage Distribution",
-        "description": (
-            "Breaks down where failures occur in the SAP validation pipeline: class creation, syntax checks, or unit tests. "
-            "Interpret this in order: a low unit-test failure rate is only meaningful if the model reliably passes creation and syntax stages first."
-        ),
-    },
-    {
-        "file": "syntax_error_types_by_model.png",
-        "title": "Syntax Error Category Distribution",
-        "description": (
-            "Splits syntax failures into lexical/token, structural, type/conversion, OOP, and declaration errors. "
-            "This shows whether a model mostly fails on basic ABAP syntax mechanics or on deeper typing and object-oriented constraints."
-        ),
-    },
-    {
-        "file": "failed_tasks_by_category.png",
-        "title": "Tasks Failed By All Models",
-        "description": (
-            "Shows the percentage of tasks in each category that no evaluated model could solve. "
-            "Higher values indicate benchmark blind spots and hard task regions where model capabilities are still weak."
-        ),
-    },
-    {
-        "file": "success_distribution.png",
-        "title": "Task-Level Success Distribution",
-        "description": (
-            "Displays the distribution of per-task success rates, not just a single average score. "
-            "Use it to distinguish stable models from polarized ones that solve some tasks almost always and others almost never."
+            "Cumulative share of (item, repetition) pairs answered correctly across feedback rounds R0\u20135. "
+            "Each model answered 180 structured questions about ABAP code and unit tests. "
+            "Claude Opus 4.5 leads, GPT-5.2 trails \u2014 the reverse of the code generation benchmark."
         ),
     },
 ]
+
+# Models to exclude from all dashboard tables (e.g. incomplete or deprecated runs)
+EXCLUDED_MODELS = {"Codestral 22B"}
+
+# Models excluded specifically from the understanding benchmark table and plots
+# (e.g. runs that are not yet fully validated)
+UNDERSTANDING_EXCLUDED_MODELS = {"gemini-3.1-pro-preview"}
 
 
 MAIN_COLUMNS = [
@@ -124,13 +91,6 @@ MAIN_COLUMNS = [
     {"key": "Success_R0_pct", "label": "Success R0", "type": "percent", "default_sort": "desc"},
     {"key": "AUC_Success_pct", "label": "AUC (R0-R5)", "type": "percent", "default_sort": "desc"},
     {
-        "key": "Median_Success_Round",
-        "label": "Median Feedbacks To Success",
-        "type": "number",
-        "decimals": 1,
-        "default_sort": "asc",
-    },
-    {
         "key": "R0_Reaches_UnitTests_pct",
         "label": "R0 Reaches Unit Tests",
         "type": "percent",
@@ -139,37 +99,39 @@ MAIN_COLUMNS = [
     {"key": "PassAt5_Final_pct", "label": "pass@5 (Final)", "type": "percent", "default_sort": "desc"},
     {"key": "Prompts_Solved_Any_pct", "label": "Prompts Solved >=1/10", "type": "percent", "default_sort": "desc"},
     {"key": "Prompts_Solved_All_pct", "label": "Prompts Solved 10/10", "type": "percent", "default_sort": "desc"},
-    {"key": "Max_LLM_Calls_Per_Run", "label": "Max Rounds Tested", "type": "number", "default_sort": "desc"},
 ]
 
 ROUND_COLUMNS = [
-    {"key": "Model_Display", "label": "Model", "type": "text"},
-    {"key": "Success_R0_pct", "label": "R0", "type": "percent"},
-    {"key": "Success_R1_pct", "label": "R1", "type": "percent"},
-    {"key": "Success_R2_pct", "label": "R2", "type": "percent"},
-    {"key": "Success_R3_pct", "label": "R3", "type": "percent"},
-    {"key": "Success_R4_pct", "label": "R4", "type": "percent"},
-    {"key": "Success_R5_pct", "label": "R5", "type": "percent"},
+    {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
+    {"key": "Success_R0_pct", "label": "R0", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R1_pct", "label": "R1", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R2_pct", "label": "R2", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R3_pct", "label": "R3", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R4_pct", "label": "R4", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R5_pct", "label": "R5", "type": "percent", "default_sort": "desc"},
 ]
 
 CATEGORY_COLUMNS = [
-    {"key": "Model_Display", "label": "Model", "type": "text"},
-    {"key": "Success_R5_StringHandling_pct", "label": "String Handling", "type": "percent"},
+    {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
+    {"key": "Success_R5_StringHandling_pct", "label": "String Handling", "type": "percent", "default_sort": "desc"},
     {
         "key": "Success_R5_ListOrArrayOperation_pct",
         "label": "List Or Array Operation",
         "type": "percent",
+        "default_sort": "desc",
     },
     {
         "key": "Success_R5_MathematicalCalculation_pct",
         "label": "Mathematical Calculation",
         "type": "percent",
+        "default_sort": "desc",
     },
-    {"key": "Success_R5_LogicalCondition_pct", "label": "Logical Condition", "type": "percent"},
+    {"key": "Success_R5_LogicalCondition_pct", "label": "Logical Condition", "type": "percent", "default_sort": "desc"},
     {
         "key": "Success_R5_ABAPDatabaseOperation_pct",
         "label": "ABAP Database Operation",
         "type": "percent",
+        "default_sort": "desc",
     },
 ]
 
@@ -238,6 +200,8 @@ def _merge_understanding_scores(df: pd.DataFrame) -> pd.DataFrame:
 
     try:
         udf = pd.read_csv(understanding_path)
+        # Remove models not yet validated for the understanding benchmark
+        udf = udf[~udf["Model"].isin(UNDERSTANDING_EXCLUDED_MODELS)]
         # Rename Success_R5_pct to Understanding_R5_pct and keep only what we need
         udf = udf[["Model", "Success_R5_pct"]].rename(columns={"Success_R5_pct": "Understanding_R5_pct"})
         df = df.merge(udf, on="Model", how="left")
@@ -251,6 +215,74 @@ def _merge_understanding_scores(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+UNDERSTANDING_TABLE_COLUMNS = [
+    {"key": "Model_Display", "label": "Model", "type": "text", "default_sort": "none"},
+    {"key": "AUC_Success_pct", "label": "AUC (R0\u2013R5)", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R0_pct", "label": "R0", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R1_pct", "label": "R1", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R2_pct", "label": "R2", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R3_pct", "label": "R3", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R4_pct", "label": "R4", "type": "percent", "default_sort": "desc"},
+    {"key": "Success_R5_pct", "label": "R5", "type": "percent", "default_sort": "desc"},
+]
+
+# Human-readable display names for understanding benchmark models
+UNDERSTANDING_MODEL_DISPLAY = {
+    "claude-opus-4-5-20251101": "Claude Opus 4.5",
+    "mistral-large-2512": "Mistral Large 2512",
+    "sap-abap-1": "SAP ABAP-1",
+    "gpt-5.2": "GPT-5.2",
+}
+
+
+def _build_understanding_section() -> dict[str, Any]:
+    """Build the understanding benchmark section from understanding_model_leaderboard.csv."""
+    path = DATA_DIR / "understanding_model_leaderboard.csv"
+    if not path.exists():
+        print(f"[INFO] No understanding leaderboard at {path}, skipping section.")
+        return {"table": {"columns": UNDERSTANDING_TABLE_COLUMNS, "rows": []}, "plot": None}
+
+    try:
+        udf = pd.read_csv(path)
+        # Remove models that are not yet validated for the understanding benchmark
+        udf = udf[~udf["Model"].isin(UNDERSTANDING_EXCLUDED_MODELS)].reset_index(drop=True)
+        udf = udf.sort_values("Success_R5_pct", ascending=False).reset_index(drop=True)
+
+        rows = []
+        for _, row in udf.iterrows():
+            model_key = str(row.get("Model", ""))
+            display = UNDERSTANDING_MODEL_DISPLAY.get(model_key, model_key)
+            rows.append({
+                "Model_Display": display,
+                "Runs": int(row["Runs"]) if not pd.isna(row.get("Runs")) else None,
+                "Success_R0_pct": round(float(row["Success_R0_pct"]), 2) if not pd.isna(row.get("Success_R0_pct")) else None,
+                "Success_R1_pct": round(float(row["Success_R1_pct"]), 2) if not pd.isna(row.get("Success_R1_pct")) else None,
+                "Success_R2_pct": round(float(row["Success_R2_pct"]), 2) if not pd.isna(row.get("Success_R2_pct")) else None,
+                "Success_R3_pct": round(float(row["Success_R3_pct"]), 2) if not pd.isna(row.get("Success_R3_pct")) else None,
+                "Success_R4_pct": round(float(row["Success_R4_pct"]), 2) if not pd.isna(row.get("Success_R4_pct")) else None,
+                "Success_R5_pct": round(float(row["Success_R5_pct"]), 2) if not pd.isna(row.get("Success_R5_pct")) else None,
+                "AUC_Success_pct": round(float(row["AUC_Success_pct"]), 2) if not pd.isna(row.get("AUC_Success_pct")) else None,
+            })
+
+        print(f"[OK] Built understanding section with {len(rows)} model(s).")
+    except Exception as exc:
+        print(f"[WARN] Could not build understanding section: {exc}")
+        rows = []
+
+    plot_file = "understanding_success_by_model_by_feedbackround_in_percent.png"
+    return {
+        "table": {"columns": UNDERSTANDING_TABLE_COLUMNS, "rows": rows},
+        "plot": {
+            "file": plot_file,
+            "title": "Understanding Benchmark: Cumulative Success By Feedback Round",
+            "description": (
+                "Cumulative share of (item, repetition) pairs answered correctly across feedback rounds R0\u20135. "
+                "Each model answered 180 structured questions about ABAP code and unit tests."
+            ),
+        },
+    }
+
+
 def _build_dashboard_json() -> Path:
     leaderboard_path = DATA_DIR / "model_leaderboard.csv"
     if not leaderboard_path.exists():
@@ -260,6 +292,9 @@ def _build_dashboard_json() -> Path:
 
     df = pd.read_csv(leaderboard_path)
     df = _merge_understanding_scores(df)
+    # Remove explicitly excluded models (e.g. Codestral 22B)
+    if "Model_Display" in df.columns:
+        df = df[~df["Model_Display"].isin(EXCLUDED_MODELS)].reset_index(drop=True)
     df = df.sort_values(
         ["Success_R5_pct", "AUC_Success_pct", "Success_R0_pct"],
         ascending=[False, False, False],
@@ -280,6 +315,8 @@ def _build_dashboard_json() -> Path:
     )
     fully_evaluated = int((df["Max_LLM_Calls_Per_Run"] >= 6).sum())
 
+    understanding_section = _build_understanding_section()
+
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "paper_url": "https://arxiv.org/abs/2601.15188",
@@ -296,6 +333,7 @@ def _build_dashboard_json() -> Path:
             "rows": _records_for_columns(df_full, CATEGORY_COLUMNS),
         },
         "plots": PLOT_METADATA,
+        "understanding": understanding_section,
         "summary": {
             "models_count": int(df_full["Model"].nunique()),
             "total_models_count": int(df["Model"].nunique()),

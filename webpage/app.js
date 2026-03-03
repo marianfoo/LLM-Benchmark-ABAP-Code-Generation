@@ -5,6 +5,12 @@ const state = {
   sortKey: "Success_R5_pct",
   sortDirection: "desc",
   filterText: "",
+  understandingSortKey: "AUC_Success_pct",
+  understandingSortDirection: "desc",
+  roundSortKey: "Success_R5_pct",
+  roundSortDirection: "desc",
+  categorySortKey: "Success_R5_StringHandling_pct",
+  categorySortDirection: "desc",
 };
 
 function asNumber(value) {
@@ -49,7 +55,7 @@ function getActiveColumn(columns) {
   return columns.find((column) => column.key === state.sortKey) ?? columns[0];
 }
 
-function renderTable(tableId, columns, rows, sortable = false) {
+function renderTable(tableId, columns, rows, sortable = false, activeSortKey = null, activeSortDir = "desc", onSort = null) {
   const table = document.getElementById(tableId);
   if (!table) return;
   const thead = table.querySelector("thead");
@@ -60,7 +66,6 @@ function renderTable(tableId, columns, rows, sortable = false) {
   tbody.innerHTML = "";
 
   const headerRow = document.createElement("tr");
-  const activeColumn = getActiveColumn(columns);
 
   for (const column of columns) {
     const th = document.createElement("th");
@@ -69,16 +74,10 @@ function renderTable(tableId, columns, rows, sortable = false) {
     if (sortable) {
       th.classList.add("sortable");
       th.addEventListener("click", () => {
-        if (state.sortKey === column.key) {
-          state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
-        } else {
-          state.sortKey = column.key;
-          state.sortDirection = column.default_sort === "asc" ? "asc" : "desc";
-        }
-        renderMainTable();
+        if (onSort) onSort(column);
       });
-      const isActive = column.key === activeColumn.key;
-      const icon = !isActive ? "↕" : state.sortDirection === "asc" ? "↑" : "↓";
+      const isActive = column.key === activeSortKey;
+      const icon = !isActive ? "↕" : activeSortDir === "asc" ? "↑" : "↓";
       th.innerHTML = `${column.label}<span class="sort-indicator">${icon}</span>`;
     } else {
       th.textContent = column.label;
@@ -118,12 +117,83 @@ function renderMainTable() {
   rows.sort((a, b) => compareRows(a, b, activeColumn));
   if (state.sortDirection === "desc") rows.reverse();
 
-  renderTable("mainTable", columns, rows, true);
+  renderTable("mainTable", columns, rows, true, state.sortKey, state.sortDirection, (column) => {
+    if (state.sortKey === column.key) {
+      state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
+    } else {
+      state.sortKey = column.key;
+      state.sortDirection = column.default_sort === "asc" ? "asc" : "desc";
+    }
+    renderMainTable();
+  });
+}
+
+function renderRoundTable() {
+  const columns = state.raw.round_table.columns;
+  let rows = [...state.raw.round_table.rows];
+  const activeCol = columns.find((c) => c.key === state.roundSortKey) ?? columns[0];
+  rows.sort((a, b) => compareRows(a, b, activeCol));
+  if (state.roundSortDirection === "desc") rows.reverse();
+  renderTable("roundTable", columns, rows, true, state.roundSortKey, state.roundSortDirection, (column) => {
+    if (state.roundSortKey === column.key) {
+      state.roundSortDirection = state.roundSortDirection === "asc" ? "desc" : "asc";
+    } else {
+      state.roundSortKey = column.key;
+      state.roundSortDirection = column.default_sort === "asc" ? "asc" : "desc";
+    }
+    renderRoundTable();
+  });
+}
+
+function renderCategoryTable() {
+  const columns = state.raw.category_table.columns;
+  let rows = [...state.raw.category_table.rows];
+  const activeCol = columns.find((c) => c.key === state.categorySortKey) ?? columns[0];
+  rows.sort((a, b) => compareRows(a, b, activeCol));
+  if (state.categorySortDirection === "desc") rows.reverse();
+  renderTable("categoryTable", columns, rows, true, state.categorySortKey, state.categorySortDirection, (column) => {
+    if (state.categorySortKey === column.key) {
+      state.categorySortDirection = state.categorySortDirection === "asc" ? "desc" : "asc";
+    } else {
+      state.categorySortKey = column.key;
+      state.categorySortDirection = column.default_sort === "asc" ? "asc" : "desc";
+    }
+    renderCategoryTable();
+  });
 }
 
 function renderSecondaryTables() {
-  renderTable("roundTable", state.raw.round_table.columns, state.raw.round_table.rows);
-  renderTable("categoryTable", state.raw.category_table.columns, state.raw.category_table.rows);
+  renderRoundTable();
+  renderCategoryTable();
+}
+
+function renderUnderstandingTable() {
+  const u = state.raw.understanding;
+  if (!u) return;
+  const columns = u.table.columns;
+  let rows = [...u.table.rows];
+
+  const activeCol = columns.find((c) => c.key === state.understandingSortKey) ?? columns[0];
+  rows.sort((a, b) => compareRows(a, b, activeCol));
+  if (state.understandingSortDirection === "desc") rows.reverse();
+
+  renderTable(
+    "understandingTable",
+    columns,
+    rows,
+    true,
+    state.understandingSortKey,
+    state.understandingSortDirection,
+    (column) => {
+      if (state.understandingSortKey === column.key) {
+        state.understandingSortDirection = state.understandingSortDirection === "asc" ? "desc" : "asc";
+      } else {
+        state.understandingSortKey = column.key;
+        state.understandingSortDirection = column.default_sort === "asc" ? "asc" : "desc";
+      }
+      renderUnderstandingTable();
+    },
+  );
 }
 
 function renderPlots() {
@@ -173,7 +243,7 @@ function bindControls() {
 function renderUnderstandingSection() {
   const u = state.raw.understanding;
   if (!u) return;
-  renderTable("understandingTable", u.table.columns, u.table.rows);
+  renderUnderstandingTable();
 }
 
 function renderLoadError(message) {

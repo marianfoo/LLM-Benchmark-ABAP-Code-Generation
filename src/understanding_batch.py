@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Batch mode for ABAP understanding benchmark (OpenAI + Anthropic).
+"""Batch mode for ABAP understanding benchmark (OpenAI + Anthropic + Google Gemini).
 
 Submits all (item, repetition) pairs per round as a single batch job,
 waits for completion, evaluates locally, then submits next-round batches
@@ -47,7 +47,7 @@ from understanding_eval import (
 )
 
 TRACKING_DIR = REPO_ROOT / "data"
-BATCH_PROVIDERS = {"OPENAI", "ANTHROPIC", "MISTRAL"}
+BATCH_PROVIDERS = {"OPENAI", "ANTHROPIC", "MISTRAL", "GOOGLE"}
 
 
 # ---------------------------------------------------------------------------
@@ -59,6 +59,8 @@ def _tracking_path(provider: str) -> Path:
         tag = "mistral"
     elif provider == "ANTHROPIC":
         tag = "anthropic"
+    elif provider == "GOOGLE":
+        tag = "google"
     else:
         tag = "openai"
     return TRACKING_DIR / f"understanding_{tag}_batch_tracking.json"
@@ -957,7 +959,7 @@ def batch_status(model_info: RunnableModel) -> int:
     tracking = _load_tracking(provider)
     model_batches = [b for b in tracking["batches"] if b["model_name"] == model_name]
 
-    tag = {"ANTHROPIC": "Anthropic", "MISTRAL": "Mistral"}.get(provider, "OpenAI")
+    tag = {"ANTHROPIC": "Anthropic", "MISTRAL": "Mistral", "GOOGLE": "Google"}.get(provider, "OpenAI")
     if model_batches:
         print(f"\n=== {tag} Understanding Batch History ({model_name}) ===")
         for b in model_batches:

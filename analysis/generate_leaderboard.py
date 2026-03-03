@@ -21,6 +21,7 @@ DISPLAY_NAME_BY_MODEL: dict[str, str] = {
     "claude-sonnet-4-20250514": "Claude Sonnet 4 (2025-05-14)",
     "gpt-5-2025-08-07": "GPT-5 (2025-08-07)",
     "gpt-5.2": "GPT-5.2",
+    "gpt-5.3-codex": "GPT-5.3 Codex",
     "gpt-oss_120b": "GPT-OSS 120B",
     "gpt-oss_20b": "GPT-OSS 20B",
     "llama-3.3-70b-instruct": "Llama 3.3 70B Instruct",

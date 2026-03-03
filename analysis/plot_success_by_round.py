@@ -25,6 +25,7 @@ def get_model_data_from_csv(file_path):
         "gpt-oss_20b",
         "gpt-oss_120b",
         "mistral-large-2512",
+        "gpt-5.3-codex",
         "gpt-5-2025-08-07",
         "claude-sonnet-4-20250514"
     ]

@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, TypedDict
+from typing import Dict, List, NotRequired, TypedDict
 
 from dotenv import load_dotenv
 
@@ -12,6 +12,8 @@ class RunnableModel(TypedDict):
     provider: str
     max_tokens: int
     temperature: float
+    # Optional: only used by OPENAI_RESPONSES provider (gpt-5.3-codex etc.)
+    reasoning_effort: NotRequired[str]
 
 
 class ModelProvider(TypedDict, total=False):
@@ -66,10 +68,31 @@ API_PROVIDERS: Dict[str, ModelProvider] = {
         "api_key_env": "OPENAI_API_KEY",
         "api_key": _env("OPENAI_API_KEY"),
     },
+    # Responses API (/v1/responses) — for codex/reasoning models that don't support
+    # /v1/chat/completions. Uses client.responses.create() instead of
+    # client.chat.completions.create(). Same OPENAI_API_KEY, no batch support.
+    "OPENAI_RESPONSES": {
+        "base_url": None,
+        "api_key_env": "OPENAI_API_KEY",
+        "api_key": _env("OPENAI_API_KEY"),
+    },
     "SAP_AICORE": {
         "base_url": None,
         "api_key_env": "AICORE_CLIENT_SECRET",
         "api_key": _env("AICORE_CLIENT_SECRET"),
+    },
+    # DeepSeek: OpenAI-compatible API. deepseek-chat = V3.2 (general), deepseek-reasoner = R1 (reasoning)
+    "DEEPSEEK": {
+        "base_url": "https://api.deepseek.com",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "api_key": _env("DEEPSEEK_API_KEY"),
+    },
+    # Google Gemini: OpenAI-compatible endpoint. Supports batch API (50% discount, 24h window).
+    # Use GEMINI_API_KEY from Google AI Studio (aistudio.google.com).
+    "GOOGLE": {
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "api_key_env": "GEMINI_API_KEY",
+        "api_key": _env("GEMINI_API_KEY"),
     },
 }
 
@@ -114,7 +137,7 @@ MODELS_TO_RUN: List[RunnableModel] = [
     },
     # --- Closed-Source Models ---
     {
-        "name": "gpt-5.2",  # OpenAI: GPT-5.1 - $1.25/$10.00 per 1M tokens (Standard)
+        "name": "gpt-5.2",  # OpenAI: GPT-5.2 - $1.25/$10.00 per 1M tokens (batch)
         "provider": "OPENAI",
         "temperature": 1,  # Note: GPT-5 temperature cannot be changed per OpenAI restrictions
         "max_tokens": 5000,
@@ -126,15 +149,61 @@ MODELS_TO_RUN: List[RunnableModel] = [
         "max_tokens": 5000,
     },
     {
+        # OpenAI: GPT-5.3 Codex - $1.75/$14.00 per 1M tokens
+        # Uses /v1/responses (Responses API), not /v1/chat/completions
+        "name": "gpt-5.3-codex",
+        "provider": "OPENAI_RESPONSES",
+        "temperature": 1,
+        "max_tokens": 5000,
+        "reasoning_effort": "medium",
+    },
+    {
         "name": "claude-opus-4-5-20251101",  # Anthropic: Claude Opus 4.5 - $5.00/$25.00 per 1M tokens
         "provider": "ANTHROPIC",
         "temperature": 0.2,
         "max_tokens": 5000,
     },
     {
+        "name": "claude-haiku-4-5-20251001",  # Anthropic: Claude Haiku 4.5 - fastest near-frontier model, $0.80/$4.00 per 1M tokens
+        "provider": "ANTHROPIC",
+        "temperature": 0.2,
+        "max_tokens": 5000,
+    },
+    # --- DeepSeek Models ---
+    {
+        # DeepSeek: R1 reasoning model (comparable to gpt-5.3-codex) - $0.55/$2.19 per 1M tokens
+        # OpenAI-compatible API, no batch support — uses parallel runner.
+        # temperature is silently ignored by deepseek-reasoner (per API docs).
+        # max_tokens covers both CoT reasoning + final answer (API default 32K, max 64K).
+        # Multi-turn: only response.choices[0].message.content is saved (reasoning_content is dropped),
+        # which matches DeepSeek's requirement to not replay reasoning_content in history.
+        "name": "deepseek-reasoner",
+        "provider": "DEEPSEEK",
+        "temperature": 0.2,
+        "max_tokens": 16000,
+    },
+    {
         "name": "sap-abap-1",  # SAP: ABAP-1 via SAP AI Core orchestration deployment
         "provider": "SAP_AICORE",
         "temperature": 0.2,
         "max_tokens": 5000,
+    },
+    # --- Google Gemini Models ---
+    {
+        # Google: Gemini 3.1 Pro Preview — latest frontier reasoning model (Feb 2026).
+        # OpenAI-compatible batch API supported at 50% cost reduction.
+        # Obtain API key at aistudio.google.com.
+        "name": "gemini-3.1-pro-preview",
+        "provider": "GOOGLE",
+        "temperature": 0.2,
+        "max_tokens": 8192,
+    },
+    {
+        # Google: Gemini 3 Flash Preview — fast frontier-class model (Dec 2025).
+        # OpenAI-compatible batch API supported at 50% cost reduction.
+        "name": "gemini-3-flash-preview",
+        "provider": "GOOGLE",
+        "temperature": 0.2,
+        "max_tokens": 8192,
     },
 ]

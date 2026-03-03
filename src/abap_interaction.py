@@ -820,6 +820,9 @@ def run_single_prompt(
 
     for rep_idx, chat in enumerate(tqdm.tqdm(chats, desc=f"Processing {prompt_file}", leave=False)):
 
+        # Skip empty chats — can happen when a batch API request failed for this repetition
+        if not chat:
+            continue
         if chat[-1]["role"] == "user":
             continue
         if chat[-1]["content"] == "The unit tests were successful.":

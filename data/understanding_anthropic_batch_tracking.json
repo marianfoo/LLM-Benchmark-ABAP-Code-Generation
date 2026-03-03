@@ -65,6 +65,72 @@
       "status": "completed",
       "created_at": "2026-02-26T21:06:58.160288+00:00",
       "completed_at": "2026-02-26T21:09:00.271581+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01GsL36fzmtNkikRJSjsqY1p",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 0,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r0.jsonl",
+      "item_count": 540,
+      "status": "completed",
+      "created_at": "2026-03-01T19:22:21.658995+00:00",
+      "completed_at": "2026-03-01T19:35:01.949082+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01KphchW77vMA9wEZ5nHMxXh",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 1,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r1.jsonl",
+      "item_count": 332,
+      "status": "completed",
+      "created_at": "2026-03-01T19:35:14.291794+00:00",
+      "completed_at": "2026-03-01T19:41:49.543054+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01FucinBHNZHpKLyw5F9Jevf",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 2,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r2.jsonl",
+      "item_count": 300,
+      "status": "completed",
+      "created_at": "2026-03-01T19:42:00.784708+00:00",
+      "completed_at": "2026-03-01T19:44:02.613737+00:00"
+    },
+    {
+      "batch_id": "msgbatch_01LDGPYo7299TN1EZAst5bje",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 3,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r3.jsonl",
+      "item_count": 277,
+      "status": "completed",
+      "created_at": "2026-03-01T19:44:13.426005+00:00",
+      "completed_at": "2026-03-01T19:46:46.519448+00:00"
+    },
+    {
+      "batch_id": "msgbatch_0177bCGdxNn5pUPA8ZXK1Gtu",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 4,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r4.jsonl",
+      "item_count": 237,
+      "status": "completed",
+      "created_at": "2026-03-01T19:46:59.104141+00:00",
+      "completed_at": "2026-03-01T19:51:35.141237+00:00"
+    },
+    {
+      "batch_id": "msgbatch_019XHCbTG3CQHhHr1j9ZAsao",
+      "model_name": "claude-haiku-4-5-20251001",
+      "provider": "ANTHROPIC",
+      "round_num": 5,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/claude-haiku-4-5-20251001_understanding_batch_r5.jsonl",
+      "item_count": 231,
+      "status": "completed",
+      "created_at": "2026-03-01T19:51:46.044941+00:00",
+      "completed_at": "2026-03-01T19:52:46.902381+00:00"
     }
   ]
 }

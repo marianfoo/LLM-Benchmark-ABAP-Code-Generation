@@ -1,6 +1,6 @@
 # Model leaderboard (ABAP code generation benchmark)
 
-Generated on **2026-02-28** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
+Generated on **2026-03-03** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
 
 This file is meant as a *developer-friendly* starting point for publishing results in a sortable website table.
 
@@ -40,7 +40,10 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 
 | Model | Success R5 | Success R0 | AUC (R0–R5) | Median feedbacks to success | R0 reaches unit tests | pass@5 (final) | Prompts solved (≥1/10) | Prompts solved (10/10) | Max rounds tested |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| gemini-3-flash-preview | 84.44% | 10.44% | 63.35% | 1.0 | 11.56% | 87.11% | 87.22% | 77.22% | 6 |
+| GPT-5.3 Codex | 84.39% | 18.56% | 62.45% | 1.0 | 21.11% | 88.27% | 89.44% | 76.67% | 6 |
 | Claude Opus 4.5 (2025-11-01) | 78.72% | 31.61% | 65.03% | 1.0 | 37.78% | 80.90% | 81.11% | 76.11% | 6 |
+| deepseek-reasoner | 78.22% | 30.39% | 62.12% | 1.0 | 41.67% | 87.28% | 89.44% | 54.44% | 6 |
 | GPT-5 (2025-08-07) | 77.11% | 19.28% | 56.60% | 1.0 | 22.39% | 84.70% | 86.11% | 59.44% | 6 |
 | Claude Sonnet 4 (2025-05-14) | 74.67% | 24.11% | 54.34% | 1.0 | 29.06% | 82.83% | 84.44% | 63.89% | 6 |
 | GPT-5.2 | 64.00% | 16.33% | 44.74% | 1.0 | 20.00% | 76.80% | 78.89% | 41.11% | 6 |
@@ -51,13 +54,17 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Llama 3.3 70B Instruct | 20.83% | 0.00% | 8.93% | 3.0 | 0.00% | 29.51% | 32.78% | 10.00% | 6 |
 | sap-abap-1 | 19.89% | 10.67% | 16.56% | 0.0 | 22.67% | 35.23% | 41.67% | 5.00% | 6 |
 | Qwen2.5 Coder 32B Instruct | 13.00% | 6.00% | 10.29% | 1.0 | 9.17% | 17.65% | 19.44% | 6.67% | 6 |
+| claude-haiku-4-5-20251001 | 5.72% | 2.06% | 3.80% | 2.0 | 2.50% | 13.03% | 16.11% | 0.00% | 6 |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | — | 0.00% | 0.00% | 0.00% | 0.00% | 6 |
 
 ## Cumulative success by feedback round (paper Table 1 style)
 
 | Model | R0 | R1 | R2 | R3 | R4 | R5 |
 | --- | --- | --- | --- | --- | --- | --- |
+| gemini-3-flash-preview | 10.44% | 47.22% | 73.11% | 81.22% | 83.67% | 84.44% |
+| GPT-5.3 Codex | 18.56% | 44.17% | 66.72% | 78.39% | 82.50% | 84.39% |
 | Claude Opus 4.5 (2025-11-01) | 31.61% | 56.67% | 70.17% | 75.67% | 77.33% | 78.72% |
+| deepseek-reasoner | 30.39% | 52.06% | 64.56% | 71.83% | 75.67% | 78.22% |
 | GPT-5 (2025-08-07) | 19.28% | 41.83% | 58.67% | 68.56% | 74.17% | 77.11% |
 | Claude Sonnet 4 (2025-05-14) | 24.11% | 41.50% | 52.78% | 63.17% | 69.83% | 74.67% |
 | GPT-5.2 | 16.33% | 33.00% | 44.56% | 52.06% | 58.50% | 64.00% |
@@ -68,13 +75,17 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Llama 3.3 70B Instruct | 0.00% | 0.00% | 3.67% | 12.17% | 16.89% | 20.83% |
 | sap-abap-1 | 10.67% | 14.83% | 16.78% | 18.17% | 19.00% | 19.89% |
 | Qwen2.5 Coder 32B Instruct | 6.00% | 8.50% | 10.06% | 11.72% | 12.44% | 13.00% |
+| claude-haiku-4-5-20251001 | 2.06% | 2.33% | 3.22% | 4.39% | 5.06% | 5.72% |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
 
 ## Success by task category (paper Table 2 style, final outcome)
 
 | Model | String Handling | List or Array Operation | Mathematical Calculation | Logical Condition | ABAP Database Operation |
 | --- | --- | --- | --- | --- | --- |
+| gemini-3-flash-preview | 93.03% | 77.50% | 85.27% | 85.20% | 31.25% |
+| GPT-5.3 Codex | 92.76% | 76.85% | 83.66% | 85.12% | 25.00% |
 | Claude Opus 4.5 (2025-11-01) | 88.95% | 68.70% | 78.92% | 80.40% | 25.00% |
+| deepseek-reasoner | 84.21% | 71.48% | 78.71% | 80.32% | 23.12% |
 | GPT-5 (2025-08-07) | 81.84% | 68.61% | 76.88% | 77.52% | 68.12% |
 | Claude Sonnet 4 (2025-05-14) | 81.58% | 63.98% | 71.94% | 76.80% | 66.25% |
 | GPT-5.2 | 75.26% | 51.02% | 63.12% | 65.92% | 16.25% |
@@ -85,6 +96,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Llama 3.3 70B Instruct | 18.82% | 8.52% | 26.99% | 18.24% | 26.25% |
 | sap-abap-1 | 15.13% | 11.94% | 27.20% | 17.92% | 13.12% |
 | Qwen2.5 Coder 32B Instruct | 11.45% | 6.48% | 17.96% | 11.44% | 14.37% |
+| claude-haiku-4-5-20251001 | 5.79% | 4.17% | 5.27% | 5.52% | 10.62% |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
 
 ## Notes / caveats

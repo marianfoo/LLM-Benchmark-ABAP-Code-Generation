@@ -76,6 +76,83 @@
       "status": "completed",
       "created_at": "2026-02-09T09:34:49.019879",
       "completed_at": "2026-02-09T09:37:22.728335"
+    },
+    {
+      "batch_id": "msgbatch_013kdBXYCRKiiBRhq2hWhyKE",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-03-01T20:06:36.954571",
+      "completed_at": "2026-03-01T20:11:13.477407"
+    },
+    {
+      "batch_id": "msgbatch_014Cv2mLYmHAemT9goKkBkxC",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 1,
+      "status": "completed",
+      "created_at": "2026-03-01T20:23:13.400115",
+      "completed_at": "2026-03-01T20:25:15.710075"
+    },
+    {
+      "batch_id": "msgbatch_01Ccb6FvBqQ6SfAt7KeoNtRz",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 2,
+      "status": "completed",
+      "created_at": "2026-03-01T20:51:20.878274",
+      "completed_at": "2026-03-01T20:53:24.004838"
+    },
+    {
+      "batch_id": "msgbatch_01DyaWjaNELErrtuLzuoQjHE",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 3,
+      "status": "completed",
+      "created_at": "2026-03-01T21:26:48.007778",
+      "completed_at": "2026-03-01T21:29:51.812559"
+    },
+    {
+      "batch_id": "msgbatch_01DfDnZ3rYc17oQAnCdCZmRx",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 4,
+      "status": "completed",
+      "created_at": "2026-03-01T22:05:43.721791",
+      "completed_at": "2026-03-01T22:08:46.930991"
+    },
+    {
+      "batch_id": "msgbatch_01Mfi5jUWPLSH9KqjzeK1iFm",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 5,
+      "status": "completed",
+      "created_at": "2026-03-01T22:44:12.848308",
+      "completed_at": "2026-03-01T22:46:15.490391"
+    },
+    {
+      "batch_id": "msgbatch_01DwkaLa9DGT5x5fxVw9Ya1Y",
+      "model_name": "claude-haiku-4-5-20251001",
+      "save_file": "data/claude-haiku-4-5-20251001.json",
+      "save_file_batch": "data/claude-haiku-4-5-20251001_batch.jsonl",
+      "save_file_batch_response": "data/claude-haiku-4-5-20251001_batch_response.jsonl",
+      "round_num": 6,
+      "status": "completed",
+      "created_at": "2026-03-01T23:21:13.367214",
+      "completed_at": "2026-03-01T23:26:48.020402"
     }
   ]
 }

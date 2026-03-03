@@ -54,6 +54,25 @@ def test_anthropic(model_name: str, api_key: str) -> tuple[bool, str]:
         return False, str(e)
 
 
+def test_openai_responses(model_name: str, api_key: str, reasoning_effort: str = "medium") -> tuple[bool, str]:
+    """Test OpenAI Responses API (/v1/responses) — for codex/reasoning models."""
+    try:
+        client = OpenAI(api_key=api_key)
+        kwargs: dict = {
+            "model": model_name,
+            "input": [{"role": "user", "content": "Say 'OK' and nothing else."}],
+            "max_output_tokens": 1024,  # reasoning models require a higher minimum than 10
+            "store": False,
+        }
+        if reasoning_effort:
+            kwargs["reasoning"] = {"effort": reasoning_effort}
+        response = client.responses.create(**kwargs)
+        content = (response.output_text or "").strip()
+        return True, f"Response: '{content[:50]}...'" if len(content) > 50 else f"Response: '{content}'"
+    except Exception as e:
+        return False, str(e)
+
+
 def test_sap_aicore(model_name: str) -> tuple[bool, str]:
     """Test SAP ABAP-1 through SAP AI Core orchestration."""
     try:
@@ -80,8 +99,22 @@ def test_sap_aicore(model_name: str) -> tuple[bool, str]:
 
 
 def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Smoke-test API keys and model names.")
+    parser.add_argument(
+        "--model", "-m",
+        default=None,
+        help="Test only a specific model (partial name match, case-insensitive). Omit to test all.",
+    )
+    args = parser.parse_args()
+
+    filter_name = args.model.lower() if args.model else None
+
     print("=" * 70)
     print("SMOKE TEST - Verifying API Keys and Model Names")
+    if filter_name:
+        print(f"  Filter: '{args.model}'")
     print("=" * 70)
     print()
 
@@ -90,6 +123,9 @@ def main():
     seen_models = set()  # Skip duplicates
 
     for model in MODELS_TO_RUN:
+        # Apply --model filter (partial, case-insensitive)
+        if filter_name and filter_name not in model["name"].lower():
+            continue
         model_name = model["name"]
         provider_name = model["provider"]
 
@@ -117,14 +153,39 @@ def main():
                 success, message = False, str(e)
             else:
                 success, message = test_anthropic(model_name, api_key)
-        else:
-            # OpenAI-compatible (GROQ, MISTRAL, OPENAI, OPENAI_DIRECT)
+        elif provider_name == "OPENAI_RESPONSES":
             try:
                 api_key = get_provider_api_key(provider_name)
             except RuntimeError as e:
                 success, message = False, str(e)
             else:
-                success, message = test_openai_compatible(model_name, provider_name, base_url, api_key)
+                effort = model.get("reasoning_effort", "medium")
+                success, message = test_openai_responses(model_name, api_key, effort)
+        else:
+            # OpenAI-compatible (GROQ, MISTRAL, OPENAI, OPENAI_DIRECT, DEEPSEEK, ...)
+            try:
+                api_key = get_provider_api_key(provider_name)
+            except RuntimeError as e:
+                success, message = False, str(e)
+            else:
+                # deepseek-reasoner: max_tokens covers CoT + answer, so 10 is too small.
+                # Use 1024 to allow the reasoning chain to complete before the final answer.
+                if model_name == "deepseek-reasoner":
+                    try:
+                        from openai import OpenAI as _OpenAI
+                        _client = _OpenAI(base_url=base_url, api_key=api_key)
+                        _resp = _client.chat.completions.create(
+                            model=model_name,
+                            messages=[{"role": "user", "content": "Say 'OK' and nothing else."}],
+                            max_tokens=1024,
+                        )
+                        content = (_resp.choices[0].message.content or "").strip()
+                        success = True
+                        message = f"Response: '{content[:50]}...'" if len(content) > 50 else f"Response: '{content}'"
+                    except Exception as e:
+                        success, message = False, str(e)
+                else:
+                    success, message = test_openai_compatible(model_name, provider_name, base_url, api_key)
 
         status = "PASS" if success else "FAIL"
         print(status)
@@ -148,6 +209,12 @@ def main():
             print(f"         Error: {msg}")
 
     print()
+    if not results:
+        print(f"No models matched filter '{args.model}'. Available models:")
+        for m in MODELS_TO_RUN:
+            print(f"  - {m['name']} ({m['provider']})")
+        sys.exit(1)
+
     print(f"Total: {passed}/{len(results)} passed")
 
     if failed > 0:

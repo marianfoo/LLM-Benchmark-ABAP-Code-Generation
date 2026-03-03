@@ -25,6 +25,7 @@ import generate_llm_answers_batch_anthropic
 import generate_llm_answers_batch_mistral
 import generate_llm_answers_parallel
 import generate_llm_answers_openai_direct
+import generate_llm_answers_openai_responses
 from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
 
 
@@ -218,6 +219,25 @@ def run_openai_direct_model(model_info: RunnableModel):
         run_abap_interaction(model_info["name"])
 
 
+def run_openai_responses_model(model_info: RunnableModel):
+    """Responses API runner for models using /v1/responses (e.g. gpt-5.3-codex)."""
+    client = openai.AsyncOpenAI(
+        api_key=get_provider_api_key(model_info["provider"]),
+    )
+    asyncio.run(
+        generate_llm_answers_openai_responses.generate_first_response(client, model_info)
+    )
+    run_abap_interaction(model_info["name"])
+
+    for num in range(2, 7):
+        asyncio.run(
+            generate_llm_answers_openai_responses.generate_next_response(
+                client, model_info, num
+            )
+        )
+        run_abap_interaction(model_info["name"])
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run LLM benchmark for ABAP code generation")
     parser.add_argument(
@@ -280,6 +300,8 @@ if __name__ == "__main__":
             batch_openai(model_info)
         elif model_info["provider"] == "OPENAI_DIRECT":
             run_openai_direct_model(model_info)
+        elif model_info["provider"] == "OPENAI_RESPONSES":
+            run_openai_responses_model(model_info)
         elif model_info["provider"] == "MISTRAL":
             batch_mistral(model_info)
         else:

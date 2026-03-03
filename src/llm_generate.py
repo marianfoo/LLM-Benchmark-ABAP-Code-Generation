@@ -131,6 +131,22 @@ def mode_complete_pending(model_name: str, model_info: RunnableModel):
         else:
             print(f"[OK] No pending Mistral batches for {model_name}")
 
+    elif provider == "GOOGLE":
+        import openai
+        import generate_llm_answers_batch_google as gen
+
+        api_key = get_provider_api_key(provider)
+        base_url = API_PROVIDERS[provider]["base_url"]
+        client = openai.OpenAI(api_key=api_key, base_url=base_url)
+        completed = gen.check_and_complete_pending_batches(client, model_info["name"])
+        if completed:
+            print(f"[DONE] Completed {len(completed)} pending Google batch(es)")
+        else:
+            print(f"[OK] No pending Google batches for {model_name}")
+
+    elif provider in ("OPENAI_DIRECT", "OPENAI_RESPONSES"):
+        print(f"[SKIP] Provider '{provider}' uses direct API calls, not batch processing.")
+
     else:
         print(f"[SKIP] Provider '{provider}' does not use batch processing.")
 
@@ -193,6 +209,32 @@ def mode_first(model_name: str, model_info: RunnableModel):
         from mistralai import Mistral as MistralClient
 
         client = MistralClient(api_key=get_provider_api_key(provider))
+        batch_id = gen.generate_first_response_batch(
+            client, model_info, save_file_batch, save_file
+        )
+        if batch_id is None:
+            return
+        gen.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+
+    elif provider == "OPENAI_RESPONSES":
+        # Responses API — uses /v1/responses, not chat completions
+        import openai
+        import generate_llm_answers_openai_responses as gen
+
+        llm_client = openai.AsyncOpenAI(api_key=get_provider_api_key(provider))
+        asyncio.run(gen.generate_first_response(llm_client, model_info))
+
+    elif provider == "GOOGLE":
+        # Google Gemini: OpenAI-compatible batch endpoint with 50% cost reduction
+        import openai
+        import generate_llm_answers_batch_google as gen
+
+        api_key = get_provider_api_key(provider)
+        base_url = API_PROVIDERS[provider]["base_url"]
+        client = openai.OpenAI(api_key=api_key, base_url=base_url)
+
         batch_id = gen.generate_first_response_batch(
             client, model_info, save_file_batch, save_file
         )
@@ -341,6 +383,34 @@ def mode_next(model_name: str, model_info: RunnableModel):
         llm_client = openai.AsyncOpenAI(api_key=api_key)
         asyncio.run(
             gen.generate_next_response(llm_client, model_info, round_num)
+        )
+
+    elif provider == "OPENAI_RESPONSES":
+        # Responses API (e.g. gpt-5.3-codex) – uses /v1/responses
+        import openai
+        import generate_llm_answers_openai_responses as gen
+
+        llm_client = openai.AsyncOpenAI(api_key=get_provider_api_key(provider))
+        asyncio.run(
+            gen.generate_next_response(llm_client, model_info, round_num)
+        )
+
+    elif provider == "GOOGLE":
+        # Google Gemini: OpenAI-compatible batch endpoint with 50% cost reduction
+        import openai
+        import generate_llm_answers_batch_google as gen
+
+        api_key = get_provider_api_key(provider)
+        base_url = API_PROVIDERS[provider]["base_url"]
+        client = openai.OpenAI(api_key=api_key, base_url=base_url)
+
+        batch_id = gen.generate_next_response_batch(
+            client, model_info, save_file, save_file_batch, round_num=round_num
+        )
+        if batch_id is None:
+            return
+        gen.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
         )
 
     elif provider == "SAP_AICORE":

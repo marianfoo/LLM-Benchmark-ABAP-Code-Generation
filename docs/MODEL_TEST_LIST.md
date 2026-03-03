@@ -13,6 +13,7 @@ Tested model IDs:
 - `gpt-oss_120b`
 - `gpt-oss_20b`
 - `llama-3.3-70b-instruct`
+- `mistral-large-2512` ✅ newly added
 - `qwen3-coder`
 - `qwen2.5-coder-32b-instruct`
 - `codestral-22b`
@@ -23,7 +24,7 @@ Tested model IDs:
 ### OpenAI
 - `gpt-5-mini`
 - `gpt-5-nano`
-- `gpt-5.3-codex` (priority watchlist; not API-available yet, add immediately once released)
+- `gpt-5.3-codex` ✅ added to llms.py (OPENAI_DIRECT, no batch)
 
 ### Gemini
 - `gemini-3-pro-preview`
