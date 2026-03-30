@@ -14,8 +14,9 @@ def get_error_summary_from_csv(file_path):
         print(f"Error reading CSV: {e}")
         return None
 
-    models = df['Model'].unique()
-    
+    EXCLUDED = {"codestral-22b", "glm-5"}
+    models = [m for m in df['Model'].unique() if m.lower() not in {e.lower() for e in EXCLUDED}]
+
     summary = {}
 
     for model in models:

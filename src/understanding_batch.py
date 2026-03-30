@@ -47,7 +47,7 @@ from understanding_eval import (
 )
 
 TRACKING_DIR = REPO_ROOT / "data"
-BATCH_PROVIDERS = {"OPENAI", "ANTHROPIC", "MISTRAL", "GOOGLE"}
+BATCH_PROVIDERS = {"OPENAI", "ANTHROPIC", "MISTRAL", "GOOGLE", "GOOGLE_VERTEX"}
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +61,8 @@ def _tracking_path(provider: str) -> Path:
         tag = "anthropic"
     elif provider == "GOOGLE":
         tag = "google"
+    elif provider == "GOOGLE_VERTEX":
+        tag = "vertex"
     else:
         tag = "openai"
     return TRACKING_DIR / f"understanding_{tag}_batch_tracking.json"
@@ -166,6 +168,10 @@ def _build_sync_client(model_info: RunnableModel):
         from mistralai import Mistral
 
         return Mistral(api_key=get_provider_api_key(provider))
+
+    if provider == "GOOGLE_VERTEX":
+        # Vertex AI uses Application Default Credentials internally
+        return None
 
     import openai
 
@@ -395,6 +401,80 @@ def _mistral_collect(client, job_id: str) -> Dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
+# Vertex AI batch helpers
+# ---------------------------------------------------------------------------
+
+def _vertex_build_request(
+    model_info: RunnableModel, custom_id: str, conversation: List[Dict]
+) -> Dict:
+    """Build a Vertex AI batch request line for understanding benchmark."""
+    from generate_llm_answers_batch_vertex import _convert_messages_to_vertex
+
+    return _convert_messages_to_vertex(model_info, custom_id, conversation)
+
+
+def _vertex_submit(model_info: RunnableModel, requests: List[Dict], batch_input_path: str) -> str:
+    """Upload JSONL to GCS and submit Vertex AI batch job. Returns job name."""
+    from generate_llm_answers_batch_vertex import (
+        _upload_to_gcs, _get_bucket_name, _make_genai_client,
+    )
+    from google.genai.types import CreateBatchJobConfig
+
+    Path(batch_input_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(batch_input_path, "w", encoding="utf-8") as f:
+        for req in requests:
+            f.write(json.dumps(req, ensure_ascii=False) + "\n")
+
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    safe_name = _normalize_model_name(model_info["name"])
+    gcs_input_path = f"understanding_input/{safe_name}/{timestamp}.jsonl"
+    gcs_output_prefix = f"understanding_output/{safe_name}/{timestamp}/"
+
+    gcs_input_uri = _upload_to_gcs(batch_input_path, gcs_input_path)
+    gcs_output_uri = f"gs://{_get_bucket_name()}/{gcs_output_prefix}"
+
+    client = _make_genai_client()
+    job = client.batches.create(
+        model=model_info["name"],
+        src=gcs_input_uri,
+        config=CreateBatchJobConfig(dest=gcs_output_uri),
+    )
+    # Store GCS output prefix in a module-level dict for later retrieval
+    _vertex_job_output_prefixes[job.name] = gcs_output_prefix
+    print(f"  [Vertex] Submitted batch job: {job.name}")
+    return job.name
+
+
+# Module-level cache mapping Vertex job names to their GCS output prefixes
+_vertex_job_output_prefixes: Dict[str, str] = {}
+
+
+def _vertex_poll(job_name: str) -> tuple[str, str]:
+    from generate_llm_answers_batch_vertex import _make_genai_client
+    from google.genai.types import JobState
+
+    client = _make_genai_client()
+    job = client.batches.get(name=job_name)
+    return str(job.state), ""
+
+
+def _vertex_collect(job_name: str) -> Dict[str, str]:
+    """Download Vertex AI output from GCS and parse into {custom_id: response_text}."""
+    from generate_llm_answers_batch_vertex import (
+        _download_from_gcs_prefix, _parse_vertex_responses,
+    )
+
+    gcs_prefix = _vertex_job_output_prefixes.get(job_name)
+    if not gcs_prefix:
+        print(f"  [WARN] No GCS output prefix found for job {job_name}")
+        return {}
+
+    local_dir = str(TRACKING_DIR / "vertex_understanding_output")
+    response_files = _download_from_gcs_prefix(gcs_prefix, local_dir)
+    return _parse_vertex_responses(response_files)
+
+
+# ---------------------------------------------------------------------------
 # Unified provider dispatch
 # ---------------------------------------------------------------------------
 
@@ -405,6 +485,8 @@ def _build_request(
         return _anthropic_build_request(model_info, custom_id, conversation)
     if model_info["provider"] == "MISTRAL":
         return _mistral_build_request(model_info, custom_id, conversation)
+    if model_info["provider"] == "GOOGLE_VERTEX":
+        return _vertex_build_request(model_info, custom_id, conversation)
     return _openai_build_request(model_info, custom_id, conversation)
 
 
@@ -415,6 +497,8 @@ def _submit_batch(
         return _anthropic_submit(client, requests, batch_input_path)
     if model_info["provider"] == "MISTRAL":
         return _mistral_submit(client, model_info, requests, batch_input_path)
+    if model_info["provider"] == "GOOGLE_VERTEX":
+        return _vertex_submit(model_info, requests, batch_input_path)
     return _openai_submit(client, requests, batch_input_path)
 
 
@@ -425,6 +509,8 @@ def _poll_batch(
         return _anthropic_poll(client, batch_id)
     if model_info["provider"] == "MISTRAL":
         return _mistral_poll(client, batch_id)
+    if model_info["provider"] == "GOOGLE_VERTEX":
+        return _vertex_poll(batch_id)
     return _openai_poll(client, batch_id)
 
 
@@ -433,6 +519,8 @@ def _is_done(provider: str, status_str: str) -> bool:
         return status_str == "ended"
     if provider == "MISTRAL":
         return status_str == "SUCCESS"
+    if provider == "GOOGLE_VERTEX":
+        return "SUCCEEDED" in status_str
     return status_str == "completed"
 
 
@@ -441,6 +529,8 @@ def _is_failed(provider: str, status_str: str) -> bool:
         return status_str in ("canceled", "expired")
     if provider == "MISTRAL":
         return status_str in ("FAILED", "TIMEOUT_EXCEEDED", "CANCELLATION_REQUESTED", "CANCELLED")
+    if provider == "GOOGLE_VERTEX":
+        return "FAILED" in status_str or "CANCELLED" in status_str
     return status_str in ("failed", "cancelled", "expired")
 
 
@@ -451,6 +541,8 @@ def _collect_responses(
         return _anthropic_collect(client, batch_id)
     if model_info["provider"] == "MISTRAL":
         return _mistral_collect(client, batch_id)
+    if model_info["provider"] == "GOOGLE_VERTEX":
+        return _vertex_collect(batch_id)
     return _openai_collect(client, batch_id)
 
 
@@ -959,7 +1051,7 @@ def batch_status(model_info: RunnableModel) -> int:
     tracking = _load_tracking(provider)
     model_batches = [b for b in tracking["batches"] if b["model_name"] == model_name]
 
-    tag = {"ANTHROPIC": "Anthropic", "MISTRAL": "Mistral", "GOOGLE": "Google"}.get(provider, "OpenAI")
+    tag = {"ANTHROPIC": "Anthropic", "MISTRAL": "Mistral", "GOOGLE": "Google", "GOOGLE_VERTEX": "Vertex"}.get(provider, "OpenAI")
     if model_batches:
         print(f"\n=== {tag} Understanding Batch History ({model_name}) ===")
         for b in model_batches:

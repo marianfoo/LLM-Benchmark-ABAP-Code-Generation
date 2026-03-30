@@ -23,9 +23,11 @@ from abap_interaction import run_abap_interaction
 import generate_llm_answers_batch_openai
 import generate_llm_answers_batch_anthropic
 import generate_llm_answers_batch_mistral
+import generate_llm_answers_batch_vertex
 import generate_llm_answers_parallel
 import generate_llm_answers_openai_direct
 import generate_llm_answers_openai_responses
+from generate_llm_answers_parallel import DailyQuotaExhausted
 from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
 
 
@@ -171,6 +173,83 @@ def batch_mistral(model_info: RunnableModel):
         run_abap_interaction(model_info["name"])
 
 
+def batch_google(model_info: RunnableModel):
+    import generate_llm_answers_batch_google
+
+    client = generate_llm_answers_batch_google._make_client()
+    save_file = f"data/{model_info['name']}.json"
+    save_file_batch = f"{save_file[:-5]}_batch.jsonl"
+    save_file_batch_response = save_file_batch[:-6] + "_response.jsonl"
+
+    # Check for any pending batches first
+    print(f"\n[Google] Checking for pending batches for {model_info['name']}...")
+    completed = generate_llm_answers_batch_google.check_and_complete_pending_batches(
+        client, model_info["name"]
+    )
+    if completed:
+        print(f"[Google] Completed {len(completed)} pending batch(es)")
+        for batch in completed:
+            run_abap_interaction(model_info["name"])
+
+    batch_id = generate_llm_answers_batch_google.generate_first_response_batch(
+        client, model_info, save_file_batch, save_file
+    )
+    if batch_id is not None:
+        generate_llm_answers_batch_google.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+    run_abap_interaction(model_info["name"])
+
+    for i in range(5):
+        batch_id = generate_llm_answers_batch_google.generate_next_response_batch(
+            client, model_info, save_file, save_file_batch, round_num=i + 2
+        )
+        if batch_id is None:
+            print(f"[Google] No more conversations to process at round {i + 2}")
+            break
+        generate_llm_answers_batch_google.wait_for_batch_and_save(
+            client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+        run_abap_interaction(model_info["name"])
+
+
+def batch_vertex(model_info: RunnableModel):
+    save_file = f"data/{model_info['name']}.json"
+    save_file_batch = f"{save_file[:-5]}_batch.jsonl"
+    save_file_batch_response = save_file_batch[:-6] + "_response.jsonl"
+
+    # Check for any pending batches first
+    print(f"\n[Vertex] Checking for pending batches for {model_info['name']}...")
+    completed = generate_llm_answers_batch_vertex.check_and_complete_pending_batches(
+        model_info["name"]
+    )
+    if completed:
+        print(f"[Vertex] Completed {len(completed)} pending batch(es)")
+        for batch in completed:
+            run_abap_interaction(model_info["name"])
+
+    job_name = generate_llm_answers_batch_vertex.generate_first_response_batch(
+        model_info, save_file_batch, save_file
+    )
+    if job_name is not None:
+        generate_llm_answers_batch_vertex.wait_for_batch_and_save(
+            job_name, save_file, save_file_batch, save_file_batch_response
+        )
+    run_abap_interaction(model_info["name"])
+
+    for i in range(5):
+        job_name = generate_llm_answers_batch_vertex.generate_next_response_batch(
+            model_info, save_file, save_file_batch, round_num=i + 2
+        )
+        if job_name is None:
+            print(f"[Vertex] No more conversations to process at round {i + 2}")
+            break
+        generate_llm_answers_batch_vertex.wait_for_batch_and_save(
+            job_name, save_file, save_file_batch, save_file_batch_response
+        )
+        run_abap_interaction(model_info["name"])
+
+
 def run_parrallel_model(model_info: RunnableModel):
     if model_info["provider"] == "SAP_AICORE":
         from abap1_orchestration import ABAP1OrchestrationClient
@@ -293,16 +372,25 @@ if __name__ == "__main__":
         print(f"\n{'='*60}")
         print(f"Starting: {model_info['name']} ({model_info['provider']})")
         print(f"{'='*60}")
-        
-        if model_info["provider"] == "ANTHROPIC":
-            batch_anthropic(model_info)
-        elif model_info["provider"] == "OPENAI":
-            batch_openai(model_info)
-        elif model_info["provider"] == "OPENAI_DIRECT":
-            run_openai_direct_model(model_info)
-        elif model_info["provider"] == "OPENAI_RESPONSES":
-            run_openai_responses_model(model_info)
-        elif model_info["provider"] == "MISTRAL":
-            batch_mistral(model_info)
-        else:
-            run_parrallel_model(model_info)
+
+        try:
+            if model_info["provider"] == "ANTHROPIC":
+                batch_anthropic(model_info)
+            elif model_info["provider"] == "OPENAI":
+                batch_openai(model_info)
+            elif model_info["provider"] == "OPENAI_DIRECT":
+                run_openai_direct_model(model_info)
+            elif model_info["provider"] == "OPENAI_RESPONSES":
+                run_openai_responses_model(model_info)
+            elif model_info["provider"] == "MISTRAL":
+                batch_mistral(model_info)
+            elif model_info["provider"] == "GOOGLE_VERTEX":
+                batch_vertex(model_info)
+            else:
+                run_parrallel_model(model_info)
+        except DailyQuotaExhausted:
+            print(f"\n{'='*60}")
+            print(f"[QUOTA] Daily quota exhausted for {model_info['name']}.")
+            print(f"Progress has been saved. Re-run this command to resume.")
+            print(f"{'='*60}")
+            break

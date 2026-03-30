@@ -32,6 +32,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
+from generate_llm_answers_parallel import DailyQuotaExhausted
 from chat_state import (
     print_status,
     count_states,
@@ -144,6 +145,15 @@ def mode_complete_pending(model_name: str, model_info: RunnableModel):
         else:
             print(f"[OK] No pending Google batches for {model_name}")
 
+    elif provider == "GOOGLE_VERTEX":
+        import generate_llm_answers_batch_vertex as gen
+
+        completed = gen.check_and_complete_pending_batches(model_info["name"])
+        if completed:
+            print(f"[DONE] Completed {len(completed)} pending Vertex batch(es)")
+        else:
+            print(f"[OK] No pending Vertex batches for {model_name}")
+
     elif provider in ("OPENAI_DIRECT", "OPENAI_RESPONSES"):
         print(f"[SKIP] Provider '{provider}' uses direct API calls, not batch processing.")
 
@@ -242,6 +252,19 @@ def mode_first(model_name: str, model_info: RunnableModel):
             return
         gen.wait_for_batch_and_save(
             client, batch_id, save_file, save_file_batch, save_file_batch_response
+        )
+
+    elif provider == "GOOGLE_VERTEX":
+        # Google Vertex AI: batch prediction with no rate limits, 50% cost reduction
+        import generate_llm_answers_batch_vertex as gen
+
+        job_name = gen.generate_first_response_batch(
+            model_info, save_file_batch, save_file
+        )
+        if job_name is None:
+            return
+        gen.wait_for_batch_and_save(
+            job_name, save_file, save_file_batch, save_file_batch_response
         )
 
     elif provider == "SAP_AICORE":
@@ -413,6 +436,19 @@ def mode_next(model_name: str, model_info: RunnableModel):
             client, batch_id, save_file, save_file_batch, save_file_batch_response
         )
 
+    elif provider == "GOOGLE_VERTEX":
+        # Google Vertex AI: batch prediction with no rate limits, 50% cost reduction
+        import generate_llm_answers_batch_vertex as gen
+
+        job_name = gen.generate_next_response_batch(
+            model_info, save_file, save_file_batch, round_num=round_num
+        )
+        if job_name is None:
+            return
+        gen.wait_for_batch_and_save(
+            job_name, save_file, save_file_batch, save_file_batch_response
+        )
+
     elif provider == "SAP_AICORE":
         import generate_llm_answers_parallel as gen
         from abap1_orchestration import ABAP1OrchestrationClient
@@ -491,14 +527,18 @@ def main():
     model_name = model_info["name"]
     print(f"Model: {model_name} ({model_info['provider']})")
 
-    if args.mode == "status":
-        mode_status(model_name)
-    elif args.mode == "complete-pending":
-        mode_complete_pending(model_name, model_info)
-    elif args.mode == "first":
-        mode_first(model_name, model_info)
-    elif args.mode == "next":
-        mode_next(model_name, model_info)
+    try:
+        if args.mode == "status":
+            mode_status(model_name)
+        elif args.mode == "complete-pending":
+            mode_complete_pending(model_name, model_info)
+        elif args.mode == "first":
+            mode_first(model_name, model_info)
+        elif args.mode == "next":
+            mode_next(model_name, model_info)
+    except DailyQuotaExhausted:
+        print(f"\n[QUOTA] Daily quota exhausted for {model_name}.")
+        print(f"Progress has been saved. Re-run this command to resume.")
 
 
 if __name__ == "__main__":

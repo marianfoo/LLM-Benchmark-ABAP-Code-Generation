@@ -1,0 +1,95 @@
+{
+  "batches": [
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/1381544056881938432",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 0,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260326_220713_round0.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260326_220713_round0/",
+      "status": "completed",
+      "created_at": "2026-03-26T22:07:17.204158",
+      "completed_at": "2026-03-27T15:57:37.256684"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/5775509180823633920",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 0,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260327_073656_round0.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260327_073656_round0/",
+      "status": "completed",
+      "created_at": "2026-03-27T07:37:06.716424",
+      "completed_at": "2026-03-27T15:57:42.060218"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/2682169555517702144",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 2,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260327_211532_round2.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260327_211532_round2/",
+      "status": "completed",
+      "created_at": "2026-03-27T21:15:38.818240",
+      "completed_at": "2026-03-27T23:00:50.114089"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/1130960958865276928",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 3,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260328_010327_round3.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260328_010327_round3/",
+      "status": "completed",
+      "created_at": "2026-03-28T01:03:32.707751",
+      "completed_at": "2026-03-28T02:39:05.887604"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/3480151114492411904",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 4,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260328_032218_round4.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260328_032218_round4/",
+      "status": "completed",
+      "created_at": "2026-03-28T03:22:23.138307",
+      "completed_at": "2026-03-28T04:38:17.660574"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/5297366758275940352",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 5,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260328_045617_round5.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260328_045617_round5/",
+      "status": "completed",
+      "created_at": "2026-03-28T04:56:21.680242",
+      "completed_at": "2026-03-28T06:27:11.494320"
+    },
+    {
+      "job_name": "projects/288634296616/locations/global/batchPredictionJobs/8167848570771210240",
+      "model_name": "gemini-3.1-pro-preview",
+      "save_file": "data/gemini-3.1-pro-preview.json",
+      "save_file_batch": "data/gemini-3.1-pro-preview_batch.jsonl",
+      "save_file_batch_response": "data/gemini-3.1-pro-preview_batch_response.jsonl",
+      "round_num": 6,
+      "gcs_input_uri": "gs://abap-benchmark-batch-0706/batch_input/gemini-3.1-pro-preview/20260328_063854_round6.jsonl",
+      "gcs_output_prefix": "batch_output/gemini-3.1-pro-preview/20260328_063854_round6/",
+      "status": "completed",
+      "created_at": "2026-03-28T06:39:04.342444",
+      "completed_at": "2026-03-28T07:35:24.211936"
+    }
+  ]
+}

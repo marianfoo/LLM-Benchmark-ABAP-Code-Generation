@@ -14,7 +14,10 @@ def visualize_syntax_errors(json_path='../data/syntax_errors.json'):
     data = {}
     total_counts = {}
     
+    EXCLUDED = {"codestral-22b", "glm-5"}
     for model, categories in raw_data.items():
+        if model.lower() in {e.lower() for e in EXCLUDED}:
+            continue
         data[model] = {}
         model_total = 0
         for category, patterns in categories.items():

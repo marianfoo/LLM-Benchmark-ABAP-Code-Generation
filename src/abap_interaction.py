@@ -1036,7 +1036,7 @@ def run_abap_interaction(
     client: AdtClient = AdtClient(
         sap_host="http://localhost:50000",
         username="DEVELOPER",
-        password="ABAPtr2023#00",
+        password="H9X8STnsyhgMv",
         client="001",
         language="EN",
     )

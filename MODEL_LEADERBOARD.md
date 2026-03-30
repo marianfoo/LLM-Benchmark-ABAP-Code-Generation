@@ -1,6 +1,6 @@
 # Model leaderboard (ABAP code generation benchmark)
 
-Generated on **2026-03-03** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
+Generated on **2026-03-28** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
 
 This file is meant as a *developer-friendly* starting point for publishing results in a sortable website table.
 
@@ -40,6 +40,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 
 | Model | Success R5 | Success R0 | AUC (R0–R5) | Median feedbacks to success | R0 reaches unit tests | pass@5 (final) | Prompts solved (≥1/10) | Prompts solved (10/10) | Max rounds tested |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| gemini-3.1-pro-preview | 88.33% | 44.33% | 76.77% | 0.0 | 46.56% | 90.31% | 91.11% | 85.00% | 6 |
 | gemini-3-flash-preview | 84.44% | 10.44% | 63.35% | 1.0 | 11.56% | 87.11% | 87.22% | 77.22% | 6 |
 | GPT-5.3 Codex | 84.39% | 18.56% | 62.45% | 1.0 | 21.11% | 88.27% | 89.44% | 76.67% | 6 |
 | Claude Opus 4.5 (2025-11-01) | 78.72% | 31.61% | 65.03% | 1.0 | 37.78% | 80.90% | 81.11% | 76.11% | 6 |
@@ -56,11 +57,13 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Qwen2.5 Coder 32B Instruct | 13.00% | 6.00% | 10.29% | 1.0 | 9.17% | 17.65% | 19.44% | 6.67% | 6 |
 | claude-haiku-4-5-20251001 | 5.72% | 2.06% | 3.80% | 2.0 | 2.50% | 13.03% | 16.11% | 0.00% | 6 |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | — | 0.00% | 0.00% | 0.00% | 0.00% | 6 |
+| glm-5 | 0.00% | 0.00% | 0.00% | — | 0.00% | 0.00% | 0.00% | 0.00% | 0 |
 
 ## Cumulative success by feedback round (paper Table 1 style)
 
 | Model | R0 | R1 | R2 | R3 | R4 | R5 |
 | --- | --- | --- | --- | --- | --- | --- |
+| gemini-3.1-pro-preview | 44.33% | 71.72% | 82.61% | 86.17% | 87.44% | 88.33% |
 | gemini-3-flash-preview | 10.44% | 47.22% | 73.11% | 81.22% | 83.67% | 84.44% |
 | GPT-5.3 Codex | 18.56% | 44.17% | 66.72% | 78.39% | 82.50% | 84.39% |
 | Claude Opus 4.5 (2025-11-01) | 31.61% | 56.67% | 70.17% | 75.67% | 77.33% | 78.72% |
@@ -77,11 +80,13 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Qwen2.5 Coder 32B Instruct | 6.00% | 8.50% | 10.06% | 11.72% | 12.44% | 13.00% |
 | claude-haiku-4-5-20251001 | 2.06% | 2.33% | 3.22% | 4.39% | 5.06% | 5.72% |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
+| glm-5 | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
 
 ## Success by task category (paper Table 2 style, final outcome)
 
 | Model | String Handling | List or Array Operation | Mathematical Calculation | Logical Condition | ABAP Database Operation |
 | --- | --- | --- | --- | --- | --- |
+| gemini-3.1-pro-preview | 95.39% | 82.59% | 89.89% | 88.56% | 31.25% |
 | gemini-3-flash-preview | 93.03% | 77.50% | 85.27% | 85.20% | 31.25% |
 | GPT-5.3 Codex | 92.76% | 76.85% | 83.66% | 85.12% | 25.00% |
 | Claude Opus 4.5 (2025-11-01) | 88.95% | 68.70% | 78.92% | 80.40% | 25.00% |
@@ -98,6 +103,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | Qwen2.5 Coder 32B Instruct | 11.45% | 6.48% | 17.96% | 11.44% | 14.37% |
 | claude-haiku-4-5-20251001 | 5.79% | 4.17% | 5.27% | 5.52% | 10.62% |
 | Codestral 22B | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
+| glm-5 | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
 
 ## Notes / caveats
 

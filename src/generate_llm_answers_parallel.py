@@ -26,8 +26,33 @@ from chat_state import (
 # Increase to saturate the API; decrease if you hit rate-limit errors.
 MAX_CONCURRENT_REQUESTS = 9
 
+# Provider-specific concurrency overrides (concurrency-limited APIs).
+_PROVIDER_CONCURRENCY: dict[str, int] = {
+    "ZAI": 2,       # Z.ai throttles by in-flight requests; keep low
+    "DEEPSEEK": 5,
+}
+
+
+def _max_concurrency(provider: str) -> int:
+    return _PROVIDER_CONCURRENCY.get(provider, MAX_CONCURRENT_REQUESTS)
+
 # Save progress every N completed API requests
 SAVE_INTERVAL = 20
+
+
+class DailyQuotaExhausted(Exception):
+    """Raised when a provider's daily request quota is exhausted."""
+    pass
+
+
+def _is_daily_quota_error(exc: Exception) -> bool:
+    """Detect daily/per-model quota exhaustion (not temporary rate limits)."""
+    msg = str(exc).lower()
+    return (
+        "per_model_per_day" in msg
+        or "per_day" in msg
+        or ("resource_exhausted" in msg and "retry in" in msg and "h" in msg)
+    )
 
 
 async def ask_provider(
@@ -66,6 +91,9 @@ async def ask_provider(
             return text_response
 
         except Exception as e:
+            # Daily quota exhaustion: stop immediately, don't retry
+            if _is_daily_quota_error(e):
+                raise DailyQuotaExhausted(str(e)) from e
             if attempt == max_retries - 1:
                 raise e
             else:
@@ -99,9 +127,13 @@ async def _first_response_single(
     counter: dict,
     save_file_path: str,
     save_lock: asyncio.Lock,
+    stop_event: asyncio.Event,
 ):
     """Process a single (prompt_file, repetition) pair, throttled by *sem*."""
     async with sem:
+        if stop_event.is_set():
+            return
+
         if prompt_file not in conversations:
             conversations[prompt_file] = []
 
@@ -118,12 +150,26 @@ async def _first_response_single(
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt_content},
         ]
-        response = await ask_provider(llm_client, model_info, conversation)
+
+        try:
+            response = await ask_provider(llm_client, model_info, conversation)
+        except DailyQuotaExhausted:
+            if not stop_event.is_set():
+                stop_event.set()
+                tqdm.tqdm.write(
+                    "\n[QUOTA] Daily request quota exhausted. "
+                    "Progress saved. Re-run to resume."
+                )
+                await _save_conversations(conversations, save_file_path, save_lock)
+            return
+
         conversation.append({"role": "assistant", "content": response})
 
         # Append in order – we hold the event loop so this is safe for
         # the same prompt_file as long as we don't yield between check & append.
         while len(conversations[prompt_file]) < rep_index:
+            if stop_event.is_set():
+                return
             # Another task for an earlier rep hasn't finished yet; yield briefly.
             await asyncio.sleep(0.05)
         conversations[prompt_file].append(conversation)
@@ -144,9 +190,10 @@ async def generate_first_response(
 
     total_requests = len(PROMPT_FILES) * REPETITIONS
 
-    sem = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+    sem = asyncio.Semaphore(_max_concurrency(model_info["provider"]))
     save_lock = asyncio.Lock()
     counter: dict = {"done": 0}
+    stop_event = asyncio.Event()
 
     with tqdm.tqdm(total=total_requests, desc="Total Progress") as pbar:
         tasks = []
@@ -165,6 +212,7 @@ async def generate_first_response(
                             counter,
                             save_file_path,
                             save_lock,
+                            stop_event,
                         )
                     )
                 )
@@ -175,6 +223,9 @@ async def generate_first_response(
 
     with open(save_file_path, "w", encoding="utf-8") as f:
         json.dump(conversations, f, ensure_ascii=False, indent=4)
+
+    if stop_event.is_set():
+        raise DailyQuotaExhausted("Daily quota exhausted. Re-run to resume.")
 
 
 # =============================================================================
@@ -194,25 +245,23 @@ async def _next_response_single(
     conversations: Dict[str, List],
     save_file_path: str,
     save_lock: asyncio.Lock,
+    stop_event: asyncio.Event,
 ):
     """Process a single conversation for the next correction round."""
     async with sem:
+        if stop_event.is_set():
+            return
+
         # Skip if already has enough responses, is successful,
         # or is not in WaitingForLLM state (e.g. NeedsSAPTest, InfraRetriable).
-        # Note: response_number is the round being generated (1-indexed from
-        # llm_generate.py), which equals the current assistant_count for chats
-        # that are waiting.  Use `>` so we don't skip conversations that are
-        # exactly at that count and need the next response.
         skip = False
         if chat_assistant_count(conversation) > response_number:
             skip = True
         elif chat_is_success(conversation):
             skip = True
         elif not chat_waiting_for_llm(conversation):
-            # Not waiting for LLM – e.g. NeedsSAPTest or InfraRetriable
             skip = True
         elif chat_assistant_count(conversation) >= MAX_ASSISTANTS:
-            # Already at Round 5 (6 assistant messages) – no more rounds
             skip = True
 
         if skip:
@@ -220,7 +269,18 @@ async def _next_response_single(
             pbar.refresh()
             return
 
-        response = await ask_provider(llm_client, model_info, conversation)
+        try:
+            response = await ask_provider(llm_client, model_info, conversation)
+        except DailyQuotaExhausted:
+            if not stop_event.is_set():
+                stop_event.set()
+                tqdm.tqdm.write(
+                    "\n[QUOTA] Daily request quota exhausted. "
+                    "Progress saved. Re-run to resume."
+                )
+                await _save_conversations(conversations, save_file_path, save_lock)
+            return
+
         conversation.append({"role": "assistant", "content": response})
 
         pbar.update(1)
@@ -258,9 +318,10 @@ async def generate_next_response(
         len(reps) for reps in data.values()
     )
 
-    sem = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+    sem = asyncio.Semaphore(_max_concurrency(model_info["provider"]))
     save_lock = asyncio.Lock()
     counter: dict = {"done": 0}
+    stop_event = asyncio.Event()
 
     with tqdm.tqdm(total=total_conversations, desc="Total Progress") as pbar:
         tasks = []
@@ -281,6 +342,7 @@ async def generate_next_response(
                             data,
                             save_file_path,
                             save_lock,
+                            stop_event,
                         )
                     )
                 )
@@ -289,6 +351,9 @@ async def generate_next_response(
     # Final save
     with open(save_file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
+    if stop_event.is_set():
+        raise DailyQuotaExhausted("Daily quota exhausted. Re-run to resume.")
 
 
 # =============================================================================

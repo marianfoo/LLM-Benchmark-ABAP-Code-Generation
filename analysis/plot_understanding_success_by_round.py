@@ -18,9 +18,8 @@ def get_model_data(csv_path: str):
     if df.empty:
         raise RuntimeError("understanding_model_leaderboard.csv is empty")
 
-    # Exclude models not yet validated for the understanding benchmark
-    EXCLUDED = {"gemini-3.1-pro-preview"}
-    df = df[~df["Model"].isin(EXCLUDED)].reset_index(drop=True)
+    EXCLUDED = {"glm-5"}
+    df = df[~df["Model"].str.lower().isin({e.lower() for e in EXCLUDED})].reset_index(drop=True)
 
     # Keep leaderboard order (already sorted by score)
     models = df["Model"].tolist()

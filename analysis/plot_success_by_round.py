@@ -14,24 +14,8 @@ def get_model_data_from_csv(file_path):
         print(f"Error reading CSV: {e}")
         return None, None
 
-    models = df['Model'].unique()
-    models = [m for m in models if 'codestral' not in m.lower()]
-    
-    desired_order = [
-        "llama-3.3-70b-instruct",
-        "codestral-22b",
-        "qwen2.5-coder-32b-instruct",
-        "qwen3-coder",
-        "gpt-oss_20b",
-        "gpt-oss_120b",
-        "mistral-large-2512",
-        "gpt-5.3-codex",
-        "gpt-5-2025-08-07",
-        "claude-sonnet-4-20250514"
-    ]
-    model_order = [m for m in desired_order if m in models]
-    remaining = [m for m in models if m not in model_order]
-    models = model_order + remaining
+    EXCLUDED = {"codestral-22b", "glm-5"}
+    models = [m for m in df['Model'].unique() if m.lower() not in {e.lower() for e in EXCLUDED}]
 
     
     model_data = {}
@@ -72,7 +56,12 @@ def get_model_data_from_csv(file_path):
             cumulative_success.append((success_count / total_samples) * 100)
             
         model_data[model] = cumulative_success
-        
+
+    # Sort models best to worst by R5 (final round) cumulative success
+    models = sorted(models, key=lambda m: model_data[m][5], reverse=True)
+    model_data = {m: model_data[m] for m in models}
+    sample_counts = {m: sample_counts[m] for m in models}
+
     return model_data, sample_counts
 
 def visualize_success_by_llm(model_data: Dict[str, List[float]], sample_counts: Dict[str, int] = None):

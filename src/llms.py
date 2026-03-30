@@ -94,6 +94,21 @@ API_PROVIDERS: Dict[str, ModelProvider] = {
         "api_key_env": "GEMINI_API_KEY",
         "api_key": _env("GEMINI_API_KEY"),
     },
+    # Google Vertex AI: uses Application Default Credentials (gcloud auth application-default login).
+    # Requires GOOGLE_CLOUD_PROJECT and GCS_BUCKET_NAME env vars.
+    # Batch API with 50% cost reduction, no predefined rate limits.
+    "GOOGLE_VERTEX": {
+        "base_url": None,
+        "api_key_env": "GOOGLE_CLOUD_PROJECT",
+        "api_key": _env("GOOGLE_CLOUD_PROJECT"),
+    },
+    # Z.ai (Zhipu AI): OpenAI-compatible API. GLM-5.1 frontier model.
+    # $0.72/$2.30 per 1M tokens (GLM-5 pricing; GLM-5.1 similar).
+    "ZAI": {
+        "base_url": "https://api.z.ai/api/paas/v4/",
+        "api_key_env": "ZAI_API_KEY",
+        "api_key": _env("ZAI_API_KEY"),
+    },
 }
 
 MODELS_TO_RUN: List[RunnableModel] = [
@@ -191,10 +206,10 @@ MODELS_TO_RUN: List[RunnableModel] = [
     # --- Google Gemini Models ---
     {
         # Google: Gemini 3.1 Pro Preview — latest frontier reasoning model (Feb 2026).
-        # OpenAI-compatible batch API supported at 50% cost reduction.
-        # Obtain API key at aistudio.google.com.
+        # Uses Vertex AI Batch API (global endpoint) — 50% cost reduction, no rate limits.
+        # Requires: gcloud auth application-default login, GOOGLE_CLOUD_PROJECT, GCS_BUCKET_NAME.
         "name": "gemini-3.1-pro-preview",
-        "provider": "GOOGLE",
+        "provider": "GOOGLE_VERTEX",
         "temperature": 0.2,
         "max_tokens": 8192,
     },
@@ -205,5 +220,13 @@ MODELS_TO_RUN: List[RunnableModel] = [
         "provider": "GOOGLE",
         "temperature": 0.2,
         "max_tokens": 8192,
+    },
+    # --- Z.ai (Zhipu AI) Models ---
+    {
+        # Z.ai: GLM-5 — 745B MoE (44B active), 205K context. $0.72/$2.30 per 1M tokens.
+        "name": "glm-5",
+        "provider": "ZAI",
+        "temperature": 0.2,
+        "max_tokens": 5000,
     },
 ]

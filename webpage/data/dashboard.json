@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-03-03T21:33:52Z",
+  "generated_at_utc": "2026-03-28T22:31:12Z",
   "paper_url": "https://arxiv.org/abs/2601.15188",
   "main_table": {
     "columns": [
@@ -59,6 +59,17 @@
       }
     ],
     "rows": [
+      {
+        "Model_Display": "gemini-3.1-pro-preview",
+        "Success_R5_pct": 88.33333333333333,
+        "Understanding_R5_pct": null,
+        "Success_R0_pct": 44.333333333333336,
+        "AUC_Success_pct": 76.76851851851852,
+        "R0_Reaches_UnitTests_pct": 46.55555555555556,
+        "PassAt5_Final_pct": 90.30643738977072,
+        "Prompts_Solved_Any_pct": 91.11111111111111,
+        "Prompts_Solved_All_pct": 85.0
+      },
       {
         "Model_Display": "gemini-3-flash-preview",
         "Success_R5_pct": 84.44444444444444,
@@ -273,6 +284,15 @@
     ],
     "rows": [
       {
+        "Model_Display": "gemini-3.1-pro-preview",
+        "Success_R0_pct": 44.333333333333336,
+        "Success_R1_pct": 71.72222222222221,
+        "Success_R2_pct": 82.61111111111111,
+        "Success_R3_pct": 86.16666666666667,
+        "Success_R4_pct": 87.44444444444444,
+        "Success_R5_pct": 88.33333333333333
+      },
+      {
         "Model_Display": "gemini-3-flash-preview",
         "Success_R0_pct": 10.444444444444445,
         "Success_R1_pct": 47.22222222222222,
@@ -449,6 +469,14 @@
       }
     ],
     "rows": [
+      {
+        "Model_Display": "gemini-3.1-pro-preview",
+        "Success_R5_StringHandling_pct": 95.39473684210526,
+        "Success_R5_ListOrArrayOperation_pct": 82.5925925925926,
+        "Success_R5_MathematicalCalculation_pct": 89.89247311827957,
+        "Success_R5_LogicalCondition_pct": 88.56,
+        "Success_R5_ABAPDatabaseOperation_pct": 31.25
+      },
       {
         "Model_Display": "gemini-3-flash-preview",
         "Success_R5_StringHandling_pct": 93.02631578947368,
@@ -727,18 +755,18 @@
     }
   },
   "summary": {
-    "models_count": 15,
-    "total_models_count": 15,
-    "fully_evaluated_models_count": 15,
+    "models_count": 16,
+    "total_models_count": 17,
+    "fully_evaluated_models_count": 16,
     "top_by_final_success": [
+      "gemini-3.1-pro-preview",
       "gemini-3-flash-preview",
-      "GPT-5.3 Codex",
-      "Claude Opus 4.5 (2025-11-01)"
+      "GPT-5.3 Codex"
     ],
     "top_by_first_try_success": [
+      "gemini-3.1-pro-preview",
       "Claude Opus 4.5 (2025-11-01)",
-      "deepseek-reasoner",
-      "Claude Sonnet 4 (2025-05-14)"
+      "deepseek-reasoner"
     ]
   }
 }

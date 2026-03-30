@@ -1,0 +1,70 @@
+{
+  "batches": [
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/1790258917205344256",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 0,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r0.jsonl",
+      "item_count": 504,
+      "status": "completed",
+      "created_at": "2026-03-28T17:28:16.222504+00:00",
+      "completed_at": "2026-03-28T18:11:17.204232+00:00"
+    },
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/2151672787301826560",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 1,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r1.jsonl",
+      "item_count": 290,
+      "status": "completed",
+      "created_at": "2026-03-28T18:11:25.347836+00:00",
+      "completed_at": "2026-03-28T19:05:59.280372+00:00"
+    },
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/7915717360382640128",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 2,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r2.jsonl",
+      "item_count": 266,
+      "status": "completed",
+      "created_at": "2026-03-28T19:06:07.670237+00:00",
+      "completed_at": "2026-03-28T19:52:57.347089+00:00"
+    },
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/5998309819029651456",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 3,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r3.jsonl",
+      "item_count": 252,
+      "status": "completed",
+      "created_at": "2026-03-28T19:53:04.971376+00:00",
+      "completed_at": "2026-03-28T20:26:44.831221+00:00"
+    },
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/3378059260830154752",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 4,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r4.jsonl",
+      "item_count": 243,
+      "status": "completed",
+      "created_at": "2026-03-28T20:26:52.120697+00:00",
+      "completed_at": "2026-03-28T20:51:01.828068+00:00"
+    },
+    {
+      "batch_id": "projects/288634296616/locations/global/batchPredictionJobs/2844382704986750976",
+      "model_name": "gemini-3.1-pro-preview",
+      "provider": "GOOGLE_VERTEX",
+      "round_num": 5,
+      "batch_input_file": "/Users/marianzeis/DEV/LLM-Benchmark-ABAP-Code-Generation/data/gemini-3.1-pro-preview_understanding_batch_r5.jsonl",
+      "item_count": 241,
+      "status": "completed",
+      "created_at": "2026-03-28T20:51:10.302806+00:00",
+      "completed_at": "2026-03-28T21:10:36.281185+00:00"
+    }
+  ]
+}

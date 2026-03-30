@@ -27,9 +27,8 @@ def main():
     if df.empty:
         raise RuntimeError("understanding_model_leaderboard.csv is empty")
 
-    # Exclude models not yet validated for the understanding benchmark
-    EXCLUDED = {"gemini-3.1-pro-preview"}
-    df = df[~df["Model"].isin(EXCLUDED)].reset_index(drop=True)
+    EXCLUDED = {"glm-5"}
+    df = df[~df["Model"].str.lower().isin({e.lower() for e in EXCLUDED})].reset_index(drop=True)
 
     models = df["Model"].tolist()
     fields = [label for _, label in FIELD_COLUMNS]

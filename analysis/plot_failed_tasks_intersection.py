@@ -14,21 +14,8 @@ def get_failed_task_counts(file_path):
         print(f"Error reading CSV: {e}")
         return None, None
 
-    target_models = df['Model'].unique()
-    
-    desired_order = [
-        "llama-3.3-70b-instruct",
-        "codestral-22b",
-        "qwen2.5-coder-32b-instruct",
-        "qwen3-coder",
-        "gpt-oss_20b",
-        "gpt-oss_120b",
-        "gpt-5-2025-08-07",
-        "claude-sonnet-4-20250514"
-    ]
-    model_order = [m for m in desired_order if m in target_models]
-    remaining = [m for m in target_models if m not in model_order]
-    target_models = model_order + remaining
+    EXCLUDED = {"codestral-22b", "glm-5"}
+    target_models = [m for m in df['Model'].unique() if m.lower() not in {e.lower() for e in EXCLUDED}]
     
     print(f"Models found: {target_models}")
     
