@@ -173,6 +173,12 @@ MODELS_TO_RUN: List[RunnableModel] = [
         "reasoning_effort": "medium",
     },
     {
+        "name": "claude-opus-4-6",  # Anthropic: Claude Opus 4.6 - $5.00/$25.00 per 1M tokens, 1M context window
+        "provider": "ANTHROPIC",
+        "temperature": 0.2,
+        "max_tokens": 5000,
+    },
+    {
         "name": "claude-opus-4-5-20251101",  # Anthropic: Claude Opus 4.5 - $5.00/$25.00 per 1M tokens
         "provider": "ANTHROPIC",
         "temperature": 0.2,

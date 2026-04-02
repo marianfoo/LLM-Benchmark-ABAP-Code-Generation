@@ -219,9 +219,9 @@ def worker_main(
     """
     # Create a per-worker ADT client
     client = AdtClient(
-        sap_host="http://localhost:50000",
-        username="DEVELOPER",
-        password="ABAPtr2023#00",
+        sap_host=os.environ["SAP_HOST"],
+        username=os.environ["SAP_USERNAME"],
+        password=os.environ["SAP_PASSWORD"],
         client="001",
         language="EN",
     )

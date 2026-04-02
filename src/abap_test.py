@@ -258,9 +258,9 @@ def _save_data(filename: str, prompt_files: dict):
 def _create_client() -> AdtClient:
     """Create and login an ADT client (reuses abap_interaction module state)."""
     client = AdtClient(
-        sap_host="http://localhost:50000",
-        username="DEVELOPER",
-        password="ABAPtr2023#00",
+        sap_host=os.environ["SAP_HOST"],
+        username=os.environ["SAP_USERNAME"],
+        password=os.environ["SAP_PASSWORD"],
         client="001",
         language="EN",
     )

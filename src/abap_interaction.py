@@ -10,6 +10,9 @@ from abap_adt_py.adt_client import AdtClient
 import xml.etree.ElementTree as ET
 import re
 import tqdm
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Optional abaplint integration (imported lazily to avoid dependency issues)
 try:
@@ -1034,9 +1037,9 @@ def run_abap_interaction(
     """
     global _current_client
     client: AdtClient = AdtClient(
-        sap_host="http://localhost:50000",
-        username="DEVELOPER",
-        password="H9X8STnsyhgMv",
+        sap_host=os.environ["SAP_HOST"],
+        username=os.environ["SAP_USERNAME"],
+        password=os.environ["SAP_PASSWORD"],
         client="001",
         language="EN",
     )
