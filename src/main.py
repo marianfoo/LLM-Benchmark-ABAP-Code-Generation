@@ -28,7 +28,11 @@ import generate_llm_answers_parallel
 import generate_llm_answers_openai_direct
 import generate_llm_answers_openai_responses
 from generate_llm_answers_parallel import DailyQuotaExhausted
-from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
+from llms import (
+    API_PROVIDERS, MODELS_TO_RUN, RunnableModel,
+    create_anthropic_client, create_portkey_openai_client,
+    get_provider_api_key, is_portkey_anthropic,
+)
 
 
 def get_available_models():
@@ -84,7 +88,7 @@ def batch_openai(model_info: RunnableModel):
 
 
 def batch_anthropic(model_info: RunnableModel):
-    client = anthropic.Anthropic(api_key=get_provider_api_key(model_info["provider"]))
+    client = create_anthropic_client()
     save_file = f"data/{model_info['name']}.json"
     save_file_batch = f"{save_file[:-5]}_batch.jsonl"
     save_file_batch_response = save_file_batch[:-6] + "_response.jsonl"
@@ -259,6 +263,8 @@ def run_parrallel_model(model_info: RunnableModel):
             temperature=model_info["temperature"],
             max_tokens=model_info["max_tokens"],
         )
+    elif is_portkey_anthropic() and model_info["provider"] == "ANTHROPIC":
+        client = create_portkey_openai_client(async_client=True)
     else:
         provider = API_PROVIDERS[model_info["provider"]]
         client = openai.AsyncOpenAI(
@@ -374,7 +380,9 @@ if __name__ == "__main__":
         print(f"{'='*60}")
 
         try:
-            if model_info["provider"] == "ANTHROPIC":
+            if model_info["provider"] == "ANTHROPIC" and is_portkey_anthropic():
+                run_parrallel_model(model_info)
+            elif model_info["provider"] == "ANTHROPIC":
                 batch_anthropic(model_info)
             elif model_info["provider"] == "OPENAI":
                 batch_openai(model_info)

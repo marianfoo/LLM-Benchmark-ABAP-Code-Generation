@@ -8,7 +8,10 @@ import sys
 from openai import OpenAI
 import anthropic
 
-from llms import API_PROVIDERS, MODELS_TO_RUN, get_provider_api_key
+from llms import (
+    API_PROVIDERS, MODELS_TO_RUN,
+    create_anthropic_client, get_provider_api_key,
+)
 
 
 def test_openai_compatible(model_name: str, provider_name: str, base_url: str, api_key: str) -> tuple[bool, str]:
@@ -39,10 +42,10 @@ def test_openai_compatible(model_name: str, provider_name: str, base_url: str, a
         return False, str(e)
 
 
-def test_anthropic(model_name: str, api_key: str) -> tuple[bool, str]:
-    """Test Anthropic API."""
+def test_anthropic(model_name: str) -> tuple[bool, str]:
+    """Test Anthropic API (direct or via Portkey)."""
     try:
-        client = anthropic.Anthropic(api_key=api_key)
+        client = create_anthropic_client()
         response = client.messages.create(
             model=model_name,
             max_tokens=10,
@@ -147,12 +150,7 @@ def main():
         if provider_name == "SAP_AICORE":
             success, message = test_sap_aicore(model_name)
         elif provider_name == "ANTHROPIC":
-            try:
-                api_key = get_provider_api_key(provider_name)
-            except RuntimeError as e:
-                success, message = False, str(e)
-            else:
-                success, message = test_anthropic(model_name, api_key)
+            success, message = test_anthropic(model_name)
         elif provider_name == "OPENAI_RESPONSES":
             try:
                 api_key = get_provider_api_key(provider_name)

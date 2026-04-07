@@ -42,6 +42,50 @@ def get_provider_api_key(provider_name: str) -> str:
     )
 
 
+# Optional Portkey gateway.  Set PORTKEY_API_KEY and point a provider's
+# base URL at Portkey to route it through the gateway.  Example .env:
+#   PORTKEY_API_KEY=pk-...
+#   ANTHROPIC_BASE_URL=https://api.portkey.ai
+# For OpenAI-compatible providers (Groq, Mistral, …) no code change is
+# needed — just override their base URL and API key in .env.
+PORTKEY_API_KEY = _env("PORTKEY_API_KEY")
+
+
+def is_portkey_anthropic() -> bool:
+    """True when Anthropic is routed through Portkey (batch API unavailable)."""
+    return bool(PORTKEY_API_KEY and API_PROVIDERS["ANTHROPIC"].get("base_url"))
+
+
+def create_portkey_openai_client(async_client: bool = False):
+    """Create an OpenAI client pointed at the Portkey gateway."""
+    import openai
+
+    base_url = API_PROVIDERS["ANTHROPIC"].get("base_url")
+    if async_client:
+        return openai.AsyncOpenAI(api_key=PORTKEY_API_KEY, base_url=base_url)
+    return openai.OpenAI(api_key=PORTKEY_API_KEY, base_url=base_url)
+
+
+def create_anthropic_client(async_client: bool = False):
+    """Create an Anthropic client, routing through Portkey if configured."""
+    import anthropic
+
+    cls = anthropic.AsyncAnthropic if async_client else anthropic.Anthropic
+    base_url = API_PROVIDERS["ANTHROPIC"].get("base_url")
+    if PORTKEY_API_KEY and base_url:
+        # Anthropic SDK appends /v1/… itself, so strip trailing /v1
+        portkey_url = base_url.removesuffix("/v1").removesuffix("/")
+        return cls(
+            api_key="portkey",  # placeholder; real auth via header
+            base_url=portkey_url,
+            default_headers={"x-portkey-api-key": PORTKEY_API_KEY},
+        )
+    api_key = get_provider_api_key("ANTHROPIC")
+    if base_url:
+        return cls(api_key=api_key, base_url=base_url)
+    return cls(api_key=api_key)
+
+
 API_PROVIDERS: Dict[str, ModelProvider] = {
     "GROQ": {
         "base_url": "https://api.groq.com/openai/v1",
@@ -54,7 +98,7 @@ API_PROVIDERS: Dict[str, ModelProvider] = {
         "api_key": _env("MISTRAL_API_KEY"),
     },
     "ANTHROPIC": {
-        "base_url": "https://api.anthropic.com/v1/",
+        "base_url": _env("ANTHROPIC_BASE_URL") or None,
         "api_key_env": "ANTHROPIC_API_KEY",
         "api_key": _env("ANTHROPIC_API_KEY"),
     },

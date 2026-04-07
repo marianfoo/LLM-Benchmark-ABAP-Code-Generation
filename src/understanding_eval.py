@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
-from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
+from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, create_anthropic_client, get_provider_api_key
 from abap1_orchestration import ABAP1OrchestrationClient
 
 
@@ -406,10 +406,7 @@ async def _build_client(model_info: RunnableModel) -> Any:
         )
 
     if provider == "ANTHROPIC":
-        import anthropic
-
-        api_key = get_provider_api_key(provider)
-        return anthropic.AsyncAnthropic(api_key=api_key)
+        return create_anthropic_client(async_client=True)
 
     import openai
 

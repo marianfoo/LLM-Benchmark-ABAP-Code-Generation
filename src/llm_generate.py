@@ -31,7 +31,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from llms import API_PROVIDERS, MODELS_TO_RUN, RunnableModel, get_provider_api_key
+from llms import (
+    API_PROVIDERS, MODELS_TO_RUN, RunnableModel,
+    create_anthropic_client, create_portkey_openai_client,
+    get_provider_api_key, is_portkey_anthropic,
+)
 from generate_llm_answers_parallel import DailyQuotaExhausted
 from chat_state import (
     print_status,
@@ -97,12 +101,14 @@ def mode_complete_pending(model_name: str, model_info: RunnableModel):
     """Complete any pending batch jobs for this model's provider."""
     provider = model_info["provider"]
 
-    if provider == "ANTHROPIC":
+    if provider == "ANTHROPIC" and is_portkey_anthropic():
+        print(f"[SKIP] ANTHROPIC via Portkey uses parallel runner, not batch processing.")
+
+    elif provider == "ANTHROPIC":
         import anthropic
         import generate_llm_answers_batch_anthropic as gen
 
-        api_key = get_provider_api_key(provider)
-        client = anthropic.Anthropic(api_key=api_key)
+        client = create_anthropic_client()
         completed = gen.check_and_complete_pending_batches(client, model_info["name"])
         if completed:
             print(f"[DONE] Completed {len(completed)} pending Anthropic batch(es)")
@@ -172,12 +178,17 @@ def mode_first(model_name: str, model_info: RunnableModel):
     save_file_batch = f"data/{model_name.replace(':', '_')}_batch.jsonl"
     save_file_batch_response = save_file_batch[:-6] + "_response.jsonl"
 
-    if provider == "ANTHROPIC":
+    if provider == "ANTHROPIC" and is_portkey_anthropic():
+        import generate_llm_answers_parallel as gen
+
+        llm_client = create_portkey_openai_client(async_client=True)
+        asyncio.run(gen.generate_first_response(llm_client, model_info))
+
+    elif provider == "ANTHROPIC":
         import anthropic
         import generate_llm_answers_batch_anthropic as gen
 
-        api_key = get_provider_api_key(provider)
-        client = anthropic.Anthropic(api_key=api_key)
+        client = create_anthropic_client()
 
         batch_id = gen.generate_first_response_batch(
             client, model_info, save_file_batch, save_file
@@ -351,12 +362,19 @@ def mode_next(model_name: str, model_info: RunnableModel):
                     max_round = r
     round_num = max_round  # the round about to be generated
 
-    if provider == "ANTHROPIC":
+    if provider == "ANTHROPIC" and is_portkey_anthropic():
+        import generate_llm_answers_parallel as gen
+
+        llm_client = create_portkey_openai_client(async_client=True)
+        asyncio.run(
+            gen.generate_next_response(llm_client, model_info, round_num)
+        )
+
+    elif provider == "ANTHROPIC":
         import anthropic
         import generate_llm_answers_batch_anthropic as gen
 
-        api_key = get_provider_api_key(provider)
-        client = anthropic.Anthropic(api_key=api_key)
+        client = create_anthropic_client()
 
         batch_id = gen.generate_next_response_batch(
             client, model_info, save_file, save_file_batch, round_num=round_num
