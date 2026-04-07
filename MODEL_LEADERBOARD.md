@@ -1,6 +1,6 @@
 # Model leaderboard (ABAP code generation benchmark)
 
-Generated on **2026-03-28** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
+Generated on **2026-04-07** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
 
 This file is meant as a *developer-friendly* starting point for publishing results in a sortable website table.
 
@@ -43,6 +43,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | gemini-3.1-pro-preview | 88.33% | 44.33% | 76.77% | 0.0 | 46.56% | 90.31% | 91.11% | 85.00% | 6 |
 | gemini-3-flash-preview | 84.44% | 10.44% | 63.35% | 1.0 | 11.56% | 87.11% | 87.22% | 77.22% | 6 |
 | GPT-5.3 Codex | 84.39% | 18.56% | 62.45% | 1.0 | 21.11% | 88.27% | 89.44% | 76.67% | 6 |
+| claude-opus-4-6 | 84.17% | 36.94% | 69.43% | 1.0 | 44.56% | 89.39% | 90.56% | 76.11% | 6 |
 | Claude Opus 4.5 (2025-11-01) | 78.72% | 31.61% | 65.03% | 1.0 | 37.78% | 80.90% | 81.11% | 76.11% | 6 |
 | deepseek-reasoner | 78.22% | 30.39% | 62.12% | 1.0 | 41.67% | 87.28% | 89.44% | 54.44% | 6 |
 | GPT-5 (2025-08-07) | 77.11% | 19.28% | 56.60% | 1.0 | 22.39% | 84.70% | 86.11% | 59.44% | 6 |
@@ -66,6 +67,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | gemini-3.1-pro-preview | 44.33% | 71.72% | 82.61% | 86.17% | 87.44% | 88.33% |
 | gemini-3-flash-preview | 10.44% | 47.22% | 73.11% | 81.22% | 83.67% | 84.44% |
 | GPT-5.3 Codex | 18.56% | 44.17% | 66.72% | 78.39% | 82.50% | 84.39% |
+| claude-opus-4-6 | 36.94% | 59.83% | 73.78% | 79.44% | 82.39% | 84.17% |
 | Claude Opus 4.5 (2025-11-01) | 31.61% | 56.67% | 70.17% | 75.67% | 77.33% | 78.72% |
 | deepseek-reasoner | 30.39% | 52.06% | 64.56% | 71.83% | 75.67% | 78.22% |
 | GPT-5 (2025-08-07) | 19.28% | 41.83% | 58.67% | 68.56% | 74.17% | 77.11% |
@@ -89,6 +91,7 @@ The CSV contains a wider set of columns for website ingestion. Column groups:
 | gemini-3.1-pro-preview | 95.39% | 82.59% | 89.89% | 88.56% | 31.25% |
 | gemini-3-flash-preview | 93.03% | 77.50% | 85.27% | 85.20% | 31.25% |
 | GPT-5.3 Codex | 92.76% | 76.85% | 83.66% | 85.12% | 25.00% |
+| claude-opus-4-6 | 89.21% | 80.46% | 84.41% | 87.04% | 28.12% |
 | Claude Opus 4.5 (2025-11-01) | 88.95% | 68.70% | 78.92% | 80.40% | 25.00% |
 | deepseek-reasoner | 84.21% | 71.48% | 78.71% | 80.32% | 23.12% |
 | GPT-5 (2025-08-07) | 81.84% | 68.61% | 76.88% | 77.52% | 68.12% |

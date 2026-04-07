@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-03-28T22:31:12Z",
+  "generated_at_utc": "2026-04-07T09:34:00Z",
   "paper_url": "https://arxiv.org/abs/2601.15188",
   "main_table": {
     "columns": [
@@ -91,6 +91,17 @@
         "PassAt5_Final_pct": 88.26940035273368,
         "Prompts_Solved_Any_pct": 89.44444444444444,
         "Prompts_Solved_All_pct": 76.66666666666667
+      },
+      {
+        "Model_Display": "claude-opus-4-6",
+        "Success_R5_pct": 84.16666666666667,
+        "Understanding_R5_pct": 85.37,
+        "Success_R0_pct": 36.94444444444444,
+        "AUC_Success_pct": 69.42592592592592,
+        "R0_Reaches_UnitTests_pct": 44.55555555555556,
+        "PassAt5_Final_pct": 89.39373897707232,
+        "Prompts_Solved_Any_pct": 90.55555555555556,
+        "Prompts_Solved_All_pct": 76.11111111111111
       },
       {
         "Model_Display": "Claude Opus 4.5 (2025-11-01)",
@@ -311,6 +322,15 @@
         "Success_R5_pct": 84.38888888888889
       },
       {
+        "Model_Display": "claude-opus-4-6",
+        "Success_R0_pct": 36.94444444444444,
+        "Success_R1_pct": 59.833333333333336,
+        "Success_R2_pct": 73.77777777777777,
+        "Success_R3_pct": 79.44444444444444,
+        "Success_R4_pct": 82.38888888888889,
+        "Success_R5_pct": 84.16666666666667
+      },
+      {
         "Model_Display": "Claude Opus 4.5 (2025-11-01)",
         "Success_R0_pct": 31.61111111111111,
         "Success_R1_pct": 56.666666666666664,
@@ -494,6 +514,14 @@
         "Success_R5_ABAPDatabaseOperation_pct": 25.0
       },
       {
+        "Model_Display": "claude-opus-4-6",
+        "Success_R5_StringHandling_pct": 89.21052631578948,
+        "Success_R5_ListOrArrayOperation_pct": 80.46296296296296,
+        "Success_R5_MathematicalCalculation_pct": 84.40860215053763,
+        "Success_R5_LogicalCondition_pct": 87.03999999999999,
+        "Success_R5_ABAPDatabaseOperation_pct": 28.125
+      },
+      {
         "Model_Display": "Claude Opus 4.5 (2025-11-01)",
         "Success_R5_StringHandling_pct": 88.94736842105263,
         "Success_R5_ListOrArrayOperation_pct": 68.7037037037037,
@@ -670,6 +698,17 @@
       ],
       "rows": [
         {
+          "Model_Display": "claude-opus-4-6",
+          "Runs": 540,
+          "Success_R0_pct": 46.67,
+          "Success_R1_pct": 53.33,
+          "Success_R2_pct": 68.15,
+          "Success_R3_pct": 78.89,
+          "Success_R4_pct": 82.41,
+          "Success_R5_pct": 85.37,
+          "AUC_Success_pct": 69.14
+        },
+        {
           "Model_Display": "deepseek-reasoner",
           "Runs": 540,
           "Success_R0_pct": 44.81,
@@ -755,9 +794,9 @@
     }
   },
   "summary": {
-    "models_count": 16,
-    "total_models_count": 17,
-    "fully_evaluated_models_count": 16,
+    "models_count": 17,
+    "total_models_count": 18,
+    "fully_evaluated_models_count": 17,
     "top_by_final_success": [
       "gemini-3.1-pro-preview",
       "gemini-3-flash-preview",
@@ -765,8 +804,8 @@
     ],
     "top_by_first_try_success": [
       "gemini-3.1-pro-preview",
-      "Claude Opus 4.5 (2025-11-01)",
-      "deepseek-reasoner"
+      "claude-opus-4-6",
+      "Claude Opus 4.5 (2025-11-01)"
     ]
   }
 }
