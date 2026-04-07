@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import openai
 import anthropic
 
-from llms import get_provider_api_key
+from llms import create_anthropic_client, get_provider_api_key
 import generate_llm_answers_batch_openai as openai_batch
 import generate_llm_answers_batch_anthropic as anthropic_batch
 
@@ -161,7 +161,7 @@ def main():
         check_openai_batches(openai_client, complete=args.complete)
     
     if not args.openai_only:
-        anthropic_client = anthropic.Anthropic(api_key=get_provider_api_key("ANTHROPIC"))
+        anthropic_client = create_anthropic_client()
         check_anthropic_batches(anthropic_client, complete=args.complete)
     
     print("\n" + "-" * 60)

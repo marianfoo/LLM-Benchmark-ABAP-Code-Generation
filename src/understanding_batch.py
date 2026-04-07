@@ -32,7 +32,7 @@ from typing import Any, Dict, List, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from llms import API_PROVIDERS, RunnableModel, get_provider_api_key
+from llms import API_PROVIDERS, RunnableModel, create_anthropic_client, get_provider_api_key
 from understanding_eval import (
     FEEDBACK_PROMPT,
     REPO_ROOT,
@@ -162,7 +162,7 @@ def _build_sync_client(model_info: RunnableModel):
     if provider == "ANTHROPIC":
         import anthropic
 
-        return anthropic.Anthropic(api_key=get_provider_api_key(provider))
+        return create_anthropic_client()
 
     if provider == "MISTRAL":
         from mistralai import Mistral

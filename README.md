@@ -82,6 +82,19 @@ AICORE_MODEL_VERSION=latest
 
 The scripts load these via `python-dotenv`. Provider config is in `src/llms.py`.
 
+### Portkey Gateway (optional)
+
+To route API calls through [Portkey](https://portkey.ai), set:
+
+```bash
+PORTKEY_API_KEY=pk-...
+ANTHROPIC_BASE_URL=https://api.portkey.ai/v1
+```
+
+When both are set, the Anthropic client authenticates via Portkey's gateway using the
+`x-portkey-api-key` header. The Portkey API key's config (set in the Portkey dashboard)
+determines which upstream provider is used.
+
 For ABAP-1/BTP setup details, see [`docs/ABAP_1_BTP_SETUP.md`](docs/ABAP_1_BTP_SETUP.md).
 
 ---
