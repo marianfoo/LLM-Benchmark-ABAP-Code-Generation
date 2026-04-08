@@ -81,7 +81,7 @@ EXCLUDED_MODELS = {"Codestral 22B"}
 
 # Models excluded specifically from the understanding benchmark table and plots
 # (e.g. runs that are not yet fully validated)
-UNDERSTANDING_EXCLUDED_MODELS = {"gemini-3.1-pro-preview"}
+UNDERSTANDING_EXCLUDED_MODELS: set = set()
 
 
 MAIN_COLUMNS = [
@@ -244,6 +244,7 @@ UNDERSTANDING_MODEL_DISPLAY = {
     "mistral-large-2512": "Mistral Large 2512",
     "sap-abap-1": "SAP ABAP-1",
     "gpt-5.2": "GPT-5.2",
+    "gemini-3.1-pro-preview": "Gemini 3.1 Pro Preview",
 }
 
 

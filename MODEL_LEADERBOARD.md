@@ -1,6 +1,6 @@
 # Model leaderboard (ABAP code generation benchmark)
 
-Generated on **2026-04-07** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
+Generated on **2026-04-08** from the raw benchmark logs in `data/*.json` (180 tasks × 10 repetitions per model, up to 6 feedback rounds).
 
 This file is meant as a *developer-friendly* starting point for publishing results in a sortable website table.
 

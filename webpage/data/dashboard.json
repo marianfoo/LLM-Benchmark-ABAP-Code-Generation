@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-04-07T09:34:00Z",
+  "generated_at_utc": "2026-04-08T07:44:05Z",
   "paper_url": "https://arxiv.org/abs/2601.15188",
   "main_table": {
     "columns": [
@@ -62,7 +62,7 @@
       {
         "Model_Display": "gemini-3.1-pro-preview",
         "Success_R5_pct": 88.33333333333333,
-        "Understanding_R5_pct": null,
+        "Understanding_R5_pct": 52.96,
         "Success_R0_pct": 44.333333333333336,
         "AUC_Success_pct": 76.76851851851852,
         "R0_Reaches_UnitTests_pct": 46.55555555555556,
@@ -751,6 +751,17 @@
           "Success_R4_pct": 53.15,
           "Success_R5_pct": 54.26,
           "AUC_Success_pct": 48.77
+        },
+        {
+          "Model_Display": "Gemini 3.1 Pro Preview",
+          "Runs": 540,
+          "Success_R0_pct": 43.52,
+          "Success_R1_pct": 47.96,
+          "Success_R2_pct": 50.56,
+          "Success_R3_pct": 52.22,
+          "Success_R4_pct": 52.59,
+          "Success_R5_pct": 52.96,
+          "AUC_Success_pct": 49.97
         },
         {
           "Model_Display": "SAP ABAP-1",
