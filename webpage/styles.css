@@ -78,6 +78,27 @@ body {
   letter-spacing: 0.02em;
 }
 
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 18px;
+  padding: 6px 14px 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.github-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-main);
+}
+
 .eyebrow {
   margin: 0 0 8px;
   text-transform: uppercase;
